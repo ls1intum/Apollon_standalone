@@ -3,12 +3,11 @@ const webpack = require('webpack');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const appVersion = require('../package').version;
 
 const outputDir = path.resolve(__dirname, '../dist');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   output: {
     path: outputDir,
     filename: '[name].js',
@@ -65,9 +64,8 @@ module.exports = {
   plugins: [
     new CircularDependencyPlugin({ exclude: /node_modules/ }),
     new HtmlWebpackPlugin({
-      template: './src/index.html.ejs',
+      template: './src/index.html',
       xhtml: true,
-      version: appVersion,
     }),
     new CopyPlugin([{ from: 'assets', to: outputDir }]),
     new webpack.HashedModuleIdsPlugin(),

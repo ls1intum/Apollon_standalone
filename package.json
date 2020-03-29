@@ -12,15 +12,24 @@
     "postinstall": "yarn build"
   },
   "dependencies": {
-    "@ls1intum/apollon": "^2.0.7",
+    "@ls1intum/apollon": "^2.0.10",
+    "bootstrap": "^4.4.1",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.4",
+    "redux-observable": "^1.2.0",
+    "rxjs": "^6.5.5",
     "styled-components": "5.0.1",
-    "tslib": "1.11.1"
+    "tslib": "1.11.1",
+    "typesafe-actions": "^5.1.0"
   },
   "devDependencies": {
     "@types/react": "16.9.4",
+    "@types/react-bootstrap": "^1.0.0",
     "@types/react-dom": "16.9.4",
+    "@types/react-redux": "^7.1.7",
     "@types/styled-components": "5.0.1",
     "circular-dependency-plugin": "5.2.0",
     "copy-webpack-plugin": "5.1.1",
