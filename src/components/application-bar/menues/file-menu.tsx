@@ -1,38 +1,41 @@
-import React, { Component } from 'react';
-import { Dropdown, NavDropdown } from 'react-bootstrap';
-import { LoadDiagramModal } from '../../load-diagram-modal/load-diagram-modal';
-import { UMLModel } from '@ls1intum/apollon';
+import React, { Component, ComponentClass } from 'react';
+import { NavDropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
+import { LoadDiagramModal } from '../../modals/load-diagram-modal/load-diagram-modal';
+import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-modal';
+import { Diagram } from '../../../services/local-storage/local-storage-types';
+import { localStorageDiagramPrefix } from '../../../constant';
 
 type Props = {};
 
 type State = {
   showLoadingModal: boolean;
+  showNewDiagramModal: boolean;
 };
 
 type StateProps = {
-  model: UMLModel | null;
+  diagram: Diagram | null;
 };
 
 type DispatchProps = {
-  validateStore: typeof LocalStorageRepository.validateStore;
+  store: typeof LocalStorageRepository.store;
 };
 
-const enhance = compose(
+const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
   connect<StateProps, DispatchProps, Props, ApplicationState>(
     (state, props) => {
       return {
-        model: state.model,
+        diagram: state.diagram,
       };
     },
     {
-      validateStore: LocalStorageRepository.validateStore,
+      store: LocalStorageRepository.store,
     },
   ),
 );
@@ -40,28 +43,35 @@ const enhance = compose(
 type OwnProps = StateProps & DispatchProps & Props & ApollonEditorContext;
 
 const getInitialState = (): State => {
-  return { showLoadingModal: false };
+  return { showLoadingModal: false, showNewDiagramModal: false };
 };
 
-const diagrams = [
-  { id: 'test', model: {} as UMLModel },
-  { id: 'test1', model: {} as UMLModel },
-];
-
-class fileMenu extends Component<OwnProps, State> {
+//TODO: check how to title this if component gets enhanced
+class FileMenuComponent extends Component<OwnProps, State> {
   state = getInitialState();
 
   constructor(props: OwnProps) {
     super(props);
     this.closeLoadingModal = this.closeLoadingModal.bind(this);
     this.openLoadingModal = this.openLoadingModal.bind(this);
+    this.openNewDiagramModal = this.openNewDiagramModal.bind(this);
+    this.closeNewDiagramModal = this.closeNewDiagramModal.bind(this);
     this.saveDiagram = this.saveDiagram.bind(this);
   }
 
   saveDiagram(): void {
     console.log('save start');
-    this.props.validateStore(this.props.editor?.model!);
+    this.props.store(this.props.diagram!.id, this.props.diagram!.title, this.props.editor?.model!);
     console.log('save end');
+  }
+
+  closeNewDiagramModal(): void {
+    // TODO: leave modal permanent on page or craete it on click and destory after closed?
+    this.setState({ showNewDiagramModal: false });
+  }
+
+  openNewDiagramModal(): void {
+    this.setState({ showNewDiagramModal: true });
   }
 
   closeLoadingModal(): void {
@@ -73,31 +83,36 @@ class fileMenu extends Component<OwnProps, State> {
     this.setState({ showLoadingModal: true });
   }
 
+  getSavedDiagrams(): string[] {
+    const localStorage = window.localStorage;
+    const diagramKeys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const keyName = localStorage.key(i);
+      if (keyName?.startsWith(localStorageDiagramPrefix)) {
+        diagramKeys.push(keyName.substr(localStorageDiagramPrefix.length));
+      }
+    }
+    return diagramKeys;
+  }
+
   render() {
     return (
       <>
-        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-          <NavDropdown.Item onClick={this.saveDiagram}> Save</NavDropdown.Item>
+        <NavDropdown title="File" id="basic-nav-dropdown">
+          <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
           <LoadDiagramModal
             show={this.state.showLoadingModal}
             close={this.closeLoadingModal}
-            diagrams={diagrams}
+            diagramIds={this.getSavedDiagrams()}
           ></LoadDiagramModal>
-          <NavDropdown.Item>
-            <Dropdown drop="right" id="basic-nav-dropdown">
-              <Dropdown.Toggle id="newDiagram">New Diagram</Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </NavDropdown.Item>
+
+          <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal}></NewDiagramModel>
         </NavDropdown>
       </>
     );
   }
 }
 
-export const FileMenu = enhance(fileMenu);
+export const FileMenu = enhance(FileMenuComponent);

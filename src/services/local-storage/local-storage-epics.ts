@@ -1,30 +1,28 @@
-import { LocalStorageActions, LocalStorageActionTypes, StoreAction, ValidateStoreAction } from './local-storage-types';
+import { LocalStorageActionTypes, StoreAction } from './local-storage-types';
 import { ApplicationState } from '../../components/store/application-state';
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
-import { filter, map, tap } from 'rxjs/operators';
-import { LocalStorageRepository } from './local-storage-repository';
+import { filter, map } from 'rxjs/operators';
+import { localStorageDiagramPrefix, localStorageLatest } from '../../constant';
+import { StopAction, StopActionType } from '../actions';
 
-export const identifierValidationEpic: Epic<Action, StoreAction, ApplicationState> = (action$, store) => {
+export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
   return action$.pipe(
-    filter((action) => action.type === LocalStorageActionTypes.VALIDATE_STORE_ACTION),
-    map((action) => action as ValidateStoreAction),
-    map((action: ValidateStoreAction) => {
-      let { identifier } = action.payload;
-      if (!identifier) {
-        const { model } = action.payload;
-        // TODO: use id generator idSequence.next()
-        identifier = `${model.type}-${store.value.idGenerator.next().value}`;
-      }
-      // check if current identifier already exists in savedState
-      // if (this.savedState.models.some((model) => model.id == identifier)) {
-      //   // TODO: give the user the option to override the current model or choose a new identifier
-      // }
-
-      const modifiedAction = { ...action };
-      modifiedAction.payload.identifier = identifier;
-      return modifiedAction;
+    filter((action) => action.type === LocalStorageActionTypes.STORE),
+    map((action) => action as StoreAction),
+    map((action: StoreAction) => {
+      let { id, title, model } = action.payload;
+      let localSaved = {
+        id,
+        title,
+        model: model,
+      };
+      localStorage.setItem(localStorageDiagramPrefix + localSaved.id, JSON.stringify(localSaved));
+      localStorage.setItem(localStorageLatest, id);
+      console.log('stored');
+      return {
+        type: StopActionType.STOP_ATION,
+      };
     }),
-    map((action: ValidateStoreAction) => LocalStorageRepository.store(action.payload.model, action.payload.identifier!)),
   );
 };

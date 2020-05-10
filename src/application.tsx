@@ -1,15 +1,17 @@
 import React from 'react';
 import { ApplicationBarComponent } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions, UMLModel } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { createGlobalStyle } from 'styled-components';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
-import { StorageStructure, StoreAction } from './services/local-storage/local-storage-types';
+import { Diagram } from './services/local-storage/local-storage-types';
+import { localStorageDiagramPrefix, localStorageLatest } from './constant';
 import {
   ApollonEditorContext,
   ApollonEditorProvider,
 } from './components/apollon-editor-component/apollon-editor-context';
+import { uuid } from './utils/uuid';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -36,28 +38,19 @@ type State = {
 };
 
 const initialState: State = Object.freeze({
-  options: undefined as ApollonOptions | undefined,
+  model: undefined as ApollonOptions | undefined,
   editor: undefined as ApollonEditor | undefined,
 });
 
-function* idGenerator(count: number): IterableIterator<number> {
-  while (true) yield count++;
-}
-
 const getInitialStore = (): ApplicationState => {
-  const localSaved: StorageStructure = JSON.parse(window.localStorage.getItem('apollon')!);
-  let localState;
-  if (localSaved) {
-    const latestDiagram: UMLModel | null =
-      localSaved && localSaved.latest && localSaved.models.some((item) => item.id === localSaved.latest)
-        ? localSaved.models.find((item) => item.id === localSaved.latest)!.model
-        : null;
-    const generator = idGenerator(localSaved.sequence);
-    localState = { model: latestDiagram, idGenerator: generator };
+  const latestId: string | null = window.localStorage.getItem(localStorageLatest);
+  let localState: ApplicationState;
+  if (latestId) {
+    const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
+    localState = { diagram: latestDiagram };
   } else {
-    localState = { model: null, idGenerator: idGenerator(0) };
+    localState = { diagram: { id: uuid(), title: '', model: {}, lastUpdate: new Date() } };
   }
-
   return localState;
 };
 

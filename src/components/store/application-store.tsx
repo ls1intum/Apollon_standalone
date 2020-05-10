@@ -5,7 +5,6 @@ import {
   combineReducers,
   compose,
   createStore,
-  DeepPartial,
   Dispatch,
   PreloadedState,
   Reducer,
@@ -25,7 +24,7 @@ type OwnProps = PropsWithChildren<{
 type Props = OwnProps;
 
 const getInitialState = (
-  initialState: PreloadedState<ApplicationState> = { model: null },
+  initialState: PreloadedState<ApplicationState>,
 ): { store: Store<ApplicationState, Actions> } => {
   const reducer: Reducer<ApplicationState, Actions> = combineReducers<ApplicationState, Actions>(reducers);
   const epicMiddleware: EpicMiddleware<Actions, Actions, ApplicationState> = createEpicMiddleware();

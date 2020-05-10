@@ -4,5 +4,5 @@ import { ReducersMapObject } from 'redux';
 import { LocalStorageReducer } from './local-storage/local-storage-reducer';
 
 export const reducers: ReducersMapObject<ApplicationState, Actions> = {
-  model: LocalStorageReducer,
+  diagram: LocalStorageReducer
 };

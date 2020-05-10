@@ -1,6 +1,6 @@
 import { combineEpics } from 'redux-observable';
-import { identifierValidationEpic } from './local-storage/local-storage-epics';
+import { storeEpic } from './local-storage/local-storage-epics';
 
-const epics = combineEpics(identifierValidationEpic);
+const epics = combineEpics(storeEpic);
 
 export default epics;

@@ -1,6 +1,5 @@
-import {UMLModel} from "@ls1intum/apollon";
+import { Diagram } from '../../services/local-storage/local-storage-types';
 
 export interface ApplicationState {
-    model: UMLModel | null
-    idGenerator: IterableIterator<number>
+  diagram: Diagram | null;
 }

@@ -1,36 +1,27 @@
 import { Reducer } from 'redux';
-import { UMLModel } from '@ls1intum/apollon';
+import { ApollonMode, ApollonOptions } from '@ls1intum/apollon';
 import { Actions } from '../actions';
-import { LocalStorageActionTypes, StorageStructure } from './local-storage-types';
+import { Diagram, LocalStorageActionTypes } from './local-storage-types';
+import { uuid } from '../../utils/uuid';
+import { localStorageDiagramPrefix } from '../../constant';
 
-export const LocalStorageReducer: Reducer<UMLModel | null, Actions> = (state, action) => {
+export const LocalStorageReducer: Reducer<Diagram | null, Actions> = (state, action) => {
   switch (action.type) {
     case LocalStorageActionTypes.LOAD: {
       const { payload } = action;
 
-      const localSaved: StorageStructure = JSON.parse(window.localStorage.getItem('apollon')!);
-      // TODO: handle loading errors, maybe put in local-storage-saga
-
-      // find model
-      const item = localSaved.models.find((item) => item.id === payload.id);
-
-      return item ? (item.model as UMLModel) : null;
+      console.log(localStorageDiagramPrefix + payload.id);
+      const diagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + payload.id)!);
+      console.log(diagram);
+      return diagram ? diagram : null;
     }
-    case LocalStorageActionTypes.STORE: {
-      const { payload } = action;
-      const { identifier, model, sequenceNumber } = payload;
-
-      let localSaved: StorageStructure = JSON.parse(window.localStorage.getItem('apollon')!);
-      if (!localSaved) localSaved = { sequence: 1, models: [], latest: undefined };
-      if (!localSaved.models) localSaved.models = [];
-      console.log(localSaved);
-      localSaved.models.push({ id: identifier, model: model });
-      localSaved.latest = identifier;
-      if (sequenceNumber) localSaved.sequence = sequenceNumber;
-      console.log(localSaved);
-      localStorage.setItem('apollon', JSON.stringify(localSaved));
-      console.log('stored');
-      return state as UMLModel;
+    case LocalStorageActionTypes.CREATE_DIAGRAM: {
+      const diagramOptions = { type: action.payload.diagramType, model: undefined, mode: ApollonMode.Modelling };
+      return {
+        id: uuid(),
+        title: action.payload.diagramTitle,
+        model: { ...diagramOptions } as ApollonOptions,
+      };
     }
   }
 

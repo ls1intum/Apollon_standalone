@@ -1,11 +1,12 @@
 import React, { Component, ComponentClass } from 'react';
-import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions, UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import styled from 'styled-components';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import { withApollonEditor } from './with-apollon-editor';
 import { ApollonEditorContext } from './apollon-editor-context';
+import { unmountComponentAtNode } from 'react-dom';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -15,8 +16,10 @@ const ApollonContainer = styled.div`
 
 type OwnProps = {};
 
+type State = {};
+
 type StateProps = {
-  options: ApollonOptions;
+  model: ApollonOptions;
 };
 
 type DispatchProps = {};
@@ -27,28 +30,28 @@ const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     (state) => ({
-      options: {
-        model: state.model!,
-      },
+      model: { model: null, ...state.diagram?.model } as ApollonOptions,
     }),
     {},
   ),
 );
 
-class ApollonEditorComponent extends Component<Props> {
+class ApollonEditorComponent extends Component<Props, State> {
   private readonly containerRef: (element: HTMLDivElement) => void;
+  private ref?: HTMLDivElement;
+
   constructor(props: Props) {
     super(props);
     this.containerRef = (element: HTMLDivElement) => {
-      // can be ignored, its the way to initialize apollon-editior
-      console.log(this.props);
-      // tslint:disable-next-line
-      this.props.setEditor(new ApollonEditor(element, this.props.options));
+      this.ref = element;
+      if (this.ref) {
+        this.props.setEditor(new ApollonEditor(this.ref, this.props.model));
+      }
     };
   }
-
   render() {
-    return <ApollonContainer ref={this.containerRef} />;
+    // json stringify of model -> key changes when model are changed -> component is rerendered
+    return <ApollonContainer key={JSON.stringify({ ...this.props.model })} ref={this.containerRef} />;
   }
 }
 
