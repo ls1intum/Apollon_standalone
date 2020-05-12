@@ -61,9 +61,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
   }
 
   saveDiagram(): void {
-    console.log('save start');
     this.props.store(this.props.diagram!.id, this.props.diagram!.title, this.props.editor?.model!);
-    console.log('save end');
   }
 
   closeNewDiagramModal(): void {
@@ -101,7 +99,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
   render() {
     return (
       <>
-        <NavDropdown title="File" id="basic-nav-dropdown">
+        <NavDropdown title="File">
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>

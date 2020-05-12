@@ -29,7 +29,7 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
       localStorage.setItem(localStorageDiagramPrefix + localSaved.id, JSON.stringify(localSaved));
       localStorage.setItem(localStorageLatest, id);
       let localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
-      localDiagrams = localDiagrams ? localDiagrams : [];
+      localDiagrams = localDiagrams ? localDiagrams.filter((entry) => entry.id !== id) : [];
       const localDiagramEntry: LocalStorageDiagramListItem = {
         id: id,
         title: title,

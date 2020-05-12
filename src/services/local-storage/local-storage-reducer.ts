@@ -10,9 +10,7 @@ export const LocalStorageReducer: Reducer<Diagram | null, Actions> = (state, act
     case LocalStorageActionTypes.LOAD: {
       const { payload } = action;
 
-      console.log(localStorageDiagramPrefix + payload.id);
       const diagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + payload.id)!);
-      console.log(diagram);
       return diagram ? diagram : null;
     }
     case LocalStorageActionTypes.CREATE_DIAGRAM: {

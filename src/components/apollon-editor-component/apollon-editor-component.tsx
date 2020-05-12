@@ -6,10 +6,8 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import { withApollonEditor } from './with-apollon-editor';
 import { ApollonEditorContext } from './apollon-editor-context';
-import { unmountComponentAtNode } from 'react-dom';
 import { Diagram } from '../../services/local-storage/local-storage-types';
-import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
-import { Styles } from '@ls1intum/apollon/lib/components/theme/styles';
+import { LocalStorageRepository } from '../../services/local-storage/local-storage-repository';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -22,18 +20,21 @@ type OwnProps = {};
 type State = {};
 
 type StateProps = {
+  diagram: Diagram | null;
   options: ApollonOptions;
 };
 
-type DispatchProps = {};
+type DispatchProps = {
+  store: typeof LocalStorageRepository.store;
+};
 
 type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext;
 
 const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
-  connect<StateProps, DispatchProps, OwnProps, ApplicationState>((state) => {
-    console.log(state.diagram?.model);
-    return {
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+    (state) => ({
+      diagram: state.diagram,
       // merge application state to valid ApollonOptions
       options: {
         type: state.editorOptions.type,
@@ -44,8 +45,11 @@ const enhance = compose<ComponentClass<OwnProps>>(
         theme: state.editorOptions.theme,
         locale: state.editorOptions.locale,
       },
-    };
-  }, {}),
+    }),
+    {
+      store: LocalStorageRepository.store,
+    },
+  ),
 );
 
 class ApollonEditorComponent extends Component<Props, State> {
@@ -58,7 +62,9 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.ref = element;
       if (this.ref) {
         const editor = new ApollonEditor(this.ref, this.props.options);
-        editor.subscribeToModelChange(() => console.log('changed'));
+        editor.subscribeToModelChange(() =>
+          this.props.store(this.props.diagram!.id, this.props.diagram!.title, this.props.editor?.model!),
+        );
         this.props.setEditor(editor);
       }
     };
