@@ -12,8 +12,9 @@
     "postinstall": "yarn build"
   },
   "dependencies": {
-    "@ls1intum/apollon": "^2.0.14-rc.1",
+    "@ls1intum/apollon": "^2.0.14-rc.2",
     "bootstrap": "^4.4.1",
+    "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",

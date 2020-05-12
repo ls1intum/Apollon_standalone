@@ -1,5 +1,5 @@
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
-import React, { Component, ComponentClass, FormEvent, ReactPortal } from 'react';
+import { UMLDiagramType} from '@ls1intum/apollon';
+import React, { Component, ComponentClass, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, ListGroup, Modal, FormControl, InputGroup } from 'react-bootstrap';
 import { compose } from 'redux';
@@ -65,7 +65,7 @@ class NewDiagramModalComponent extends Component<Props, State> {
   };
 
   createNewDiagram() {
-    this.props.createDiagram(this.state.diagramTitle, this.state.selectedDiagramType);
+    this.props.createDiagram(this.state.diagramTitle, this.state.selectedDiagramType as UMLDiagramType);
     this.handleClose();
   }
 

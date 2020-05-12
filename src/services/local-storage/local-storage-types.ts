@@ -1,17 +1,19 @@
-import { ApollonOptions, UMLModel } from '@ls1intum/apollon';
+import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { Action } from 'redux';
-
-export type StorageStructure = {
-  latest?: string;
-  sequence: number;
-  models: Diagram[];
-};
+import { Moment } from 'moment';
 
 export type Diagram = {
   id: string;
   title: string;
-  model: UMLModel;
-  lastUpdate: Date;
+  model?: UMLModel;
+  lastUpdate: Moment;
+};
+
+export type LocalStorageDiagramListItem = {
+  id: string;
+  title: string;
+  type: UMLDiagramType;
+  lastUpdate: Moment;
 };
 
 export type LocalStorageActions = LoadAction | StoreAction | CreateDiagramAction;
@@ -47,6 +49,6 @@ export type StoreAction = Action<LocalStorageActionTypes.STORE> & StorePayload;
 export type CreateDiagramAction = Action<LocalStorageActionTypes.CREATE_DIAGRAM> & {
   payload: {
     diagramTitle: string;
-    diagramType: string;
+    diagramType: UMLDiagramType;
   };
 };

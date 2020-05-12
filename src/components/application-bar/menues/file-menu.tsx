@@ -8,8 +8,9 @@ import { withApollonEditor } from '../../apollon-editor-component/with-apollon-e
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
 import { LoadDiagramModal } from '../../modals/load-diagram-modal/load-diagram-modal';
 import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-modal';
-import { Diagram } from '../../../services/local-storage/local-storage-types';
-import { localStorageDiagramPrefix } from '../../../constant';
+import { Diagram, LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
+import { localStorageDiagramPrefix, localStorageDiagramsList } from '../../../constant';
+import moment from 'moment';
 
 type Props = {};
 
@@ -83,16 +84,19 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.setState({ showLoadingModal: true });
   }
 
-  getSavedDiagrams(): string[] {
+  getSavedDiagrams(): LocalStorageDiagramListItem[] {
     const localStorage = window.localStorage;
     const diagramKeys: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const keyName = localStorage.key(i);
-      if (keyName?.startsWith(localStorageDiagramPrefix)) {
-        diagramKeys.push(keyName.substr(localStorageDiagramPrefix.length));
-      }
-    }
-    return diagramKeys;
+    // for (let i = 0; i < localStorage.length; i++) {
+    //   const keyName = localStorage.key(i);
+    //   if (keyName?.startsWith(localStorageDiagramPrefix)) {
+    //     diagramKeys.push(keyName.substr(localStorageDiagramPrefix.length));
+    //   }
+    // }
+    const localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
+    // create full moment dates
+    localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
+    return localDiagrams ? localDiagrams : [];
   }
 
   render() {
@@ -105,7 +109,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <LoadDiagramModal
             show={this.state.showLoadingModal}
             close={this.closeLoadingModal}
-            diagramIds={this.getSavedDiagrams()}
+            diagrams={this.getSavedDiagrams()}
           ></LoadDiagramModal>
 
           <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal}></NewDiagramModel>

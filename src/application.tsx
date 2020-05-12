@@ -1,7 +1,7 @@
 import React from 'react';
 import { ApplicationBarComponent } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions, UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { createGlobalStyle } from 'styled-components';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
@@ -12,6 +12,10 @@ import {
   ApollonEditorProvider,
 } from './components/apollon-editor-component/apollon-editor-context';
 import { uuid } from './utils/uuid';
+import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
+import { DeepPartial } from 'redux';
+import { Styles } from '@ls1intum/apollon/lib/components/theme/styles';
+import moment from 'moment';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -44,14 +48,27 @@ const initialState: State = Object.freeze({
 
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
-  let localState: ApplicationState;
+  let diagram: { diagram: Diagram };
   if (latestId) {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
-    localState = { diagram: latestDiagram };
+    diagram = { diagram: latestDiagram };
   } else {
-    localState = { diagram: { id: uuid(), title: '', model: {}, lastUpdate: new Date() } };
+    diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram1', model: undefined, lastUpdate: moment() } };
   }
-  return localState;
+
+  // editor options defaults
+  const applicationState = {
+    ...diagram,
+    editorOptions: {
+      type: UMLDiagramType.ClassDiagram,
+      mode: ApollonMode.Modelling,
+      readonly: false,
+      enablePopups: false,
+      locale: Locale.en,
+    },
+  };
+
+  return applicationState;
 };
 
 const initialStore = getInitialStore();
