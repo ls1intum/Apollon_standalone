@@ -13,9 +13,8 @@ import {
 } from './components/apollon-editor-component/apollon-editor-context';
 import { uuid } from './utils/uuid';
 import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
-import { DeepPartial } from 'redux';
-import { Styles } from '@ls1intum/apollon/lib/components/theme/styles';
 import moment from 'moment';
+import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -82,6 +81,7 @@ export class Application extends React.Component<Props, State> {
   };
 
   render() {
+    const FIREFOX = /Firefox/i.test(navigator.userAgent);
     const context: ApollonEditorContext | null = this.state.editor
       ? { editor: this.state.editor, setEditor: this.setEditor }
       : { editor: undefined, setEditor: this.setEditor };
@@ -90,6 +90,7 @@ export class Application extends React.Component<Props, State> {
         <ApplicationStore initialState={initialStore}>
           <GlobalStyle />
           <ApplicationBarComponent></ApplicationBarComponent>
+          {FIREFOX && <FirefoxIncompatibilityHint></FirefoxIncompatibilityHint>}
           <ApollonEditorWrapper />
         </ApplicationStore>
       </ApollonEditorProvider>
