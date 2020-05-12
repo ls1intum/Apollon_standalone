@@ -53,7 +53,7 @@ const getInitialStore = (): ApplicationState => {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
     diagram = { diagram: latestDiagram };
   } else {
-    diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram1', model: undefined, lastUpdate: moment() } };
+    diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
   }
 
   // editor options defaults

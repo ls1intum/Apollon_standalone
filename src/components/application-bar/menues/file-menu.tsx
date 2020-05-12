@@ -86,17 +86,16 @@ class FileMenuComponent extends Component<OwnProps, State> {
 
   getSavedDiagrams(): LocalStorageDiagramListItem[] {
     const localStorage = window.localStorage;
-    const diagramKeys: string[] = [];
-    // for (let i = 0; i < localStorage.length; i++) {
-    //   const keyName = localStorage.key(i);
-    //   if (keyName?.startsWith(localStorageDiagramPrefix)) {
-    //     diagramKeys.push(keyName.substr(localStorageDiagramPrefix.length));
-    //   }
-    // }
-    const localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
+    let localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
+    localDiagrams = localDiagrams ? localDiagrams : [];
     // create full moment dates
     localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
-    return localDiagrams ? localDiagrams : [];
+    // sort desc to lastUpdate -> * -1
+    localDiagrams.sort(
+      (first: LocalStorageDiagramListItem, second: LocalStorageDiagramListItem) =>
+        (first.lastUpdate.valueOf() - second.lastUpdate.valueOf()) * -1,
+    );
+    return localDiagrams;
   }
 
   render() {

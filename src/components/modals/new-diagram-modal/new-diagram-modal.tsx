@@ -1,4 +1,4 @@
-import { UMLDiagramType} from '@ls1intum/apollon';
+import { UMLDiagramType } from '@ls1intum/apollon';
 import React, { Component, ComponentClass, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, ListGroup, Modal, FormControl, InputGroup } from 'react-bootstrap';
@@ -70,8 +70,7 @@ class NewDiagramModalComponent extends Component<Props, State> {
   }
 
   generateDiagramTitle(type: UMLDiagramType): string {
-    const id = 1;
-    return type + id;
+    return type;
   }
 
   render(): ReactPortal {

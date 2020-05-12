@@ -1,7 +1,7 @@
 import { Component, ComponentClass, ReactPortal } from 'react';
 import React from 'react';
 import { Modal, Button, ListGroup } from 'react-bootstrap';
-import { Locale, UMLModel } from '@ls1intum/apollon';
+import { Locale } from '@ls1intum/apollon';
 import { createPortal } from 'react-dom';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';
@@ -9,7 +9,7 @@ import { withApollonEditor } from '../../apollon-editor-component/with-apollon-e
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
-import { longDate } from '../../../constant';
+import { LoadDiagramItem } from './load-diagram-item';
 
 type OwnProps = {
   show: boolean;
@@ -81,7 +81,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
                   onClick={(event: any) => this.select(value.id)}
                   active={this.state.selectedDiagramId ? this.state.selectedDiagramId === value.id : false}
                 >
-                  {value.title}-{value.type}-{value.lastUpdate.locale(this.props.locale).format(longDate)}
+                  <LoadDiagramItem item={value}></LoadDiagramItem>
                 </ListGroup.Item>
               ))}
           </ListGroup>
