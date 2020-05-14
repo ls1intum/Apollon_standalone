@@ -38,6 +38,8 @@
     "copy-webpack-plugin": "5.1.1",
     "css-loader": "3.4.2",
     "ejs-loader": "0.3.5",
+    "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
+    "fork-ts-checker-webpack-plugin": "4.1.3",
     "html-webpack-plugin": "4.0.2",
     "prettier": "2.0.2",
     "style-loader": "1.1.3",
