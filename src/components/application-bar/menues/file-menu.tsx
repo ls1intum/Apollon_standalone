@@ -27,7 +27,7 @@ type DispatchProps = {
   store: typeof LocalStorageRepository.store;
 };
 
-const enhance = compose<ComponentClass<OwnProps>>(
+const enhance = compose<ComponentClass<Props>>(
   withApollonEditor,
   connect<StateProps, DispatchProps, Props, ApplicationState>(
     (state, props) => {

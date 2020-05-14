@@ -1,7 +1,7 @@
 import React from 'react';
 import { ApplicationBarComponent } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions, UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions, UMLDiagramType} from '@ls1intum/apollon';
 import { createGlobalStyle } from 'styled-components';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
@@ -62,7 +62,7 @@ const getInitialStore = (): ApplicationState => {
       type: UMLDiagramType.ClassDiagram,
       mode: ApollonMode.Modelling,
       readonly: false,
-      enablePopups: false,
+      enablePopups: true,
       locale: Locale.en,
     },
   };
@@ -81,7 +81,7 @@ export class Application extends React.Component<Props, State> {
   };
 
   render() {
-    const FIREFOX = /Firefox/i.test(navigator.userAgent);
+    const isFirefox: boolean = /Firefox/i.test(navigator.userAgent);
     const context: ApollonEditorContext | null = this.state.editor
       ? { editor: this.state.editor, setEditor: this.setEditor }
       : { editor: undefined, setEditor: this.setEditor };
@@ -90,7 +90,7 @@ export class Application extends React.Component<Props, State> {
         <ApplicationStore initialState={initialStore}>
           <GlobalStyle />
           <ApplicationBarComponent></ApplicationBarComponent>
-          {FIREFOX && <FirefoxIncompatibilityHint></FirefoxIncompatibilityHint>}
+          {isFirefox && <FirefoxIncompatibilityHint></FirefoxIncompatibilityHint>}
           <ApollonEditorWrapper />
         </ApplicationStore>
       </ApollonEditorProvider>

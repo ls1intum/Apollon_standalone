@@ -1,7 +1,6 @@
 import { Component, ComponentClass, ReactPortal } from 'react';
 import React from 'react';
-import { Modal, Button, ListGroup } from 'react-bootstrap';
-import { Locale } from '@ls1intum/apollon';
+import { Modal, Button } from 'react-bootstrap';
 import { createPortal } from 'react-dom';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';
@@ -9,7 +8,7 @@ import { withApollonEditor } from '../../apollon-editor-component/with-apollon-e
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
-import { LoadDiagramItem } from './load-diagram-item';
+import { LoadDiagramContent } from './load-diagram-content';
 
 type OwnProps = {
   show: boolean;
@@ -25,22 +24,15 @@ type DispatchProps = {
   load: typeof LocalStorageRepository.load;
 };
 
-type StateProps = {
-  locale: Locale;
-};
+type StateProps = {};
 
 type Props = StateProps & DispatchProps & OwnProps;
 
 const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
-  connect<StateProps, DispatchProps, Props, ApplicationState>(
-    (state) => ({
-      locale: state.editorOptions.locale,
-    }),
-    {
-      load: LocalStorageRepository.load,
-    },
-  ),
+  connect<StateProps, DispatchProps, Props, ApplicationState>(null, {
+    load: LocalStorageRepository.load,
+  }),
 );
 
 const getInitialState = (): State => {
@@ -72,19 +64,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
           <Modal.Title>Load Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ListGroup>
-            {this.props.diagrams &&
-              this.props.diagrams.map((value, index, array) => (
-                <ListGroup.Item
-                  key={value.id}
-                  action
-                  onClick={(event: any) => this.select(value.id)}
-                  active={this.state.selectedDiagramId ? this.state.selectedDiagramId === value.id : false}
-                >
-                  <LoadDiagramItem item={value}></LoadDiagramItem>
-                </ListGroup.Item>
-              ))}
-          </ListGroup>
+          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)}></LoadDiagramContent>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
