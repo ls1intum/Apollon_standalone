@@ -27,7 +27,7 @@ type DispatchProps = {
   store: typeof LocalStorageRepository.store;
 };
 
-const enhance = compose<ComponentClass<OwnProps>>(
+const enhance = compose<ComponentClass<Props>>(
   withApollonEditor,
   connect<StateProps, DispatchProps, Props, ApplicationState>(
     (state, props) => {
@@ -99,7 +99,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
   render() {
     return (
       <>
-        <NavDropdown title="File">
+        <NavDropdown id="file-menu-item" title="File">
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
