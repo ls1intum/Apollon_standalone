@@ -1,7 +1,7 @@
 import React from 'react';
 import { ApplicationBarComponent } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions, UMLDiagramType} from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { createGlobalStyle } from 'styled-components';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
@@ -12,9 +12,9 @@ import {
   ApollonEditorProvider,
 } from './components/apollon-editor-component/apollon-editor-context';
 import { uuid } from './utils/uuid';
-import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
 import moment from 'moment';
 import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
+import { defaultEditorOptions } from './services/editor-options/editor-options-reducer';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -55,19 +55,11 @@ const getInitialStore = (): ApplicationState => {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
   }
 
-  // editor options defaults
-  const applicationState = {
+  // initial application state
+  return {
     ...diagram,
-    editorOptions: {
-      type: UMLDiagramType.ClassDiagram,
-      mode: ApollonMode.Modelling,
-      readonly: false,
-      enablePopups: true,
-      locale: Locale.en,
-    },
+    editorOptions: defaultEditorOptions,
   };
-
-  return applicationState;
 };
 
 const initialStore = getInitialStore();
