@@ -36,7 +36,9 @@ const enhance = compose<ComponentClass<OwnProps>>(
 );
 
 const getInitialState = (): State => {
-  return {};
+  return {
+    selectedDiagramId: undefined,
+  };
 };
 
 class LoadDiagramModalComponent extends Component<Props, State> {
@@ -47,7 +49,10 @@ class LoadDiagramModalComponent extends Component<Props, State> {
     this.loadDiagram = this.loadDiagram.bind(this);
   }
 
-  handleClose = () => this.props.close();
+  handleClose = () => {
+    this.props.close();
+    this.setState(getInitialState());
+  };
 
   select = (id: string) => this.setState({ selectedDiagramId: id });
 
@@ -64,7 +69,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
           <Modal.Title>Load Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)}></LoadDiagramContent>
+          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)}/>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>

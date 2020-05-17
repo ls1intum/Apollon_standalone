@@ -50,7 +50,11 @@ class NewDiagramModalComponent extends Component<Props, State> {
     this.createNewDiagram = this.createNewDiagram.bind(this);
   }
 
-  handleClose = () => this.props.close();
+  handleClose = () => {
+    this.props.close();
+    this.setState(getInitialState());
+  };
+
   select = (diagramType: UMLDiagramType) => {
     const newState = { ...this.state, selectedDiagramType: diagramType };
     if (this.state.generatedTitle || !this.state.diagramTitle) {
