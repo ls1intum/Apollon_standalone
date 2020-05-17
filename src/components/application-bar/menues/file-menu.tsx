@@ -1,5 +1,5 @@
 import React, { Component, ComponentClass } from 'react';
-import { NavDropdown } from 'react-bootstrap';
+import { NavDropdown, Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
@@ -9,7 +9,7 @@ import { ApollonEditorContext } from '../../apollon-editor-component/apollon-edi
 import { LoadDiagramModal } from '../../modals/load-diagram-modal/load-diagram-modal';
 import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-modal';
 import { Diagram, LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
-import { localStorageDiagramPrefix, localStorageDiagramsList } from '../../../constant';
+import { localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
 import { ExportRepository } from '../../../services/export/export-repository';
 
@@ -88,10 +88,10 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.setState({ showLoadingModal: true });
   }
 
-  exportDiagram(): void {
+  exportDiagram(exportType: 'PNG' | 'SVG'): void {
     if (this.props.editor && this.props.diagram?.title) {
-      console.log('export');
-      this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+      if (exportType === 'PNG') this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+      else if (exportType === 'SVG') this.props.exportAsSVG(this.props.editor, this.props.diagram?.title);
     }
   }
 
@@ -116,7 +116,19 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
-          <NavDropdown.Item onClick={this.exportDiagram}>Export</NavDropdown.Item>
+          <Dropdown id="export-dropdown" drop="right">
+            <Dropdown.Toggle
+              id="dropdown-basic"
+              split
+              className="bg-transparent w-100 text-dark text-left pl-4 border-white d-flex align-items-center"
+            >
+              <span className="flex-grow-1">Export</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('SVG')}>As SVG</Dropdown.Item>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>As PNG</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
           <LoadDiagramModal
             show={this.state.showLoadingModal}
             close={this.closeLoadingModal}
