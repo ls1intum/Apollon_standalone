@@ -11,6 +11,7 @@ import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-moda
 import { Diagram, LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import { localStorageDiagramPrefix, localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
+import { ExportRepository } from '../../../services/export/export-repository';
 
 type Props = {};
 
@@ -25,6 +26,8 @@ type StateProps = {
 
 type DispatchProps = {
   store: typeof LocalStorageRepository.store;
+  exportAsSVG: typeof ExportRepository.exportAsSVG;
+  exportAsPNG: typeof ExportRepository.exportAsPNG;
 };
 
 const enhance = compose<ComponentClass<Props>>(
@@ -37,6 +40,8 @@ const enhance = compose<ComponentClass<Props>>(
     },
     {
       store: LocalStorageRepository.store,
+      exportAsSVG: ExportRepository.exportAsSVG,
+      exportAsPNG: ExportRepository.exportAsPNG,
     },
   ),
 );
@@ -58,6 +63,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.openNewDiagramModal = this.openNewDiagramModal.bind(this);
     this.closeNewDiagramModal = this.closeNewDiagramModal.bind(this);
     this.saveDiagram = this.saveDiagram.bind(this);
+    this.exportDiagram = this.exportDiagram.bind(this);
   }
 
   saveDiagram(): void {
@@ -82,6 +88,13 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.setState({ showLoadingModal: true });
   }
 
+  exportDiagram(): void {
+    if (this.props.editor && this.props.diagram?.title) {
+      console.log('export');
+      this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+    }
+  }
+
   getSavedDiagrams(): LocalStorageDiagramListItem[] {
     const localStorage = window.localStorage;
     let localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
@@ -103,13 +116,14 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.exportDiagram}>Export</NavDropdown.Item>
           <LoadDiagramModal
             show={this.state.showLoadingModal}
             close={this.closeLoadingModal}
             diagrams={this.getSavedDiagrams()}
-          ></LoadDiagramModal>
+          />
 
-          <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal}></NewDiagramModel>
+          <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal} />
         </NavDropdown>
       </>
     );
