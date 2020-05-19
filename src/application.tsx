@@ -15,6 +15,7 @@ import { uuid } from './utils/uuid';
 import moment from 'moment';
 import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
 import { defaultEditorOptions } from './services/editor-options/editor-options-reducer';
+import {EditorOptions} from "./services/editor-options/editor-options-types";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -48,9 +49,11 @@ const initialState: State = Object.freeze({
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
   let diagram: { diagram: Diagram };
+  let edidtorOptions: EditorOptions = defaultEditorOptions
   if (latestId) {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
     diagram = { diagram: latestDiagram };
+    edidtorOptions.type = latestDiagram.model?.type
   } else {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
   }
@@ -58,7 +61,7 @@ const getInitialStore = (): ApplicationState => {
   // initial application state
   return {
     ...diagram,
-    editorOptions: defaultEditorOptions,
+    editorOptions: edidtorOptions,
   };
 };
 
