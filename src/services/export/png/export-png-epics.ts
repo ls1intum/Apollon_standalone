@@ -9,7 +9,7 @@ import { from } from 'rxjs';
 
 export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {
   return action$.pipe(
-    filter((action) => action.type === ExportActionTypes.Export_PNG),
+    filter((action) => action.type === ExportActionTypes.EXPORT_PNG),
     map((action) => action as ExportPNGAction),
     map((action: ExportPNGAction) => {
       const apollonEditor: ApollonEditor = action.payload.editor;

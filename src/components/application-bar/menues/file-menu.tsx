@@ -12,12 +12,14 @@ import { Diagram, LocalStorageDiagramListItem } from '../../../services/local-st
 import { localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
 import { ExportRepository } from '../../../services/export/export-repository';
+import { ImportDiagramModal } from '../../modals/import-diagram-modal/import-diagram-modal';
 
 type Props = {};
 
 type State = {
   showLoadingModal: boolean;
   showNewDiagramModal: boolean;
+  showImportDiagramModal: boolean;
 };
 
 type StateProps = {
@@ -28,6 +30,7 @@ type DispatchProps = {
   store: typeof LocalStorageRepository.store;
   exportAsSVG: typeof ExportRepository.exportAsSVG;
   exportAsPNG: typeof ExportRepository.exportAsPNG;
+  exportAsJSON: typeof ExportRepository.exportAsJSON;
 };
 
 const enhance = compose<ComponentClass<Props>>(
@@ -42,6 +45,7 @@ const enhance = compose<ComponentClass<Props>>(
       store: LocalStorageRepository.store,
       exportAsSVG: ExportRepository.exportAsSVG,
       exportAsPNG: ExportRepository.exportAsPNG,
+      exportAsJSON: ExportRepository.exportAsJSON,
     },
   ),
 );
@@ -49,7 +53,7 @@ const enhance = compose<ComponentClass<Props>>(
 type OwnProps = StateProps & DispatchProps & Props & ApollonEditorContext;
 
 const getInitialState = (): State => {
-  return { showLoadingModal: false, showNewDiagramModal: false };
+  return { showLoadingModal: false, showNewDiagramModal: false, showImportDiagramModal: false };
 };
 
 //TODO: check how to title this if component gets enhanced
@@ -62,12 +66,14 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.openLoadingModal = this.openLoadingModal.bind(this);
     this.openNewDiagramModal = this.openNewDiagramModal.bind(this);
     this.closeNewDiagramModal = this.closeNewDiagramModal.bind(this);
+    this.openImportDiagramModal = this.openImportDiagramModal.bind(this);
+    this.closeImportDiagramModal = this.closeImportDiagramModal.bind(this);
     this.saveDiagram = this.saveDiagram.bind(this);
     this.exportDiagram = this.exportDiagram.bind(this);
   }
 
   saveDiagram(): void {
-    this.props.store(this.props.diagram!.id, this.props.diagram!.title, this.props.editor?.model!);
+    this.props.store(this.props.diagram!);
   }
 
   closeNewDiagramModal(): void {
@@ -84,14 +90,31 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.setState({ showLoadingModal: false });
   }
 
+  openImportDiagramModal(): void {
+    this.setState({ showImportDiagramModal: true });
+  }
+
+  closeImportDiagramModal(): void {
+    // TODO: leave modal permanent on page or craete it on click and destory after closed?
+    this.setState({ showImportDiagramModal: false });
+  }
+
   openLoadingModal(): void {
     this.setState({ showLoadingModal: true });
   }
 
-  exportDiagram(exportType: 'PNG' | 'SVG'): void {
+  exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON'): void {
     if (this.props.editor && this.props.diagram?.title) {
-      if (exportType === 'PNG') this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
-      else if (exportType === 'SVG') this.props.exportAsSVG(this.props.editor, this.props.diagram?.title);
+      switch (exportType) {
+        case 'SVG':
+          this.props.exportAsSVG(this.props.editor, this.props.diagram?.title);
+          break;
+        case 'PNG':
+          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+          break;
+        case 'JSON':
+          this.props.exportAsJSON(this.props.editor, this.props.diagram!);
+      }
     }
   }
 
@@ -116,6 +139,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.saveDiagram}>Save</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.openImportDiagramModal}>Import</NavDropdown.Item>
           <Dropdown id="export-dropdown" drop="right">
             <Dropdown.Toggle
               id="dropdown-basic"
@@ -127,6 +151,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
             <Dropdown.Menu>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('SVG')}>As SVG</Dropdown.Item>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>As PNG</Dropdown.Item>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('JSON')}>As JSON</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <LoadDiagramModal
@@ -134,8 +159,8 @@ class FileMenuComponent extends Component<OwnProps, State> {
             close={this.closeLoadingModal}
             diagrams={this.getSavedDiagrams()}
           />
-
           <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal} />
+          <ImportDiagramModal show={this.state.showImportDiagramModal} close={this.closeImportDiagramModal} />
         </NavDropdown>
       </>
     );

@@ -62,9 +62,12 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.ref = element;
       if (this.ref) {
         const editor = new ApollonEditor(this.ref, this.props.options);
-        editor.subscribeToModelChange(() =>
-          this.props.store(this.props.diagram!.id, this.props.diagram!.title, this.props.editor?.model!),
-        );
+        // TODO: remove in future library update
+        // @ts-ignore
+        editor.subscribeToModelChange((model: UMLModel) => {
+          const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
+          this.props.store(diagram);
+        });
         this.props.setEditor(editor);
       }
     };

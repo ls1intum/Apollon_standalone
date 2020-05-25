@@ -38,9 +38,7 @@ export type LoadAction = Action<LocalStorageActionTypes.LOAD> & {
 
 type StorePayload = {
   payload: {
-    id: string;
-    title: string;
-    model: UMLModel;
+    diagram: Diagram
   };
 };
 

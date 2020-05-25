@@ -37,7 +37,7 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
-  connect<StateProps, DispatchProps, Props, ApplicationState>(null, {
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {
     createDiagram: LocalStorageRepository.createDiagram,
   }),
 );
