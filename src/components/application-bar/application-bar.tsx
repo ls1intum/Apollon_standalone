@@ -8,6 +8,7 @@ import { Diagram } from '../../services/local-storage/local-storage-types';
 import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { LocalStorageRepository } from '../../services/local-storage/local-storage-repository';
+import {appVersion} from "../../application-constants";
 
 type OwnProps = {};
 
@@ -22,6 +23,12 @@ const DiagramTitle = styled.input`
   padding-left: 0.5rem;
   background-color: transparent;
   border: none;
+`;
+
+const ApplicationVersion = styled.span`
+  font-size: small;
+  color: #ccc;
+  margin-right: 10px;
 `;
 
 type DispatchProps = {
@@ -80,25 +87,25 @@ class ApplicationBarComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Navbar bg="dark" variant="dark" expand="lg" className="pb-1 pt-0">
+        <Navbar bg="dark" variant="dark" expand="lg">
           <Navbar.Brand>
-            <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />
+            <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />{' '}
+            <span className="font-weight-bold ml-2">Apollon</span>
           </Navbar.Brand>
-          <div className="d-flex flex-column">
-            <DiagramTitle
-              type="text"
-              value={this.state.diagramTitle}
-              onChange={this.changeDiagramTitlePreview}
-              onBlur={this.changeDiagramTitleApplicationState}
-            />
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <FileMenu />
-                <HelpMenu />
-              </Nav>
-            </Navbar.Collapse>
-          </div>
+          <ApplicationVersion>{appVersion}</ApplicationVersion>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <FileMenu />
+              <HelpMenu />
+              <DiagramTitle
+                type="text"
+                value={this.state.diagramTitle}
+                onChange={this.changeDiagramTitlePreview}
+                onBlur={this.changeDiagramTitleApplicationState}
+              />
+            </Nav>
+          </Navbar.Collapse>
         </Navbar>
       </>
     );
