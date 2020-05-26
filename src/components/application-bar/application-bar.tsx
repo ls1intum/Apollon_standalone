@@ -19,6 +19,7 @@ const DiagramTitle = styled.input`
   font-size: x-large;
   font-weight: bold;
   color: #fff;
+  padding-left: 0.5rem;
   background-color: transparent;
   border: none;
 `;
@@ -89,7 +90,7 @@ class ApplicationBarComponent extends Component<Props, State> {
               value={this.state.diagramTitle}
               onChange={this.changeDiagramTitlePreview}
               onBlur={this.changeDiagramTitleApplicationState}
-            ></DiagramTitle>
+            />
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
