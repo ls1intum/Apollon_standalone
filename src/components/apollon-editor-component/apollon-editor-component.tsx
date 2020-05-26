@@ -12,7 +12,6 @@ import { LocalStorageRepository } from '../../services/local-storage/local-stora
 const ApollonContainer = styled.div`
   display: flex;
   flex-grow: 2;
-  margin: 20px;
 `;
 
 type OwnProps = {};
