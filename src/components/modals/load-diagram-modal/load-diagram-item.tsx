@@ -12,7 +12,7 @@ const SubTitle = styled.span`
   color: #9e9e9e;
 `;
 
-type Props = {
+type OwnProps = {
   item: LocalStorageDiagramListItem;
 };
 
@@ -22,15 +22,15 @@ type StateProps = {
 
 type DispatchProps = {};
 
-type OwnProps = Props & StateProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProps;
 
-const enhance = connect<StateProps, DispatchProps, Props, ApplicationState>((state) => {
+const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((state) => {
   return {
     locale: state.editorOptions.locale,
   };
 });
 
-const LoadDiagramItemComponent = (props: OwnProps) => {
+const LoadDiagramItemComponent = (props: Props) => {
   return (
     <div className="d-flex justify-content-between align-items-center">
       <div>
