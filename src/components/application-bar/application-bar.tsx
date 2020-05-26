@@ -8,12 +8,12 @@ import { Diagram } from '../../services/local-storage/local-storage-types';
 import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { LocalStorageRepository } from '../../services/local-storage/local-storage-repository';
-import {appVersion} from "../../application-constants";
+import { appVersion } from '../../application-constants';
 
 type OwnProps = {};
 
 type StateProps = {
-  diagram: Diagram;
+  diagram: Diagram | null;
 };
 
 const DiagramTitle = styled.input`
@@ -41,7 +41,7 @@ type Props = OwnProps & StateProps & DispatchProps;
 const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => {
     return {
-      diagram: state.diagram!,
+      diagram: state.diagram,
     };
   },
   {
@@ -54,7 +54,7 @@ type State = { diagramTitle: string };
 
 const getInitialState = (props: Props): State => {
   return {
-    diagramTitle: props.diagram.title ? props.diagram.title : '',
+    diagramTitle: props.diagram?.title ? props.diagram.title : '',
   };
 };
 
@@ -68,7 +68,7 @@ class ApplicationBarComponent extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
-    if (prevProps.diagram.title !== this.props.diagram.title) {
+    if (this.props.diagram && prevProps.diagram?.title !== this.props.diagram?.title) {
       this.setState({ diagramTitle: this.props.diagram.title });
     }
   }
@@ -79,9 +79,11 @@ class ApplicationBarComponent extends Component<Props, State> {
   }
 
   changeDiagramTitleApplicationState(event: ChangeEvent<HTMLInputElement>) {
-    const diagram: Diagram = { ...this.props.diagram, title: this.state.diagramTitle };
-    this.props.updateDiagram(diagram);
-    this.props.store(diagram);
+    if (this.props.diagram) {
+      const diagram: Diagram = { ...this.props.diagram, title: this.state.diagramTitle };
+      this.props.updateDiagram(diagram);
+      this.props.store(diagram);
+    }
   }
 
   render() {

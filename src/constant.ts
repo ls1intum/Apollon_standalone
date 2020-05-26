@@ -8,3 +8,6 @@ export const localStorageLatest = localStoragePrefix + 'latest';
 
 // date formats
 export const longDate = 'MMMM Do YYYY, h:mm:ss a'
+
+// toast hide
+export const toastAutohideDelay = 2000

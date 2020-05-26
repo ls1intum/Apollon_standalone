@@ -68,12 +68,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.closeNewDiagramModal = this.closeNewDiagramModal.bind(this);
     this.openImportDiagramModal = this.openImportDiagramModal.bind(this);
     this.closeImportDiagramModal = this.closeImportDiagramModal.bind(this);
-    this.saveDiagram = this.saveDiagram.bind(this);
     this.exportDiagram = this.exportDiagram.bind(this);
-  }
-
-  saveDiagram(): void {
-    this.props.store(this.props.diagram!);
   }
 
   closeNewDiagramModal(): void {
@@ -113,29 +108,34 @@ class FileMenuComponent extends Component<OwnProps, State> {
           this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
           break;
         case 'JSON':
-          this.props.exportAsJSON(this.props.editor, this.props.diagram!);
+          this.props.exportAsJSON(this.props.editor, this.props.diagram);
       }
     }
   }
 
   getSavedDiagrams(): LocalStorageDiagramListItem[] {
-    const localStorage = window.localStorage;
-    let localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
-    localDiagrams = localDiagrams ? localDiagrams : [];
-    // create full moment dates
-    localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
-    // sort desc to lastUpdate -> * -1
-    localDiagrams.sort(
-      (first: LocalStorageDiagramListItem, second: LocalStorageDiagramListItem) =>
-        (first.lastUpdate.valueOf() - second.lastUpdate.valueOf()) * -1,
-    );
+    // load localStorageList
+    const localStorageDiagramList = window.localStorage.getItem(localStorageDiagramsList);
+    let localDiagrams: LocalStorageDiagramListItem[];
+    if (localStorageDiagramList) {
+      localDiagrams = JSON.parse(localStorageDiagramList);
+      // create full moment dates
+      localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
+      // sort desc to lastUpdate -> * -1
+      localDiagrams.sort(
+        (first: LocalStorageDiagramListItem, second: LocalStorageDiagramListItem) =>
+          (first.lastUpdate.valueOf() - second.lastUpdate.valueOf()) * -1,
+      );
+    } else {
+      localDiagrams = [];
+    }
     return localDiagrams;
   }
 
   render() {
     return (
       <>
-        <NavDropdown id="file-menu-item" title="File" className='pt-0, pb-0'>
+        <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0">
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openImportDiagramModal}>Import</NavDropdown.Item>

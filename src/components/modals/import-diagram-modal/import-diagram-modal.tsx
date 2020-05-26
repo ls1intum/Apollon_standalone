@@ -47,16 +47,18 @@ class ImportDiagramModalComponent extends Component<Props, State> {
 
   importDiagram() {
     if (this.state.selectedFile) {
-      new Promise((resolve: (value: string) => void) => {
-        const json = this.state.selectedFile;
-        const reader = new FileReader();
-        const diagramName = this.state.selectedFile!.name;
-        reader.onload = function (e) {
-          const target: any = e.target;
-          const data = target.result;
-          resolve(data);
-        };
-        reader.readAsText(this.state.selectedFile!);
+      new Promise((resolve: (value: string) => void, reject) => {
+        if (this.state.selectedFile) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const target: any = e.target;
+            const data = target.result;
+            resolve(data);
+          };
+          reader.readAsText(this.state.selectedFile);
+        } else {
+          reject();
+        }
       }).then((content: string) => {
         this.props.importDiagram(content);
       });

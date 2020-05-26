@@ -57,7 +57,9 @@ class LoadDiagramModalComponent extends Component<Props, State> {
   select = (id: string) => this.setState({ selectedDiagramId: id });
 
   loadDiagram = () => {
-    this.props.load(this.state.selectedDiagramId!);
+    if (this.state.selectedDiagramId){
+      this.props.load(this.state.selectedDiagramId);
+    }
     this.handleClose();
   };
 

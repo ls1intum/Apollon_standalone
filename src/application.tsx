@@ -16,23 +16,7 @@ import moment from 'moment';
 import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
 import { defaultEditorOptions } from './services/editor-options/editor-options-reducer';
 import { EditorOptions } from './services/editor-options/editor-options-types';
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-         Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  #root {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-`;
+import { ErrorPanel } from './components/error-handling/error-panel';
 
 type Props = {};
 
@@ -49,11 +33,11 @@ const initialState: State = Object.freeze({
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
   let diagram: { diagram: Diagram };
-  let edidtorOptions: EditorOptions = defaultEditorOptions;
+  let editorOptions: EditorOptions = defaultEditorOptions;
   if (latestId) {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
     diagram = { diagram: latestDiagram };
-    edidtorOptions.type = latestDiagram.model?.type;
+    editorOptions.type = latestDiagram.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
   }
@@ -61,7 +45,8 @@ const getInitialStore = (): ApplicationState => {
   // initial application state
   return {
     ...diagram,
-    editorOptions: edidtorOptions,
+    editorOptions: editorOptions,
+    errors: [],
   };
 };
 
@@ -77,15 +62,13 @@ export class Application extends React.Component<Props, State> {
 
   render() {
     const isFirefox: boolean = /Firefox/i.test(navigator.userAgent);
-    const context: ApollonEditorContext | null = this.state.editor
-      ? { editor: this.state.editor, setEditor: this.setEditor }
-      : { editor: undefined, setEditor: this.setEditor };
+    const context: ApollonEditorContext | null = { editor: this.state.editor, setEditor: this.setEditor };
     return (
       <ApollonEditorProvider value={context}>
         <ApplicationStore initialState={initialStore}>
-          <GlobalStyle />
           <ApplicationBar />
           {isFirefox && <FirefoxIncompatibilityHint></FirefoxIncompatibilityHint>}
+          <ErrorPanel />
           <ApollonEditorWrapper />
         </ApplicationStore>
       </ApollonEditorProvider>

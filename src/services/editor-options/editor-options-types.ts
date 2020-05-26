@@ -4,7 +4,7 @@ import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/edito
 import { Styles } from '@ls1intum/apollon/lib/components/theme/styles';
 
 export type EditorOptions = {
-  type?: UMLDiagramType;
+  type: UMLDiagramType;
   mode?: ApollonMode;
   readonly?: boolean;
   enablePopups?: boolean;

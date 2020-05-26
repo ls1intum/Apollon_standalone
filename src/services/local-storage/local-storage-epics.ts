@@ -7,32 +7,48 @@ import {
   StoreAction,
 } from './local-storage-types';
 import { ApplicationState } from '../../components/store/application-state';
-import { combineEpics, Epic } from 'redux-observable';
+import { combineEpics, Epic, ofType } from 'redux-observable';
 import { Action } from 'redux';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant';
 import { StopAction, StopActionType } from '../actions';
 import moment from 'moment';
 import { uuid } from '../../utils/uuid';
 import { UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
+import { ErrorActionType, LoadDiagramErrorAction } from '../error-management/error-types';
+import { ErrorRepository } from '../error-management/error-repository';
 
 export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
   return action$.pipe(
     filter((action) => action.type === LocalStorageActionTypes.STORE),
     map((action) => action as StoreAction),
     map((action: StoreAction) => {
-      let { diagram } = action.payload;
+      const { diagram } = action.payload;
+      // save diagram and update latest diagram entry
       localStorage.setItem(localStorageDiagramPrefix + diagram.id, JSON.stringify(diagram));
       localStorage.setItem(localStorageLatest, diagram.id);
-      let localDiagrams: LocalStorageDiagramListItem[] = JSON.parse(localStorage.getItem(localStorageDiagramsList)!);
-      localDiagrams = localDiagrams ? localDiagrams.filter((entry) => entry.id !== diagram.id) : [];
+
+      // new entry for local storage list
+      const type = diagram.model?.type ? diagram.model.type : store.value.editorOptions.type;
       const localDiagramEntry: LocalStorageDiagramListItem = {
         id: diagram.id,
         title: diagram.title,
-        type: diagram.model!.type,
+        type: type,
         lastUpdate: moment(),
       };
+
+      // list with diagrams in local storage
+      const localStorageListJson = localStorage.getItem(localStorageDiagramsList);
+      let localDiagrams: LocalStorageDiagramListItem[];
+      if (localStorageListJson) {
+        localDiagrams = JSON.parse(localStorageListJson);
+        // filter old value
+        localDiagrams = localDiagrams.filter((entry) => entry.id !== diagram.id);
+      } else {
+        localDiagrams = [];
+      }
+      // add new value and save
       localDiagrams.push(localDiagramEntry);
       localStorage.setItem(localStorageDiagramsList, JSON.stringify(localDiagrams));
       return { type: StopActionType.STOP_ACTION };
@@ -40,9 +56,12 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
   );
 };
 
-export const loadDiagramEpic: Epic<Action, UpdateDiagramAction | StopAction, ApplicationState> = (action$, store) => {
+export const loadDiagramEpic: Epic<Action, UpdateDiagramAction | LoadDiagramErrorAction, ApplicationState> = (
+  action$,
+  store,
+) => {
   return action$.pipe(
-    filter((action) => action.type === LocalStorageActionTypes.LOAD),
+    ofType(LocalStorageActionTypes.LOAD),
     map((action) => action as LoadAction),
     map((action: LoadAction) => {
       let { id } = action.payload;
@@ -51,10 +70,11 @@ export const loadDiagramEpic: Epic<Action, UpdateDiagramAction | StopAction, App
         const diagram: Diagram = JSON.parse(localStorageContent);
         return DiagramRepository.updateDiagram(diagram, diagram.model?.type);
       } else {
-        // TODO: Loading error
-        return {
-          type: StopActionType.STOP_ACTION,
-        };
+        return ErrorRepository.createError(
+          ErrorActionType.ERROR_LOAD_DIAGRAM,
+          'Could not load diagram',
+          `The key for diagram with id ${id} could not be found. Maybe you deleted it from your local storage?`,
+        ) as LoadDiagramErrorAction;
       }
     }),
   );
