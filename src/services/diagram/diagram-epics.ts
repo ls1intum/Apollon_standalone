@@ -20,7 +20,6 @@ export const updateDiagramEpic: Epic<Action, ChangeDiagramTypeAction | StopActio
     map((action) => action as UpdateDiagramAction),
     map((action: UpdateDiagramAction) => {
       const { diagramType } = action.payload;
-      console.log(diagramType)
       if (diagramType) {
         return {
           type: EditorOptionsActionTypes.CHANGE_DIAGRAM_TYPE,

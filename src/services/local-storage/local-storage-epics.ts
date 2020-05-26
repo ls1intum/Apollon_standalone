@@ -14,7 +14,6 @@ import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest
 import { StopAction, StopActionType } from '../actions';
 import moment from 'moment';
 import { uuid } from '../../utils/uuid';
-import { ImportActionTypes, ImportJSONAction } from '../import/import-types';
 import { UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
 
@@ -41,7 +40,7 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
   );
 };
 
-export const loadDiagramEpic: Epic<Action, ImportJSONAction | StopAction, ApplicationState> = (action$, store) => {
+export const loadDiagramEpic: Epic<Action, UpdateDiagramAction | StopAction, ApplicationState> = (action$, store) => {
   return action$.pipe(
     filter((action) => action.type === LocalStorageActionTypes.LOAD),
     map((action) => action as LoadAction),
@@ -49,12 +48,8 @@ export const loadDiagramEpic: Epic<Action, ImportJSONAction | StopAction, Applic
       let { id } = action.payload;
       const localStorageContent: string | null = window.localStorage.getItem(localStorageDiagramPrefix + id);
       if (localStorageContent) {
-        return {
-          type: ImportActionTypes.IMPORT_JSON,
-          payload: {
-            json: localStorageContent,
-          },
-        };
+        const diagram: Diagram = JSON.parse(localStorageContent);
+        return DiagramRepository.updateDiagram(diagram, diagram.model?.type);
       } else {
         // TODO: Loading error
         return {
