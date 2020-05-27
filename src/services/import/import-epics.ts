@@ -22,11 +22,14 @@ export const importEpic: Epic<
     map((action) => action as ImportJSONAction),
     mergeMap((action: ImportJSONAction) => {
       return of(action).pipe(
-        map((action: ImportJSONAction) => {
+        mergeMap((action: ImportJSONAction) => {
           const { json } = action.payload;
           const diagram: Diagram = JSON.parse(json);
           diagram.id = uuid();
-          return DiagramRepository.updateDiagram(diagram, diagram.model?.type), LocalStorageRepository.store(diagram);
+          return of(
+            DiagramRepository.updateDiagram(diagram, diagram.model?.type),
+            LocalStorageRepository.store(diagram),
+          );
         }),
         catchError((error) =>
           of(
