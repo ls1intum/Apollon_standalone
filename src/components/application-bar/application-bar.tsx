@@ -20,7 +20,7 @@ const DiagramTitle = styled.input`
   font-size: x-large;
   font-weight: bold;
   color: #fff;
-  padding-left: 0.5rem;
+  margin-left: 1rem;
   background-color: transparent;
   border: none;
 `;
