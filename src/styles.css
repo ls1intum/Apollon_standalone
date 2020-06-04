@@ -12,3 +12,7 @@ body {
     flex-direction: column;
     flex-grow: 1;
 }
+
+.apollon-editor {
+    flex-grow: 1;
+}
