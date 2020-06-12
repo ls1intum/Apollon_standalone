@@ -36,7 +36,7 @@ export const importEpic: Epic<
             ErrorRepository.createError(
               ErrorActionType.ERROR_IMPORT_DIAGRAM,
               'Import failed',
-              'Could not import selected file. Are you sure it cotnains a diagram.json?',
+              'Could not import selected file. Are you sure it contains a diagram.json?',
             ) as ImportDiagramErrorAction,
           ),
         ),
