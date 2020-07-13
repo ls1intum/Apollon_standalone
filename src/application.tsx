@@ -2,7 +2,6 @@ import React from 'react';
 import { ApplicationBar } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
 import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
-import { createGlobalStyle } from 'styled-components';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
 import { Diagram } from './services/local-storage/local-storage-types';
@@ -35,9 +34,9 @@ const getInitialStore = (): ApplicationState => {
   let diagram: { diagram: Diagram };
   let editorOptions: EditorOptions = defaultEditorOptions;
   if (latestId) {
-    const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
-    diagram = { diagram: latestDiagram };
-    editorOptions.type = latestDiagram.model?.type ? latestDiagram.model.type : editorOptions.type;
+    const latestDiagram: Diagram | null = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
+    diagram = { diagram: latestDiagram as Diagram};
+    editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
   }
@@ -67,7 +66,7 @@ export class Application extends React.Component<Props, State> {
       <ApollonEditorProvider value={context}>
         <ApplicationStore initialState={initialStore}>
           <ApplicationBar />
-          {isFirefox && <FirefoxIncompatibilityHint></FirefoxIncompatibilityHint>}
+          {isFirefox && <FirefoxIncompatibilityHint/>}
           <ErrorPanel />
           <ApollonEditorWrapper />
         </ApplicationStore>
