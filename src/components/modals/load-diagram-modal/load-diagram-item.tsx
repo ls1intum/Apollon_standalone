@@ -33,11 +33,11 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((
 const LoadDiagramItemComponent = (props: Props) => {
   return (
     <div className="d-flex justify-content-between align-items-center">
-      <div>
+      <div className="text-truncate pr-1">
         <span>{props.item.title}</span>
         <SubTitle>{props.item.type}</SubTitle>
       </div>
-      <div>
+      <div className="flex-shrink-0">
         <SubTitle>last updated:</SubTitle>
         <SubTitle>{props.item.lastUpdate.locale(props.locale).format(longDate)}</SubTitle>
       </div>
