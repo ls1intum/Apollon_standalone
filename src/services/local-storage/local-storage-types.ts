@@ -38,7 +38,7 @@ export type LoadAction = Action<LocalStorageActionTypes.LOAD> & {
 
 type StorePayload = {
   payload: {
-    diagram: Diagram
+    diagram: Diagram;
   };
 };
 

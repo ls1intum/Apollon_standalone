@@ -34,7 +34,7 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
       const localDiagramEntry: LocalStorageDiagramListItem = {
         id: diagram.id,
         title: diagram.title,
-        type: type,
+        type,
         lastUpdate: moment(),
       };
 
@@ -64,7 +64,7 @@ export const loadDiagramEpic: Epic<Action, UpdateDiagramAction | LoadDiagramErro
     ofType(LocalStorageActionTypes.LOAD),
     map((action) => action as LoadAction),
     map((action: LoadAction) => {
-      let { id } = action.payload;
+      const { id } = action.payload;
       const localStorageContent: string | null = window.localStorage.getItem(localStorageDiagramPrefix + id);
       if (localStorageContent) {
         const diagram: Diagram = JSON.parse(localStorageContent);
@@ -85,7 +85,7 @@ export const createDiagramEpic: Epic<Action, UpdateDiagramAction, ApplicationSta
     filter((action) => action.type === LocalStorageActionTypes.CREATE_DIAGRAM),
     map((action) => action as CreateDiagramAction),
     map((action: CreateDiagramAction) => {
-      let { diagramTitle, diagramType } = action.payload;
+      const { diagramTitle, diagramType } = action.payload;
       const diagram: Diagram = {
         id: uuid(),
         title: diagramTitle,

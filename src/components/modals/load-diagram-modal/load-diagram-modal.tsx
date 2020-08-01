@@ -57,7 +57,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
   select = (id: string) => this.setState({ selectedDiagramId: id });
 
   loadDiagram = () => {
-    if (this.state.selectedDiagramId){
+    if (this.state.selectedDiagramId) {
       this.props.load(this.state.selectedDiagramId);
     }
     this.handleClose();
@@ -71,7 +71,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
           <Modal.Title>Load Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)}/>
+          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>

@@ -1,13 +1,13 @@
-import { ApollonError, ErrorAction, ErrorActions, ErrorActionType } from './error-types';
+import { ErrorActionType } from './error-types';
 import { uuid } from '../../utils/uuid';
 
 export const ErrorRepository = {
   createError: (type: ErrorActionType, headerText: string, bodyText: string) => ({
-    type: type,
+    type,
     payload: {
       id: uuid(),
-      headerText: headerText,
-      bodyText: bodyText,
+      headerText,
+      bodyText,
     },
   }),
   dismissError: (errorId: string) => ({

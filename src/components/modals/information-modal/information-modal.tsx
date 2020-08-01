@@ -1,10 +1,7 @@
-import React, { ChangeEvent, Component, ComponentClass, ReactPortal } from 'react';
+import React, { Component, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, Modal, Form, ListGroup } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { ImportRepository } from '../../../services/import/import-repository';
-import { LoadDiagramItem } from '../load-diagram-modal/load-diagram-item';
+import { Button, Modal } from 'react-bootstrap';
+
 import {
   apollonLibraryRepositoryLink,
   apollonLibraryVersion,
@@ -51,14 +48,19 @@ export class InformationModal extends Component<Props, State> {
               <tr>
                 <td>Version:</td>
                 <td>
-                  <a href={apollonStandaloneRepositoryLink} target='_blank'>Apollon Standalone </a>
+                  <a href={apollonStandaloneRepositoryLink} target="_blank">
+                    Apollon Standalone{' '}
+                  </a>
                   {appVersion}
                 </td>
               </tr>
               <tr>
                 <td>Apollon Library:</td>
                 <td>
-                  <a href={apollonLibraryRepositoryLink} target='_blank'>Apollon library</a> {apollonLibraryVersion}
+                  <a href={apollonLibraryRepositoryLink} target="_blank">
+                    Apollon library
+                  </a>{' '}
+                  {apollonLibraryVersion}
                 </td>
               </tr>
             </tbody>

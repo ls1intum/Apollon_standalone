@@ -56,7 +56,7 @@ const getInitialState = (): State => {
   return { showLoadingModal: false, showNewDiagramModal: false, showImportDiagramModal: false };
 };
 
-//TODO: check how to title this if component gets enhanced
+// TODO: check how to title this if component gets enhanced
 class FileMenuComponent extends Component<OwnProps, State> {
   state = getInitialState();
 

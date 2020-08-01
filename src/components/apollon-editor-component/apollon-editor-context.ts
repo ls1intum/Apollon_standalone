@@ -3,7 +3,7 @@ import { createContext } from 'react';
 
 export type ApollonEditorContext = {
   editor?: ApollonEditor;
-  setEditor: (editor: ApollonEditor) => void
+  setEditor: (editor: ApollonEditor) => void;
 };
 
 export const {

@@ -31,7 +31,7 @@
     "@types/react": "16.9.44",
     "@types/react-bootstrap": "1.0.1",
     "@types/react-dom": "16.9.8",
-    "@types/react-redux": "7.1.9",
+    "@types/react-redux": "7.1.7",
     "@types/styled-components": "5.1.2",
     "@types/uuid": "8.0.0",
     "circular-dependency-plugin": "5.2.0",

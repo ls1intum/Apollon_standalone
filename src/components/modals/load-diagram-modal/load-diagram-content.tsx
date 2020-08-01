@@ -11,9 +11,9 @@ type Props = {
 export const LoadDiagramContent = (props: Props) => {
   const [selectedDiagramId, setSelectedDiagramId] = useState<string | undefined>(undefined);
 
-  const onSelect = (selectedDiagramId: string) => {
-    setSelectedDiagramId(selectedDiagramId);
-    props.onSelect(selectedDiagramId);
+  const onSelect = (diagramId: string) => {
+    setSelectedDiagramId(diagramId);
+    props.onSelect(diagramId);
   };
 
   if (props.diagrams && props.diagrams.length > 0) {
@@ -26,7 +26,7 @@ export const LoadDiagramContent = (props: Props) => {
             onClick={(event: any) => onSelect(value.id)}
             active={selectedDiagramId ? selectedDiagramId === value.id : false}
           >
-            <LoadDiagramItem item={value}></LoadDiagramItem>
+            <LoadDiagramItem item={value}/>
           </ListGroup.Item>
         ))}
       </ListGroup>

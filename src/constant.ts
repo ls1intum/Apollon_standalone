@@ -7,7 +7,7 @@ export const localStorageDiagramsList = localStoragePrefix + 'diagrams';
 export const localStorageLatest = localStoragePrefix + 'latest';
 
 // date formats
-export const longDate = 'MMMM Do YYYY, h:mm:ss a'
+export const longDate = 'MMMM Do YYYY, h:mm:ss a';
 
 // toast hide
-export const toastAutohideDelay = 2000
+export const toastAutohideDelay = 2000;

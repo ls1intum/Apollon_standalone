@@ -24,7 +24,7 @@ function ErrorPanelComponent(props: Props) {
   return (
     <>
       {props.errors.map((error, index) => (
-        <ErrorMessage error={error} onClose={(error: ApollonError) => props.dismissError(error.id)} key={index} />
+        <ErrorMessage error={error} onClose={(apollonError: ApollonError) => props.dismissError(apollonError.id)} key={index} />
       ))}
     </>
   );

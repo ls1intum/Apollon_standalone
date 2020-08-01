@@ -1,7 +1,7 @@
 import React, { Component, ComponentClass } from 'react';
-import { ApollonEditor, ApollonOptions, UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonOptions, UMLModel } from '@ls1intum/apollon';
 import styled from 'styled-components';
-import { compose, DeepPartial } from 'redux';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import { withApollonEditor } from './with-apollon-editor';

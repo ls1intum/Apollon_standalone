@@ -34,8 +34,10 @@ const getInitialStore = (): ApplicationState => {
   let diagram: { diagram: Diagram };
   let editorOptions: EditorOptions = defaultEditorOptions;
   if (latestId) {
-    const latestDiagram: Diagram | null = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
-    diagram = { diagram: latestDiagram as Diagram};
+    const latestDiagram: Diagram | null = JSON.parse(
+      window.localStorage.getItem(localStorageDiagramPrefix + latestId)!,
+    );
+    diagram = { diagram: latestDiagram as Diagram };
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
@@ -66,7 +68,7 @@ export class Application extends React.Component<Props, State> {
       <ApollonEditorProvider value={context}>
         <ApplicationStore initialState={initialStore}>
           <ApplicationBar />
-          {isFirefox && <FirefoxIncompatibilityHint/>}
+          {isFirefox && <FirefoxIncompatibilityHint />}
           <ErrorPanel />
           <ApollonEditorWrapper />
         </ApplicationStore>

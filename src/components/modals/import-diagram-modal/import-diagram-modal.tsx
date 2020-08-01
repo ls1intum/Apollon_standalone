@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, ComponentClass, ReactPortal } from 'react';
+import React, { ChangeEvent, Component, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -50,8 +50,8 @@ class ImportDiagramModalComponent extends Component<Props, State> {
       new Promise((resolve: (value: string) => void, reject) => {
         if (this.state.selectedFile) {
           const reader = new FileReader();
-          reader.onload = function (e) {
-            const target: any = e.target;
+          reader.onload = (event) => {
+            const target: any = event.target;
             const data = target.result;
             resolve(data);
           };
