@@ -213,10 +213,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@ls1intum/apollon@2.1.16":
-  version "2.1.16"
-  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.1.16.tgz#bf3dad31526b1963cd1c39163345331cf6c1e0e7"
-  integrity sha512-A6VhZsIz3cFwhkDcWDin/llANp9zvpesAJTcilQPTYkq91dK5S8saPjT+RxTBoRFIOdSNG57AmWblT8CmrsxmA==
+"@ls1intum/apollon@2.1.17":
+  version "2.1.17"
+  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.1.17.tgz#05c4a5cf0132585a10be4cf6622b94ff6415f240"
+  integrity sha512-B65lmhQ3abFgJTTYbac6vy4sfhrw6zdAoiMFpMiL8kM9Vujledw/wTokR5+2IKVIVwp6SX2fUem0QbrEIFrfwA==
   dependencies:
     pepjs "0.5.2"
     react "16.13.1"
