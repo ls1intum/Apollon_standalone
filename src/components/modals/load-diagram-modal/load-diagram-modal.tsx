@@ -47,6 +47,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.loadDiagram = this.loadDiagram.bind(this);
+    this.select = this.select.bind(this)
   }
 
   handleClose = () => {
@@ -71,7 +72,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
           <Modal.Title>Load Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select.bind(this)} />
+          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>

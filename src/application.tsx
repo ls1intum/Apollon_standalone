@@ -32,7 +32,7 @@ const initialState: State = Object.freeze({
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
   let diagram: { diagram: Diagram };
-  let editorOptions: EditorOptions = defaultEditorOptions;
+  const editorOptions: EditorOptions = defaultEditorOptions;
   if (latestId) {
     const latestDiagram: Diagram | null = JSON.parse(
       window.localStorage.getItem(localStorageDiagramPrefix + latestId)!,
@@ -46,7 +46,7 @@ const getInitialStore = (): ApplicationState => {
   // initial application state
   return {
     ...diagram,
-    editorOptions: editorOptions,
+    editorOptions,
     errors: [],
   };
 };
