@@ -67,7 +67,14 @@ module.exports = {
       template: './src/index.html',
       xhtml: true,
     }),
-    new CopyPlugin([{ from: 'assets', to: outputDir }]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'assets',
+          to: outputDir,
+        },
+      ],
+    }),
     new webpack.HashedModuleIdsPlugin(),
   ],
 };
