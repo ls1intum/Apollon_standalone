@@ -1,7 +1,7 @@
 import { UMLDiagramType } from '@ls1intum/apollon';
 import React, { Component, ComponentClass, ReactPortal } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, ListGroup, Modal, FormControl, InputGroup } from 'react-bootstrap';
+import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { connect } from 'react-redux';
@@ -42,6 +42,8 @@ const enhance = compose<ComponentClass<OwnProps>>(
   }),
 );
 
+const diagramsInBeta = [UMLDiagramType.PetriNet.valueOf()];
+
 class NewDiagramModalComponent extends Component<Props, State> {
   state = getInitialState();
 
@@ -58,8 +60,7 @@ class NewDiagramModalComponent extends Component<Props, State> {
   select = (diagramType: UMLDiagramType) => {
     const newState = { ...this.state, selectedDiagramType: diagramType };
     if (this.state.generatedTitle || !this.state.diagramTitle) {
-      const diagramTitle = this.generateDiagramTitle(diagramType);
-      newState.diagramTitle = diagramTitle;
+      newState.diagramTitle = this.generateDiagramTitle(diagramType);
       newState.generatedTitle = true;
     }
     this.setState(newState);
@@ -99,6 +100,11 @@ class NewDiagramModalComponent extends Component<Props, State> {
                 active={this.state.selectedDiagramType ? this.state.selectedDiagramType === value : false}
               >
                 {value}
+                {diagramsInBeta.includes(value) && (
+                  <Badge className="ml-1" variant="secondary">
+                    Beta
+                  </Badge>
+                )}
               </ListGroup.Item>
             ))}
           </ListGroup>
