@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --config ./webpack/webpack.dev.js",
