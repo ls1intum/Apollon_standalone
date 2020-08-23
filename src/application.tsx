@@ -4,7 +4,6 @@ import { ApollonEditorWrapper } from './components/apollon-editor-component/apol
 import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
-import { Diagram } from './services/local-storage/local-storage-types';
 import { localStorageDiagramPrefix, localStorageLatest } from './constant';
 import {
   ApollonEditorContext,
@@ -16,6 +15,7 @@ import { FirefoxIncompatibilityHint } from './components/incompatability-hints/f
 import { defaultEditorOptions } from './services/editor-options/editor-options-reducer';
 import { EditorOptions } from './services/editor-options/editor-options-types';
 import { ErrorPanel } from './components/error-handling/error-panel';
+import { Diagram } from './services/diagram/diagram-types';
 
 type Props = {};
 
@@ -34,10 +34,8 @@ const getInitialStore = (): ApplicationState => {
   let diagram: { diagram: Diagram };
   const editorOptions: EditorOptions = defaultEditorOptions;
   if (latestId) {
-    const latestDiagram: Diagram | null = JSON.parse(
-      window.localStorage.getItem(localStorageDiagramPrefix + latestId)!,
-    );
-    diagram = { diagram: latestDiagram as Diagram };
+    const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
+    diagram = { diagram: latestDiagram };
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
     diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };

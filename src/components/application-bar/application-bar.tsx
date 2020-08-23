@@ -4,11 +4,10 @@ import { FileMenu } from './menues/file-menu';
 import { HelpMenu } from './menues/help-menu';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
-import { Diagram } from '../../services/local-storage/local-storage-types';
 import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
-import { LocalStorageRepository } from '../../services/local-storage/local-storage-repository';
 import { appVersion } from '../../application-constants';
+import { Diagram } from '../../services/diagram/diagram-types';
 
 type OwnProps = {};
 
@@ -33,7 +32,6 @@ const ApplicationVersion = styled.span`
 
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
-  store: typeof LocalStorageRepository.store;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -46,7 +44,6 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   },
   {
     updateDiagram: DiagramRepository.updateDiagram,
-    store: LocalStorageRepository.store,
   },
 );
 
@@ -80,9 +77,7 @@ class ApplicationBarComponent extends Component<Props, State> {
 
   changeDiagramTitleApplicationState(event: ChangeEvent<HTMLInputElement>) {
     if (this.props.diagram) {
-      const diagram: Diagram = { ...this.props.diagram, title: this.state.diagramTitle };
-      this.props.updateDiagram(diagram);
-      this.props.store(diagram);
+      this.props.updateDiagram({ title: this.state.diagramTitle });
     }
   }
 

@@ -2,17 +2,18 @@ import React, { Component, ComponentClass } from 'react';
 import { NavDropdown, Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
 import { LoadDiagramModal } from '../../modals/load-diagram-modal/load-diagram-modal';
 import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-modal';
-import { Diagram, LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
+import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import { localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
 import { ExportRepository } from '../../../services/export/export-repository';
 import { ImportDiagramModal } from '../../modals/import-diagram-modal/import-diagram-modal';
+import { PatternCatalogueModal } from '../../modals/pattern-catalogue-modal/pattern-catalogue-modal';
+import { Diagram } from '../../../services/diagram/diagram-types';
 
 type Props = {};
 
@@ -20,6 +21,7 @@ type State = {
   showLoadingModal: boolean;
   showNewDiagramModal: boolean;
   showImportDiagramModal: boolean;
+  showPatternCatalogueModal: boolean;
 };
 
 type StateProps = {
@@ -27,7 +29,6 @@ type StateProps = {
 };
 
 type DispatchProps = {
-  store: typeof LocalStorageRepository.store;
   exportAsSVG: typeof ExportRepository.exportAsSVG;
   exportAsPNG: typeof ExportRepository.exportAsPNG;
   exportAsJSON: typeof ExportRepository.exportAsJSON;
@@ -42,7 +43,6 @@ const enhance = compose<ComponentClass<Props>>(
       };
     },
     {
-      store: LocalStorageRepository.store,
       exportAsSVG: ExportRepository.exportAsSVG,
       exportAsPNG: ExportRepository.exportAsPNG,
       exportAsJSON: ExportRepository.exportAsJSON,
@@ -53,7 +53,12 @@ const enhance = compose<ComponentClass<Props>>(
 type OwnProps = StateProps & DispatchProps & Props & ApollonEditorContext;
 
 const getInitialState = (): State => {
-  return { showLoadingModal: false, showNewDiagramModal: false, showImportDiagramModal: false };
+  return {
+    showLoadingModal: false,
+    showNewDiagramModal: false,
+    showImportDiagramModal: false,
+    showPatternCatalogueModal: true,
+  };
 };
 
 // TODO: check how to title this if component gets enhanced
@@ -68,16 +73,21 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.closeNewDiagramModal = this.closeNewDiagramModal.bind(this);
     this.openImportDiagramModal = this.openImportDiagramModal.bind(this);
     this.closeImportDiagramModal = this.closeImportDiagramModal.bind(this);
+    this.openPatternCatalogueModal = this.openPatternCatalogueModal.bind(this);
+    this.closePatternCatalogueModal = this.closePatternCatalogueModal.bind(this);
     this.exportDiagram = this.exportDiagram.bind(this);
   }
 
+  openNewDiagramModal(): void {
+    this.setState({ showNewDiagramModal: true });
+  }
   closeNewDiagramModal(): void {
     // TODO: leave modal permanent on page or craete it on click and destory after closed?
     this.setState({ showNewDiagramModal: false });
   }
 
-  openNewDiagramModal(): void {
-    this.setState({ showNewDiagramModal: true });
+  openLoadingModal(): void {
+    this.setState({ showLoadingModal: true });
   }
 
   closeLoadingModal(): void {
@@ -94,8 +104,13 @@ class FileMenuComponent extends Component<OwnProps, State> {
     this.setState({ showImportDiagramModal: false });
   }
 
-  openLoadingModal(): void {
-    this.setState({ showLoadingModal: true });
+  openPatternCatalogueModal(): void {
+    this.setState({ showPatternCatalogueModal: true });
+  }
+
+  closePatternCatalogueModal(): void {
+    // TODO: leave modal permanent on page or craete it on click and destory after closed?
+    this.setState({ showPatternCatalogueModal: false });
   }
 
   exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON'): void {
@@ -137,6 +152,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
       <>
         <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0">
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.openPatternCatalogueModal}>Patterns</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openImportDiagramModal}>Import</NavDropdown.Item>
           <Dropdown id="export-dropdown" drop="right">
@@ -160,6 +176,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
           />
           <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal} />
           <ImportDiagramModal show={this.state.showImportDiagramModal} close={this.closeImportDiagramModal} />
+          <PatternCatalogueModal show={this.state.showPatternCatalogueModal} close={this.closePatternCatalogueModal} />
         </NavDropdown>
       </>
     );

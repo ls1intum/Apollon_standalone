@@ -26,7 +26,7 @@ export const LoadDiagramContent = (props: Props) => {
             onClick={(event: any) => onSelect(value.id)}
             active={selectedDiagramId ? selectedDiagramId === value.id : false}
           >
-            <LoadDiagramItem item={value}/>
+            <LoadDiagramItem item={value} />
           </ListGroup.Item>
         ))}
       </ListGroup>

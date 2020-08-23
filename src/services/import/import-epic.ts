@@ -1,10 +1,10 @@
 import { Action } from 'redux';
-import { Diagram, StoreAction } from '../local-storage/local-storage-types';
+import { StoreAction } from '../local-storage/local-storage-types';
 import { ImportActionTypes, ImportJSONAction } from './import-types';
 import { Epic, ofType } from 'redux-observable';
 import { ApplicationState } from '../../components/store/application-state';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { UpdateDiagramAction } from '../diagram/diagram-types';
+import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
 import { uuid } from '../../utils/uuid';
 import { of } from 'rxjs';
@@ -27,7 +27,7 @@ export const importEpic: Epic<
           const diagram: Diagram = JSON.parse(json);
           diagram.id = uuid();
           return of(
-            DiagramRepository.updateDiagram(diagram, diagram.model?.type),
+            DiagramRepository.updateDiagram({ ...diagram, ...{ diagramType: diagram.model?.type } }),
             LocalStorageRepository.store(diagram),
           );
         }),

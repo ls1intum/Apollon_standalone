@@ -5,7 +5,7 @@ import { ApplicationState } from '../../../components/store/application-state';
 import { filter, map } from 'rxjs/operators';
 import { ExportActionTypes, ExportJSONAction } from '../export-types';
 import { ApollonEditor } from '@ls1intum/apollon';
-import { Diagram } from '../../local-storage/local-storage-types';
+import { Diagram } from '../../diagram/diagram-types';
 
 export const exportJSONEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {
   return action$.pipe(

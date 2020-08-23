@@ -1,19 +1,11 @@
-import { UMLDiagramType } from '@ls1intum/apollon';
-import { CreateDiagramAction, Diagram, LoadAction, LocalStorageActionTypes, StoreAction } from './local-storage-types';
+import { LoadAction, LocalStorageActionTypes, StoreAction } from './local-storage-types';
+import { Diagram } from '../diagram/diagram-types';
 
 export const LocalStorageRepository = {
   load: (id: string): LoadAction => ({
     type: LocalStorageActionTypes.LOAD,
     payload: {
       id,
-    },
-  }),
-
-  createDiagram: (diagramTitle: string, diagramType: UMLDiagramType): CreateDiagramAction => ({
-    type: LocalStorageActionTypes.CREATE_DIAGRAM,
-    payload: {
-      diagramType,
-      diagramTitle,
     },
   }),
 

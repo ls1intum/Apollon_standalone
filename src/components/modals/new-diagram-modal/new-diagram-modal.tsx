@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 
 type OwnProps = {
   show: boolean;
@@ -28,7 +28,7 @@ const getInitialState = (): State => {
 };
 
 type DispatchProps = {
-  createDiagram: typeof LocalStorageRepository.createDiagram;
+  createDiagram: typeof DiagramRepository.createDiagram;
 };
 
 type StateProps = {};
@@ -38,7 +38,7 @@ type Props = StateProps & DispatchProps & OwnProps;
 const enhance = compose<ComponentClass<OwnProps>>(
   withApollonEditor,
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {
-    createDiagram: LocalStorageRepository.createDiagram,
+    createDiagram: DiagramRepository.createDiagram,
   }),
 );
 

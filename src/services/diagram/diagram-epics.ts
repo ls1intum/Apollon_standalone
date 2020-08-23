@@ -1,17 +1,43 @@
-import { Epic } from 'redux-observable';
+import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
-import { ChangeDiagramTypeAction, EditorOptionsActionTypes } from '../editor-options/editor-options-types';
+import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
 import { ApplicationState } from '../../components/store/application-state';
-import { filter, map } from 'rxjs/operators';
-import { DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
-import { StopAction, StopActionType } from '../actions';
+import { filter, map, mergeMap } from 'rxjs/operators';
+import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
+import { uuid } from '../../utils/uuid';
+import moment from 'moment';
+import { DiagramRepository } from './diagram-repository';
+import { StoreAction } from '../local-storage/local-storage-types';
+import { LocalStorageRepository } from '../local-storage/local-storage-repository';
+import { of } from 'rxjs';
+import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
+
+export const createDiagramEpic: Epic<Action, UpdateDiagramAction | ChangeDiagramTypeAction, ApplicationState> = (
+  action$,
+  store,
+) => {
+  return action$.pipe(
+    filter((action) => action.type === DiagramActionTypes.CREATE_DIAGRAM),
+    map((action) => action as CreateDiagramAction),
+    mergeMap((action: CreateDiagramAction) => {
+      const { diagramTitle, diagramType, template } = action.payload;
+      const diagram: Diagram = {
+        id: uuid(),
+        title: diagramTitle,
+        model: template,
+        lastUpdate: moment(),
+      };
+      return of(DiagramRepository.updateDiagram(diagram), EditorOptionsRepository.changeDiagramType(diagramType));
+    }),
+  );
+};
 
 /**
  * side effect after Reducer for CREATE_DIAGRAM action has received message -> change diagram type of editor to new diagram
  * @param action$
  * @param store
  */
-export const updateDiagramEpic: Epic<Action, ChangeDiagramTypeAction | StopAction, ApplicationState> = (
+export const updateDiagramEpic: Epic<Action, ChangeDiagramTypeAction | StoreAction, ApplicationState> = (
   action$,
   store,
 ) => {
@@ -19,19 +45,9 @@ export const updateDiagramEpic: Epic<Action, ChangeDiagramTypeAction | StopActio
     filter((action) => action.type === DiagramActionTypes.UPDATE_DIAGRAM),
     map((action) => action as UpdateDiagramAction),
     map((action: UpdateDiagramAction) => {
-      const { diagramType } = action.payload;
-      if (diagramType) {
-        return {
-          type: EditorOptionsActionTypes.CHANGE_DIAGRAM_TYPE,
-          payload: {
-            type: diagramType,
-          },
-        };
-      } else {
-        return {
-          type: StopActionType.STOP_ACTION,
-        };
-      }
+      return LocalStorageRepository.store(store.value.diagram);
     }),
   );
 };
+
+export const diagramEpics = combineEpics(createDiagramEpic, updateDiagramEpic);

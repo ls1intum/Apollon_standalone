@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import { withApollonEditor } from './with-apollon-editor';
 import { ApollonEditorContext } from './apollon-editor-context';
-import { Diagram } from '../../services/local-storage/local-storage-types';
-import { LocalStorageRepository } from '../../services/local-storage/local-storage-repository';
+import { Diagram } from '../../services/diagram/diagram-types';
+import { DiagramRepository } from '../../services/diagram/diagram-repository';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -17,7 +17,9 @@ const ApollonContainer = styled.div`
 
 type OwnProps = {};
 
-type State = {};
+type State = {
+  forceRecreate: boolean;
+};
 
 type StateProps = {
   diagram: Diagram | null;
@@ -25,7 +27,7 @@ type StateProps = {
 };
 
 type DispatchProps = {
-  store: typeof LocalStorageRepository.store;
+  updateDiagram: typeof DiagramRepository.updateDiagram;
 };
 
 type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext;
@@ -47,12 +49,13 @@ const enhance = compose<ComponentClass<OwnProps>>(
       },
     }),
     {
-      store: LocalStorageRepository.store,
+      updateDiagram: DiagramRepository.updateDiagram,
     },
   ),
 );
 
 class ApollonEditorComponent extends Component<Props, State> {
+  state = { forceRecreate: false };
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
 
@@ -64,16 +67,32 @@ class ApollonEditorComponent extends Component<Props, State> {
         const editor = new ApollonEditor(this.ref, this.props.options);
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
-          this.props.store(diagram);
+          this.props.updateDiagram(diagram);
         });
         this.props.setEditor(editor);
+        this.setState({ forceRecreate: false });
       }
     };
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if (
+      this.props.options.model === undefined &&
+      JSON.stringify(this.props.options.model) !== JSON.stringify(prevProps.options.model)
+    ) {
+      this.setState({ forceRecreate: true });
+    }
+  }
+
   render() {
-    // json stringify of model -> key changes when model are changed -> component is rerendered
-    return <ApollonContainer key={JSON.stringify({ ...this.props.options })} ref={this.containerRef} />;
+    const { model, ...apollonOptions } = this.props.options;
+    // json stringify of apollon options, except for model -> key changes when apollon options are changed -> component is rerendered
+    return (
+      <ApollonContainer
+        key={JSON.stringify({ ...apollonOptions, ...{ forceRecreate: this.state.forceRecreate } })}
+        ref={this.containerRef}
+      />
+    );
   }
 }
 
