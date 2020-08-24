@@ -3,6 +3,7 @@ import observerModel from '../../../pattern/behavioral/observer.json';
 import commandModel from '../../../pattern/behavioral/command.json';
 import adapterModel from '../../../pattern/structural/adapter.json';
 import bridgeModel from '../../../pattern/structural/bridge.json';
+import factoryModel from '../../../pattern/creational/factory.json';
 
 export enum PatternCategory {
   CREATIONAL = 'Creational',
@@ -19,7 +20,6 @@ export enum Pattern {
   OBSERVER = 'Observer',
   // Creational patterns
   FACTORY = 'Factory',
-  BUILDER = 'Builder',
 }
 
 export const PatternToCategoryMapping: {
@@ -30,7 +30,6 @@ export const PatternToCategoryMapping: {
   [Pattern.COMMAND]: PatternCategory.BEHAVIORAL,
   [Pattern.OBSERVER]: PatternCategory.BEHAVIORAL,
   [Pattern.FACTORY]: PatternCategory.CREATIONAL,
-  [Pattern.BUILDER]: PatternCategory.CREATIONAL,
 };
 
 export const PatternToModelMapping: {
@@ -40,8 +39,7 @@ export const PatternToModelMapping: {
   [Pattern.BRIDGE]: bridgeModel as any,
   [Pattern.COMMAND]: commandModel as any,
   [Pattern.OBSERVER]: observerModel as any,
-  [Pattern.FACTORY]: observerModel as any,
-  [Pattern.BUILDER]: observerModel as any,
+  [Pattern.FACTORY]: factoryModel as any,
 };
 
 export function getPatternsForCategory(category: PatternCategory): Pattern[] {

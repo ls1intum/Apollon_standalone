@@ -1,6 +1,6 @@
-import { Reducer } from "redux";
-import { Actions } from "../actions";
-import { Diagram, DiagramActionTypes } from "./diagram-types";
+import { Reducer } from 'redux';
+import { Actions } from '../actions';
+import { Diagram, DiagramActionTypes } from './diagram-types';
 
 export const DiagramReducer: Reducer<Diagram | null, Actions> = (state, action) => {
   switch (action.type) {

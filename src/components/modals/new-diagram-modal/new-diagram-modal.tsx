@@ -123,4 +123,4 @@ class NewDiagramModalComponent extends Component<Props, State> {
   }
 }
 
-export const NewDiagramModel = enhance(NewDiagramModalComponent);
+export const NewDiagramModal = enhance(NewDiagramModalComponent);

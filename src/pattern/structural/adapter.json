@@ -1,178 +1,153 @@
 {
   "version": "2.0.0",
   "type": "ClassDiagram",
-  "size": { "width": 740, "height": 420 },
+  "size": { "width": 820, "height": 320 },
   "interactive": { "elements": [], "relationships": [] },
   "elements": [
     {
-      "id": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
-      "name": "Publisher",
+      "id": "7617e411-bc83-40ce-a865-8d6694163f61",
+      "name": "Client",
       "type": "Class",
       "owner": null,
-      "bounds": { "x": 0, "y": 0, "width": 210, "height": 130 },
-      "attributes": [],
-      "methods": [
-        "66de5d21-faf4-4bcd-98f3-121cd53fb473",
-        "4a4615fa-4afa-4216-8303-99c46166cf38",
-        "f73eed56-e48f-400c-8331-6b5e9c797cf7"
-      ]
+      "bounds": { "x": 0, "y": 0, "width": 200, "height": 100 },
+      "attributes": ["380cddbf-af90-43ba-8919-1d02460f730d"],
+      "methods": ["28f7d30d-6431-4987-8e93-c687fe500027"]
     },
     {
-      "id": "66de5d21-faf4-4bcd-98f3-121cd53fb473",
-      "name": "+ subscribe(subscriber)",
+      "id": "380cddbf-af90-43ba-8919-1d02460f730d",
+      "name": "+ adapter: Adapter",
+      "type": "ClassAttribute",
+      "owner": "7617e411-bc83-40ce-a865-8d6694163f61",
+      "bounds": { "x": 0, "y": 40, "width": 200, "height": 30 }
+    },
+    {
+      "id": "28f7d30d-6431-4987-8e93-c687fe500027",
+      "name": "+ doWork()",
       "type": "ClassMethod",
-      "owner": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
-      "bounds": { "x": 0, "y": 40, "width": 210, "height": 30 }
+      "owner": "7617e411-bc83-40ce-a865-8d6694163f61",
+      "bounds": { "x": 0, "y": 70, "width": 200, "height": 30 }
     },
     {
-      "id": "4a4615fa-4afa-4216-8303-99c46166cf38",
-      "name": "+ unsubscribe(subscriber)",
-      "type": "ClassMethod",
-      "owner": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
-      "bounds": { "x": 0, "y": 70, "width": 210, "height": 30 }
-    },
-    {
-      "id": "f73eed56-e48f-400c-8331-6b5e9c797cf7",
-      "name": "+ notify()",
-      "type": "ClassMethod",
-      "owner": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
-      "bounds": { "x": 0, "y": 100, "width": 210, "height": 30 }
-    },
-    {
-      "id": "87325a5f-3fb0-4466-af07-f5f67e6011f4",
-      "name": "Subscriber",
+      "id": "f513cc84-0286-42a9-a743-1363cad84326",
+      "name": "Adapter",
       "type": "Class",
       "owner": null,
-      "bounds": { "x": 500, "y": 0, "width": 200, "height": 70 },
+      "bounds": { "x": 390, "y": 0, "width": 200, "height": 70 },
       "attributes": [],
-      "methods": ["4e860899-5ac7-41d8-b1e7-5cb4798d609b"]
+      "methods": ["e3cb7974-e368-49a8-bf5f-f99f4d77dc2b"]
     },
     {
-      "id": "4e860899-5ac7-41d8-b1e7-5cb4798d609b",
-      "name": "+ update()",
+      "id": "e3cb7974-e368-49a8-bf5f-f99f4d77dc2b",
+      "name": "+ method()",
       "type": "ClassMethod",
-      "owner": "87325a5f-3fb0-4466-af07-f5f67e6011f4",
-      "bounds": { "x": 500, "y": 40, "width": 200, "height": 30 }
+      "owner": "f513cc84-0286-42a9-a743-1363cad84326",
+      "bounds": { "x": 390, "y": 40, "width": 200, "height": 30 }
     },
     {
-      "id": "8c1251a5-9b07-4f2a-ade7-1b4f36dde1f0",
-      "name": "ConcreteSubscriber",
+      "id": "d78e2374-743a-4aa8-8413-27ac8e8afd2d",
+      "name": "Adaptee1",
       "type": "Class",
       "owner": null,
-      "bounds": { "x": 500, "y": 250, "width": 200, "height": 70 },
+      "bounds": { "x": 210, "y": 200, "width": 200, "height": 70 },
       "attributes": [],
-      "methods": ["33c3e223-2d12-4a89-b558-340178529ffb"]
+      "methods": ["40be9b9d-f740-4b75-8a12-c4a568c7d4a5"]
     },
     {
-      "id": "33c3e223-2d12-4a89-b558-340178529ffb",
-      "name": "+ update()",
+      "id": "40be9b9d-f740-4b75-8a12-c4a568c7d4a5",
+      "name": "+ method()",
       "type": "ClassMethod",
-      "owner": "8c1251a5-9b07-4f2a-ade7-1b4f36dde1f0",
-      "bounds": { "x": 500, "y": 290, "width": 200, "height": 30 }
+      "owner": "d78e2374-743a-4aa8-8413-27ac8e8afd2d",
+      "bounds": { "x": 210, "y": 240, "width": 200, "height": 30 }
     },
     {
-      "id": "692bd322-981c-43eb-9c0d-348005d239e0",
-      "name": "ConcretePublisher",
+      "id": "85171f31-c149-4fff-ad93-4eaa89200be7",
+      "name": "AdapteeN",
       "type": "Class",
       "owner": null,
-      "bounds": { "x": 0, "y": 250, "width": 210, "height": 130 },
+      "bounds": { "x": 570, "y": 200, "width": 200, "height": 70 },
       "attributes": [],
-      "methods": [
-        "1f90a822-f621-4987-b841-7f9780355c0d",
-        "32a6f766-8bb0-4916-87e4-2da813c03171",
-        "9e560813-2ecf-4084-a6e0-03d60ab79687"
-      ]
+      "methods": ["1c119fe6-323d-4afc-bacb-5540b440d478"]
     },
     {
-      "id": "1f90a822-f621-4987-b841-7f9780355c0d",
-      "name": "+ subscribe(subscriber)",
+      "id": "1c119fe6-323d-4afc-bacb-5540b440d478",
+      "name": "+ method()",
       "type": "ClassMethod",
-      "owner": "692bd322-981c-43eb-9c0d-348005d239e0",
-      "bounds": { "x": 0, "y": 290, "width": 210, "height": 30 }
-    },
-    {
-      "id": "32a6f766-8bb0-4916-87e4-2da813c03171",
-      "name": "+ unsubscribe(subscriber)",
-      "type": "ClassMethod",
-      "owner": "692bd322-981c-43eb-9c0d-348005d239e0",
-      "bounds": { "x": 0, "y": 320, "width": 210, "height": 30 }
-    },
-    {
-      "id": "9e560813-2ecf-4084-a6e0-03d60ab79687",
-      "name": "+ notify()",
-      "type": "ClassMethod",
-      "owner": "692bd322-981c-43eb-9c0d-348005d239e0",
-      "bounds": { "x": 0, "y": 350, "width": 210, "height": 30 }
+      "owner": "85171f31-c149-4fff-ad93-4eaa89200be7",
+      "bounds": { "x": 570, "y": 240, "width": 200, "height": 30 }
     }
   ],
   "relationships": [
     {
-      "id": "8d26292b-cff8-4cc2-86dc-5c60a2043b49",
+      "id": "f99db5ff-eb7e-408b-945d-7328ce6ab8c1",
       "name": "",
       "type": "ClassInheritance",
       "owner": null,
-      "bounds": { "x": 600, "y": 70, "width": 1, "height": 180 },
+      "bounds": { "x": 490, "y": 70, "width": 180, "height": 130 },
       "path": [
-        { "x": 0, "y": 180 },
+        { "x": 180, "y": 130 },
+        { "x": 180, "y": 65 },
+        { "x": 0, "y": 65 },
         { "x": 0, "y": 0 }
       ],
       "source": {
         "direction": "Up",
-        "element": "8c1251a5-9b07-4f2a-ade7-1b4f36dde1f0",
+        "element": "85171f31-c149-4fff-ad93-4eaa89200be7",
         "multiplicity": "",
         "role": ""
       },
       "target": {
         "direction": "Down",
-        "element": "87325a5f-3fb0-4466-af07-f5f67e6011f4",
+        "element": "f513cc84-0286-42a9-a743-1363cad84326",
         "multiplicity": "",
         "role": ""
       }
     },
     {
-      "id": "805368d9-5e11-40b4-94ba-376922f27cc9",
+      "id": "ee1b6572-6784-45f9-b94b-dd9028f8a7d8",
       "name": "",
       "type": "ClassInheritance",
       "owner": null,
-      "bounds": { "x": 105, "y": 130, "width": 1, "height": 120 },
+      "bounds": { "x": 310, "y": 70, "width": 180, "height": 130 },
       "path": [
-        { "x": 0, "y": 120 },
-        { "x": 0, "y": 0 }
+        { "x": 0, "y": 130 },
+        { "x": 0, "y": 65 },
+        { "x": 180, "y": 65 },
+        { "x": 180, "y": 0 }
       ],
       "source": {
         "direction": "Up",
-        "element": "692bd322-981c-43eb-9c0d-348005d239e0",
+        "element": "d78e2374-743a-4aa8-8413-27ac8e8afd2d",
         "multiplicity": "",
         "role": ""
       },
       "target": {
         "direction": "Down",
-        "element": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
+        "element": "f513cc84-0286-42a9-a743-1363cad84326",
         "multiplicity": "",
         "role": ""
       }
     },
     {
-      "id": "7df5d9e9-b8e2-40b1-948b-eda75d183cc6",
+      "id": "8ef7f2bf-a121-429b-972d-1346d3fa5f8b",
       "name": "",
-      "type": "ClassBidirectional",
+      "type": "ClassUnidirectional",
       "owner": null,
-      "bounds": { "x": 210, "y": 35, "width": 290, "height": 1 },
+      "bounds": { "x": 200, "y": 35, "width": 190, "height": 1 },
       "path": [
         { "x": 0, "y": 0 },
-        { "x": 290, "y": 0 }
+        { "x": 190, "y": 0 }
       ],
       "source": {
         "direction": "Right",
-        "element": "16eb25ce-60f6-4b27-9f59-c11c7ca43303",
-        "multiplicity": "1",
+        "element": "7617e411-bc83-40ce-a865-8d6694163f61",
+        "multiplicity": "",
         "role": ""
       },
       "target": {
         "direction": "Left",
-        "element": "87325a5f-3fb0-4466-af07-f5f67e6011f4",
-        "multiplicity": "*",
-        "role": "oberservers"
+        "element": "f513cc84-0286-42a9-a743-1363cad84326",
+        "multiplicity": "",
+        "role": ""
       }
     }
   ],

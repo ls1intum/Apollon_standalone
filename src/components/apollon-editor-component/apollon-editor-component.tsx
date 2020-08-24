@@ -8,6 +8,7 @@ import { withApollonEditor } from './with-apollon-editor';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
+import { uuid } from '../../utils/uuid';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -17,9 +18,7 @@ const ApollonContainer = styled.div`
 
 type OwnProps = {};
 
-type State = {
-  forceRecreate: boolean;
-};
+type State = {};
 
 type StateProps = {
   diagram: Diagram | null;
@@ -55,7 +54,6 @@ const enhance = compose<ComponentClass<OwnProps>>(
 );
 
 class ApollonEditorComponent extends Component<Props, State> {
-  state = { forceRecreate: false };
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
 
@@ -75,24 +73,9 @@ class ApollonEditorComponent extends Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
-    if (
-      this.props.options.model === undefined &&
-      JSON.stringify(this.props.options.model) !== JSON.stringify(prevProps.options.model)
-    ) {
-      this.setState({ forceRecreate: true });
-    }
-  }
-
   render() {
-    const { model, ...apollonOptions } = this.props.options;
-    // json stringify of apollon options, except for model -> key changes when apollon options are changed -> component is rerendered
-    return (
-      <ApollonContainer
-        key={JSON.stringify({ ...apollonOptions, ...{ forceRecreate: this.state.forceRecreate } })}
-        ref={this.containerRef}
-      />
-    );
+    // if diagram id changes -> redraw
+    return <ApollonContainer key={this.props.diagram?.id || uuid()} ref={this.containerRef} />;
   }
 }
 

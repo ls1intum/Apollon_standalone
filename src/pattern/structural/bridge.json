@@ -31,10 +31,10 @@
     },
     {
       "id": "18264ca7-b69e-48f4-a6e0-be862bea1fe0",
-      "name": "Class",
+      "name": "Implementor",
       "type": "Class",
       "owner": null,
-      "bounds": { "x": 960, "y": 0, "width": 200, "height": 70 },
+      "bounds": { "x": 960, "y": 0, "width": 210, "height": 70 },
       "attributes": [],
       "methods": ["246da2c4-b276-4e9f-9b8f-8067f38dfbf5"]
     },
@@ -43,7 +43,7 @@
       "name": "+ operationImpl()",
       "type": "ClassMethod",
       "owner": "18264ca7-b69e-48f4-a6e0-be862bea1fe0",
-      "bounds": { "x": 960, "y": 40, "width": 200, "height": 30 }
+      "bounds": { "x": 960, "y": 40, "width": 210, "height": 30 }
     },
     {
       "id": "a9794d93-5088-41de-b4bd-d48eaef3c5e8",
@@ -79,7 +79,7 @@
     },
     {
       "id": "34fb12e8-f889-4514-8899-3df8b4e54ff3",
-      "name": "Class",
+      "name": "ConcreteImplementor1",
       "type": "Class",
       "owner": null,
       "bounds": { "x": 790, "y": 200, "width": 200, "height": 70 },
@@ -95,7 +95,7 @@
     },
     {
       "id": "cf1b7bea-b3a4-4f2f-bc5b-df515d8303d4",
-      "name": "Class",
+      "name": "ConcreteImplementor2",
       "type": "Class",
       "owner": null,
       "bounds": { "x": 1140, "y": 200, "width": 200, "height": 70 },
@@ -118,18 +118,18 @@
       "owner": null,
       "bounds": { "x": 590, "y": 35, "width": 370, "height": 1 },
       "path": [
-        { "x": 0, "y": 0 },
-        { "x": 370, "y": 0 }
+        { "x": 370, "y": 0 },
+        { "x": 0, "y": 0 }
       ],
       "source": {
-        "direction": "Right",
-        "element": "e8a6492c-ff28-44d7-9f8c-89322431eafc",
-        "multiplicity": "",
-        "role": ""
-      },
-      "target": {
         "direction": "Left",
         "element": "18264ca7-b69e-48f4-a6e0-be862bea1fe0",
+        "multiplicity": "",
+        "role": "implements"
+      },
+      "target": {
+        "direction": "Right",
+        "element": "e8a6492c-ff28-44d7-9f8c-89322431eafc",
         "multiplicity": "",
         "role": ""
       }
@@ -212,12 +212,12 @@
       "name": "",
       "type": "ClassInheritance",
       "owner": null,
-      "bounds": { "x": 890, "y": 70, "width": 170, "height": 130 },
+      "bounds": { "x": 890, "y": 70, "width": 175, "height": 130 },
       "path": [
         { "x": 0, "y": 130 },
         { "x": 0, "y": 65 },
-        { "x": 170, "y": 65 },
-        { "x": 170, "y": 0 }
+        { "x": 175, "y": 65 },
+        { "x": 175, "y": 0 }
       ],
       "source": {
         "direction": "Up",
@@ -237,10 +237,10 @@
       "name": "",
       "type": "ClassInheritance",
       "owner": null,
-      "bounds": { "x": 1060, "y": 70, "width": 180, "height": 130 },
+      "bounds": { "x": 1065, "y": 70, "width": 175, "height": 130 },
       "path": [
-        { "x": 180, "y": 130 },
-        { "x": 180, "y": 65 },
+        { "x": 175, "y": 130 },
+        { "x": 175, "y": 65 },
         { "x": 0, "y": 65 },
         { "x": 0, "y": 0 }
       ],

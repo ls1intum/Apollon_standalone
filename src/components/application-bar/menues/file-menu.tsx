@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
 import { LoadDiagramModal } from '../../modals/load-diagram-modal/load-diagram-modal';
-import { NewDiagramModel } from '../../modals/new-diagram-modal/new-diagram-modal';
+import { NewDiagramModal } from '../../modals/new-diagram-modal/new-diagram-modal';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import { localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
@@ -169,12 +169,13 @@ class FileMenuComponent extends Component<OwnProps, State> {
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('JSON')}>As JSON</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          {/* TODO: either add and remove dialogs to DOM when opened or move Modals to higher hierarchy*/}
           <LoadDiagramModal
             show={this.state.showLoadingModal}
             close={this.closeLoadingModal}
             diagrams={this.getSavedDiagrams()}
           />
-          <NewDiagramModel show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal} />
+          <NewDiagramModal show={this.state.showNewDiagramModal} close={this.closeNewDiagramModal} />
           <ImportDiagramModal show={this.state.showImportDiagramModal} close={this.closeImportDiagramModal} />
           <PatternCatalogueModal show={this.state.showPatternCatalogueModal} close={this.closePatternCatalogueModal} />
         </NavDropdown>
