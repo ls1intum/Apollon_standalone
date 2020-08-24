@@ -57,7 +57,7 @@ const getInitialState = (): State => {
     showLoadingModal: false,
     showNewDiagramModal: false,
     showImportDiagramModal: false,
-    showPatternCatalogueModal: true,
+    showPatternCatalogueModal: false,
   };
 };
 
