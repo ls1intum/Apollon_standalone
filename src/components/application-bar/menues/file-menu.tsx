@@ -152,7 +152,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
       <>
         <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0">
           <NavDropdown.Item onClick={this.openNewDiagramModal}>New</NavDropdown.Item>
-          <NavDropdown.Item onClick={this.openPatternCatalogueModal}>Patterns</NavDropdown.Item>
+          <NavDropdown.Item onClick={this.openPatternCatalogueModal}>Start from Pattern</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openLoadingModal}>Load</NavDropdown.Item>
           <NavDropdown.Item onClick={this.openImportDiagramModal}>Import</NavDropdown.Item>
           <Dropdown id="export-dropdown" drop="right">
