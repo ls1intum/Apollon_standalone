@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { appVersion } from '../../application-constants';
 import { Diagram } from '../../services/diagram/diagram-types';
+import { ViewMenu } from './menues/view-menu';
 
 type OwnProps = {};
 
@@ -94,6 +95,7 @@ class ApplicationBarComponent extends Component<Props, State> {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <FileMenu />
+              <ViewMenu />
               <HelpMenu />
               <DiagramTitle
                 type="text"

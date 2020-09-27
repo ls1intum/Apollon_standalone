@@ -1,4 +1,4 @@
-import pjson from '../package.json';
+import pjson from '../../package.json';
 
 export const appVersion = pjson.version;
 export const apollonStandaloneRepositoryLink = 'https://github.com/ls1intum/Apollon_standalone';

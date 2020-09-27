@@ -12,14 +12,21 @@ export type EditorOptions = {
   locale: Locale;
 };
 
-export type EditorOptionsActions = ChangeDiagramTypeAction;
+export type EditorOptionsActions = ChangeDiagramTypeAction | ChangeEditorModeAction;
 
 export const enum EditorOptionsActionTypes {
   CHANGE_DIAGRAM_TYPE = '@@editor-options/change_diagram_type',
+  CHANGE_EDITOR_MODE = '@@editor-options/change_editor_mode',
 }
 
 export type ChangeDiagramTypeAction = Action<EditorOptionsActionTypes.CHANGE_DIAGRAM_TYPE> & {
   payload: {
     type: UMLDiagramType;
+  };
+};
+
+export type ChangeEditorModeAction = Action<EditorOptionsActionTypes.CHANGE_EDITOR_MODE> & {
+  payload: {
+    mode: ApollonMode;
   };
 };

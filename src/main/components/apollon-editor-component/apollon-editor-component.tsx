@@ -74,8 +74,9 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   render() {
-    // if diagram id changes -> redraw
-    return <ApollonContainer key={this.props.diagram?.id || uuid()} ref={this.containerRef} />;
+    // if diagram id or editor mode changes -> redraw
+    const key = (this.props.diagram?.id || uuid()) + this.props.options.mode;
+    return <ApollonContainer key={key} ref={this.containerRef} />;
   }
 }
 

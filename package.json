@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --config ./webpack/webpack.dev.js",
@@ -8,6 +8,8 @@
     "lint": "yarn lint:ts && yarn lint:css",
     "lint:ts": "tslint --force -p tsconfig.json -c tslint.json -t stylish",
     "lint:css": "stylelint 'src/**/*.ts'",
+    "prettier:check": "prettier --check 'src/{main,tests}/**/*.{json,ts,tsx,js,jsx,css,scss,html}'",
+    "prettier:write": "prettier --write 'src/{main,tests}/**/*.{json,ts,tsx,js,jsx,css,scss,html}'",
     "update": "yarn upgrade-interactive --latest",
     "postinstall": "yarn build"
   },

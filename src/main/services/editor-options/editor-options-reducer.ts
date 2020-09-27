@@ -19,6 +19,10 @@ export const EditorOptionsReducer: Reducer<EditorOptions, Actions> = (state = de
       const type = action.payload.type as UMLDiagramType;
       return { ...state, type };
     }
+    case EditorOptionsActionTypes.CHANGE_EDITOR_MODE: {
+      const mode = action.payload.mode;
+      return { ...state, mode };
+    }
   }
 
   return state;
