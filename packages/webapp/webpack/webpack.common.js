@@ -4,7 +4,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const outputDir = path.resolve(__dirname, '../dist');
+const outputDir = path.resolve(__dirname, '../../../dist');
 
 module.exports = {
   entry: './src/main/index.tsx',
