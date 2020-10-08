@@ -35,12 +35,7 @@ export class HelpMenu extends Component<Props, State> {
       <>
         <NavDropdown id="file-menu-item" title="Help" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <NavDropdown.Item onClick={this.openInformationModal}>About Apollon</NavDropdown.Item>
-          <a
-            href={bugReportURL}
-            target="_blank"
-            style={{ color: '#212529' }}
-            className="dropdown-item"
-          >
+          <a href={bugReportURL} target="_blank" style={{ color: '#212529' }} className="dropdown-item">
             Report a Problem
           </a>
           <InformationModal show={this.state.showInformationModal} close={this.closeInformationModal} />

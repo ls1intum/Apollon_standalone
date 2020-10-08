@@ -4,7 +4,7 @@ export const FileDownloadRepository = {
   downloadFile: (file: File): FileDownloadAction => ({
     type: FileDownloadActionTypes.FILE_DOWNLOAD,
     payload: {
-      file: file,
+      file,
     },
   }),
 };

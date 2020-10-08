@@ -1,0 +1,10 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["../../tslint.json", "tslint-react"],
+  "jsRules": {},
+  "rules": {
+    "jsx-no-lambda": false,
+    "jsx-boolean-value": [true, "never"]
+  },
+  "rulesDirectory": []
+}
