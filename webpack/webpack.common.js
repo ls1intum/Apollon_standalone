@@ -7,7 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const outputDir = path.resolve(__dirname, '../dist');
 
 module.exports = {
-  entry: './src/main/index.tsx',
+  entry: './src/main/webapp/index.tsx',
   output: {
     path: outputDir,
     filename: '[name].js',
@@ -64,7 +64,7 @@ module.exports = {
   plugins: [
     new CircularDependencyPlugin({ exclude: /node_modules/ }),
     new HtmlWebpackPlugin({
-      template: './src/main/index.html',
+      template: './src/main/webapp/index.html',
       xhtml: true,
     }),
     new CopyPlugin({
