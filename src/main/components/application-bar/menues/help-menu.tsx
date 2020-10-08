@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavDropdown } from 'react-bootstrap';
 import { InformationModal } from '../../modals/information-modal/information-modal';
+import { bugReportURL } from '../../../constant';
 
 type Props = {};
 
@@ -34,6 +35,11 @@ export class HelpMenu extends Component<Props, State> {
       <>
         <NavDropdown id="file-menu-item" title="Help" style={{ paddingTop: 0, paddingBottom: 0 }}>
           <NavDropdown.Item onClick={this.openInformationModal}>About Apollon</NavDropdown.Item>
+          <NavDropdown.Item>
+            <a href={bugReportURL} onClick={(event) => window.open(bugReportURL)} style={{ color: '#212529' }}>
+              Report a Problem
+            </a>
+          </NavDropdown.Item>
           <InformationModal show={this.state.showInformationModal} close={this.closeInformationModal} />
         </NavDropdown>
       </>

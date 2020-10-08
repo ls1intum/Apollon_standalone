@@ -1,8 +1,8 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, ComponentType } from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
 import { FileMenu } from './menues/file-menu';
 import { HelpMenu } from './menues/help-menu';
-import { connect } from 'react-redux';
+import { connect, ConnectedComponent } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
@@ -111,4 +111,4 @@ class ApplicationBarComponent extends Component<Props, State> {
   }
 }
 
-export const ApplicationBar = enhance(ApplicationBarComponent);
+export const ApplicationBar: ConnectedComponent<ComponentType<Props>, OwnProps> = enhance(ApplicationBarComponent);
