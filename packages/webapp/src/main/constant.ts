@@ -7,6 +7,8 @@ declare const DEPLOYMENT_URL: string;
 const _deploymentURL = DEPLOYMENT_URL;
 export { _deploymentURL as DEPLOYMENT_URL };
 
+export const BASE_URL = `${DEPLOYMENT_URL}/api`
+
 // prefixes
 export const localStoragePrefix = 'apollon_';
 export const localStorageDiagramPrefix = localStoragePrefix + 'diagram_';

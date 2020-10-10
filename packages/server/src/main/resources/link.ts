@@ -10,6 +10,7 @@ type LinkData = {
 const serverSecret = '301e44f939178f35d1bf578d1f6b70e4';
 
 export function createLink(req: any, res: any) {
+  console.log(req.body);
   const data: LinkData = req.body;
   const diagramId = data.diagram.id;
   const hash = createHash('md5')

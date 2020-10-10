@@ -26,5 +26,5 @@ module.exports = merge(common, {
       // eslint: true,
     }),
     new ForkTsCheckerNotifierWebpackPlugin({ title: 'Apollon Standalone', excludeWarnings: false }),
-  ]
+  ],
 });

@@ -58,6 +58,10 @@ class ShareModalComponent extends Component<Props, State> {
     this.generateLink();
   };
 
+  copyLink = () => {
+    navigator.clipboard.writeText(this.state.link);
+  };
+
   render() {
     const { show } = this.props;
     return createPortal(
@@ -92,7 +96,7 @@ class ShareModalComponent extends Component<Props, State> {
           <InputGroup className="mb-3">
             <FormControl readOnly={true} value={this.state.link} />
             <InputGroup.Append className="w-25">
-              <Button variant="outline-secondary" className="w-100">
+              <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
                 Copy Link
               </Button>
             </InputGroup.Append>

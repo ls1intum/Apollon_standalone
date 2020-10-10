@@ -1,8 +1,8 @@
 import { Diagram } from '../diagram/diagram-types';
 import { DiagramAccess } from '../../../../../shared/diagram-access';
-import { DEPLOYMENT_URL } from '../../constant';
+import { BASE_URL } from '../../constant';
 
-const resourceUrl = `${DEPLOYMENT_URL}/link`;
+const resourceUrl = `${BASE_URL}/links`;
 
 export const LinkRepository = {
   generateLink: (diagram: Diagram, permission: DiagramAccess): Promise<{ link: string }> => {
@@ -13,6 +13,9 @@ export const LinkRepository = {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => response.json());
+    }).then((response) => {
+      console.log(response);
+      return response.json();
+    });
   },
 };

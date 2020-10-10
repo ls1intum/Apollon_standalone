@@ -19,13 +19,14 @@ app.use(
 
 // routes
 export const router = express.Router();
-router.post('/link', (req, res) => createLink(req, res));
-router.get('/diagram', getDiagram);
-router.get('/*', (req, res) => {
+router.post('/links', (req, res) => createLink(req, res));
+router.get('/diagrams', getDiagram);
+app.use('/api', router);
+
+app.get('/*', (req, res) => {
   console.log(__dirname);
   res.sendFile(path.resolve(`${webappPath}/index.html`));
 });
-app.use('/', router);
 
 app.listen(port, () => {
   console.log('Apollon Standalone Server listening at http://localhost:%s', port);
