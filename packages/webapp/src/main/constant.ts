@@ -1,3 +1,12 @@
+// webpack environment constants
+declare const APPLICATION_SERVER_VERSION: boolean;
+const _applicationServerVersion = APPLICATION_SERVER_VERSION;
+export { _applicationServerVersion as APPLICATION_SERVER_VERSION };
+
+declare const DEPLOYMENT_URL: string;
+const _deploymentURL = DEPLOYMENT_URL;
+export { _deploymentURL as DEPLOYMENT_URL };
+
 // prefixes
 export const localStoragePrefix = 'apollon_';
 export const localStorageDiagramPrefix = localStoragePrefix + 'diagram_';
