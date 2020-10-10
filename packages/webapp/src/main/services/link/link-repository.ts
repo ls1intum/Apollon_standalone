@@ -9,13 +9,10 @@ export const LinkRepository = {
     const body = JSON.stringify({ diagram: diagram, permission: permission });
     return fetch(resourceUrl, {
       method: 'POST',
-      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      console.log(response);
-      return response.json();
-    });
+      body: body,
+    }).then((response) => response.json());
   },
 };
