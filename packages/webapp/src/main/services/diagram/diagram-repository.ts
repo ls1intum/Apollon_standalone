@@ -17,7 +17,7 @@ export const DiagramRepository = {
       values,
     },
   }),
-  getDiagramFromServer(url: string): Promise<Diagram> {
+  getDiagramFromServer(url: string): Promise<Diagram | null> {
     const link = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
     const resourceUrl = `${BASE_URL}/diagrams/${link}`;
     return fetch(resourceUrl, {
@@ -25,6 +25,13 @@ export const DiagramRepository = {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => response.json());
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        // error occured or no diagram found
+        return null;
+      }
+    });
   },
 };

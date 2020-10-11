@@ -6,13 +6,13 @@ const resourceUrl = `${BASE_URL}/links`;
 
 export const LinkRepository = {
   generateLink: (diagram: Diagram, permission: DiagramAccess): Promise<{ link: string }> => {
-    const body = JSON.stringify({ diagram: diagram, permission: permission });
+    const body = JSON.stringify({ diagram, permission });
     return fetch(resourceUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: body,
+      body,
     }).then((response) => response.json());
   },
 };

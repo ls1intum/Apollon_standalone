@@ -16,3 +16,7 @@ body {
 .apollon-editor {
   flex-grow: 1;
 }
+
+#share-modal #permission-selection-dropdown {
+  width: 100%;
+}

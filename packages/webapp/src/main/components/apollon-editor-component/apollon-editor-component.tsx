@@ -75,9 +75,13 @@ class ApollonEditorComponent extends Component<Props, State> {
     if (DEPLOYMENT_URL) {
       // hosted with backend
       const url = window.location.href;
-      DiagramRepository.getDiagramFromServer(url).then((diagram) => {
-        this.props.updateDiagram(diagram);
-      });
+      if (url !== DEPLOYMENT_URL) {
+        DiagramRepository.getDiagramFromServer(url).then((diagram) => {
+          if (diagram) {
+            this.props.updateDiagram(diagram);
+          }
+        });
+      }
     }
   }
 
