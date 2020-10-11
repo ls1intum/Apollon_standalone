@@ -19,6 +19,9 @@ module.exports = merge(common, {
     contentBase: path.join(__dirname, 'public'),
     host: '0.0.0.0',
     port: 8888,
+    proxy: {
+      '/': 'http://localhost:3333',
+    },
   },
 
   plugins: [

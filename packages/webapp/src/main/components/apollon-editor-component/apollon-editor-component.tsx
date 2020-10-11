@@ -9,6 +9,7 @@ import { ApollonEditorContext } from './apollon-editor-context';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { uuid } from '../../utils/uuid';
+import { DEPLOYMENT_URL } from '../../constant';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -71,6 +72,13 @@ class ApollonEditorComponent extends Component<Props, State> {
         this.setState({ forceRecreate: false });
       }
     };
+    if (DEPLOYMENT_URL) {
+      // hosted with backend
+      const url = window.location.href;
+      DiagramRepository.getDiagramFromServer(url).then((diagram) => {
+        this.props.updateDiagram(diagram);
+      });
+    }
   }
 
   render() {

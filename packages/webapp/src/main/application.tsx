@@ -4,7 +4,7 @@ import { ApollonEditorWrapper } from './components/apollon-editor-component/apol
 import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
-import { BASE_URL, DEPLOYMENT_URL, localStorageDiagramPrefix, localStorageLatest } from './constant';
+import { localStorageDiagramPrefix, localStorageLatest } from './constant';
 import {
   ApollonEditorContext,
   ApollonEditorProvider,
@@ -56,12 +56,6 @@ export class Application extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    if (DEPLOYMENT_URL) {
-      // hosted with backend
-      const url = window.location.href;
-      const linkData = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
-      console.log(linkData);
-    }
   }
 
   setEditor = (ref: ApollonEditor) => {

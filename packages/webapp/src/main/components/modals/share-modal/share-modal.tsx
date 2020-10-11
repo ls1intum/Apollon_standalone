@@ -41,6 +41,7 @@ class ShareModalComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.handleClose = this.handleClose.bind(this);
+    this.generateLink();
   }
 
   handleClose = () => {
@@ -50,7 +51,6 @@ class ShareModalComponent extends Component<Props, State> {
   generateLink = async () => {
     const response = await LinkRepository.generateLink(this.props.diagram, this.state.permission);
     this.setState({ link: response.link });
-    console.log(response.link);
   };
 
   changePermission = (permission: DiagramAccess) => {
