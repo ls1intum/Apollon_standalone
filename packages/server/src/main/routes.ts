@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import { createLink } from "./resources/link";
-import { getDiagram, updateDiagram } from "./resources/diagram";
+import express, { Request } from 'express';
+import cors from 'cors';
+import { DiagramResource } from "./resources/diagram-resource";
+import { TokenCreationData, TokenResource } from "./resources/token-resource";
 
 //options for cors midddleware
 const options: cors.CorsOptions = {
@@ -11,17 +11,22 @@ const options: cors.CorsOptions = {
   preflightContinue: false,
 };
 
-export const register = ( app: express.Application ) => {
+export const register = (app: express.Application) => {
+  const diagramResource = new DiagramResource();
+  const tokenResource = new TokenResource();
   const router = express.Router();
   router.use(cors(options));
 
   // routes
-  // links
-  router.post('/links', (req, res) => createLink(req, res));
+  // tokens
+  router.get('/tokens/:value/allTokens', (req, res) =>
+    tokenResource.getAllTokensForOwnerToken(req as Request<TokenCreationData>, res),
+  );
 
   // diagrams
-  router.get('/diagrams/:link', (req, res) => getDiagram(req, res));
-  router.put('/diagrams/:link', (req, res) => updateDiagram(req, res));
+  router.get('/diagrams/:id', (req, res) => diagramResource.getDiagram(req, res));
+  router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagram(req, res));
+  router.put('/diagrams/:id', (req, res) => diagramResource.updateDiagram(req, res));
 
   app.use('/api', router);
-}
+};

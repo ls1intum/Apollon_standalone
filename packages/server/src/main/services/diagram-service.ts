@@ -1,40 +1,56 @@
-import { Diagram } from 'webapp/src/main/services/diagram/diagram-types';
-import { DiagramAccess } from '../../../../shared/diagram-access';
-import { StorageService } from './storage-service/storage-service';
-import { FileStorageService } from './storage-service/file-storage-service';
+import { DiagramPermission } from '../../../../shared/diagram-permission';
+import { TokenService } from './token-service';
+import { getRepository, Repository } from 'typeorm';
+import { Diagram } from '../entity/diagram';
+import { Token } from '../entity/token';
+import { DiagramDTO } from '../../../../shared/diagram-dto';
 
 export class DiagramService {
-  private storageService: StorageService = new FileStorageService();
+  private tokenService: TokenService = new TokenService();
+  private diagramRepository: Repository<Diagram> = getRepository(Diagram);
 
-  getDiagram(diagramId: string): Promise<Diagram> {
-    return this.storageService.getDiagram(diagramId);
+  /**
+   * publishes the diagram and generates tokens for different permissions
+   * @param diagramDTO
+   * @returns editor token which gives full right to edit and share the diagram
+   */
+  publishDiagram(diagramDTO: DiagramDTO): Promise<Token[]> {
+    const diagram: Diagram = new Diagram();
+    diagram.diagram = diagramDTO;
+    return this.diagramRepository.save(diagram).then((savedDiagram) => {
+      return this.tokenService.createTokensForPermissions(savedDiagram, DiagramPermission.EDIT);
+    });
   }
 
-  async updateOrCreateDiagram(diagram: Diagram, permission: DiagramAccess): Promise<void> {
-    try {
-      // update current diagram
-      const currentDiagram = await this.getDiagram(diagram.id);
-      const mergedDiagram = this.mergeDiagram(currentDiagram, diagram, permission);
-      return this.storageService.saveDiagram(diagram.id, mergedDiagram);
-    } catch (error) {
-      // no diagram exists -> add diagram
-      return this.storageService.saveDiagram(diagram.id, diagram);
+  getDiagramByToken(tokenValue: string): Promise<Diagram | undefined> {
+    return this.diagramRepository
+      .createQueryBuilder('diagram')
+      .leftJoin('diagram.tokens', 'token')
+      .where('token.value = :token', { token: tokenValue })
+      .getOne();
+  }
+
+  async updateDiagram(diagram: DiagramDTO, tokenValue: string): Promise<Diagram> {
+    const currentDiagram: Diagram | undefined = await this.getDiagramByToken(tokenValue);
+    if (!currentDiagram) {
+      throw Error('Cannot update diagram. No diagram for token exists');
     }
+    const token: Token = await this.tokenService.getTokenByValue(tokenValue);
+    const mergedDiagram = this.mergeDiagram(currentDiagram, diagram, token.permission);
+    return this.diagramRepository.save(mergedDiagram);
   }
 
-  mergeDiagram(existingDiagram: Diagram, updatedDiagram: Diagram, permission: DiagramAccess): Diagram {
-    let mergedDiagram: Diagram;
+  private mergeDiagram(existingDiagram: Diagram, updatedDiagram: DiagramDTO, permission: DiagramPermission): Diagram {
+    let mergedDiagram: Diagram = existingDiagram;
     switch (permission) {
-      case DiagramAccess.EDIT:
-        mergedDiagram = updatedDiagram;
-        if (mergedDiagram.model && existingDiagram.model) {
-          mergedDiagram.model.assessments = existingDiagram.model.assessments;
+      case DiagramPermission.EDIT:
+        if (mergedDiagram.diagram.model && existingDiagram.diagram.model) {
+          mergedDiagram.diagram.model.assessments = existingDiagram.diagram.model.assessments;
         }
         break;
-      case DiagramAccess.FEEDBACK:
-        mergedDiagram = existingDiagram;
-        if (mergedDiagram.model && updatedDiagram.model) {
-          mergedDiagram.model.assessments = updatedDiagram.model.assessments;
+      case DiagramPermission.FEEDBACK:
+        if (mergedDiagram.diagram.model && updatedDiagram.model) {
+          mergedDiagram.diagram.model.assessments = updatedDiagram.model.assessments;
         }
         break;
       default:

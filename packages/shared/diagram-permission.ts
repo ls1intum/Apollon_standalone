@@ -1,4 +1,4 @@
-export enum DiagramAccess {
+export enum DiagramPermission {
   FEEDBACK = 'Feedback',
   EDIT = 'Edit',
 }

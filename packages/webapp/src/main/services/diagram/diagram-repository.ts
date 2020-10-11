@@ -1,6 +1,7 @@
 import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { BASE_URL } from '../../constant';
+import { TokenDTO } from '../../../../../shared/token-dto';
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
@@ -17,9 +18,9 @@ export const DiagramRepository = {
       values,
     },
   }),
-  getDiagramFromServer(url: string): Promise<Diagram | null> {
+  getDiagramFromServerByLink(url: string): Promise<Diagram | null> {
     const link = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
-    const resourceUrl = `${BASE_URL}/diagrams/${link}`;
+    const resourceUrl = `${BASE_URL}/links/${link}/diagram/`;
     return fetch(resourceUrl, {
       method: 'GET',
       headers: {
@@ -31,6 +32,58 @@ export const DiagramRepository = {
       } else {
         // error occured or no diagram found
         return null;
+      }
+    });
+  },
+  getDiagramFromServerByDiagramId(diagramId: string): Promise<Diagram | null> {
+    const resourceUrl = `${BASE_URL}/diagrams/${diagramId}`;
+    return fetch(resourceUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        // error occured or no diagram found
+        return null;
+      }
+    });
+  },
+  publishDiagramOnServer(diagram: Diagram): Promise<TokenDTO[]> {
+    const resourceUrl = `${BASE_URL}/diagrams/publish`;
+    const body = JSON.stringify(diagram);
+    return fetch(resourceUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response: Response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        // error occured or no diagram found
+        throw Error('Publish of diagram failed');
+      }
+    });
+  },
+  updateDiagramOnServer(diagram: Diagram): Promise<void> {
+    const resourceUrl = `${BASE_URL}/diagrams/${diagram.id}`;
+    const body = JSON.stringify(diagram);
+    return fetch(resourceUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response) => {
+      if (response.ok) {
+        return;
+      } else {
+        // error occured or no diagram found
+        throw Error('Update of diagram on server failed');
       }
     });
   },

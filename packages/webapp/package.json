@@ -7,11 +7,11 @@
     "lint": "yarn lint:ts && yarn lint:css",
     "lint:ts": "tslint --force -p tsconfig.json -c tslint.json -t stylish",
     "lint:css": "stylelint 'src/**/*.ts'",
-    "build": "rm -rf dist && webpack --config ./webpack/webpack.prod.js",
+    "build": "rm -rf ../../dist && webpack --config ./webpack/webpack.prod.js",
     "postinstall": "yarn build"
   },
   "dependencies": {
-    "@ls1intum/apollon": "2.2.0",
+    "@ls1intum/apollon": "2.2.1",
     "bootstrap": "4.5.2",
     "moment": "2.29.1",
     "react": "16.13.1",

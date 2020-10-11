@@ -10,6 +10,7 @@ import { Diagram } from '../../services/diagram/diagram-types';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { uuid } from '../../utils/uuid';
 import { DEPLOYMENT_URL } from '../../constant';
+import { ImportRepository } from '../../services/import/import-repository';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -28,6 +29,7 @@ type StateProps = {
 
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
+  importDiagram: typeof ImportRepository.importJSON;
 };
 
 type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext;
@@ -50,6 +52,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
+      importDiagram: ImportRepository.importJSON,
     },
   ),
 );
@@ -76,9 +79,11 @@ class ApollonEditorComponent extends Component<Props, State> {
       // hosted with backend
       const url = window.location.href;
       if (url !== DEPLOYMENT_URL) {
-        DiagramRepository.getDiagramFromServer(url).then((diagram) => {
+        // this check fails in development setting because webpack dev server url !== deployment url
+        DiagramRepository.getDiagramFromServerByLink(url).then((diagram) => {
           if (diagram) {
-            this.props.updateDiagram(diagram);
+            console.log(diagram.model?.type);
+            this.props.importDiagram(JSON.stringify(diagram));
           }
         });
       }
