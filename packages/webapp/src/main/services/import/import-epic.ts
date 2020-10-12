@@ -1,5 +1,4 @@
 import { Action } from 'redux';
-import { StoreAction } from '../local-storage/local-storage-types';
 import { ImportActionTypes, ImportJSONAction } from './import-types';
 import { Epic, ofType } from 'redux-observable';
 import { ApplicationState } from '../../components/store/application-state';
@@ -10,10 +9,12 @@ import { uuid } from '../../utils/uuid';
 import { of } from 'rxjs';
 import { ErrorRepository } from '../error-management/error-repository';
 import { ErrorActionType, ImportDiagramErrorAction } from '../error-management/error-types';
+import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
+import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
 
 export const importEpic: Epic<
   Action,
-  UpdateDiagramAction | StoreAction | ImportDiagramErrorAction,
+  UpdateDiagramAction | ChangeDiagramTypeAction | ImportDiagramErrorAction,
   ApplicationState
 > = (action$, store) => {
   return action$.pipe(
@@ -25,7 +26,10 @@ export const importEpic: Epic<
           const { json } = importAction.payload;
           const diagram: Diagram = JSON.parse(json);
           diagram.id = uuid();
-          return of(DiagramRepository.updateDiagram({ ...diagram, ...{ diagramType: diagram.model?.type } }));
+          return of(
+            DiagramRepository.updateDiagram({ ...diagram, ...{ diagramType: diagram.model?.type } }),
+            EditorOptionsRepository.changeDiagramType(diagram.model!.type),
+          );
         }),
         catchError((error) =>
           of(

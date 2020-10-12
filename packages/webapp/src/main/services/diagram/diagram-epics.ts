@@ -37,10 +37,7 @@ export const createDiagramEpic: Epic<Action, UpdateDiagramAction | ChangeDiagram
  * @param action$
  * @param store
  */
-export const updateDiagramEpic: Epic<Action, ChangeDiagramTypeAction | StoreAction, ApplicationState> = (
-  action$,
-  store,
-) => {
+export const updateDiagramEpic: Epic<Action, StoreAction, ApplicationState> = (action$, store) => {
   return action$.pipe(
     filter((action) => action.type === DiagramActionTypes.UPDATE_DIAGRAM),
     map((action) => action as UpdateDiagramAction),

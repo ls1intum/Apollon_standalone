@@ -66,7 +66,6 @@ class ApollonEditorComponent extends Component<Props, State> {
     this.containerRef = (element: HTMLDivElement) => {
       this.ref = element;
       if (this.ref) {
-        console.log(this.props.options);
         const editor = new ApollonEditor(this.ref, this.props.options);
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
@@ -91,7 +90,7 @@ class ApollonEditorComponent extends Component<Props, State> {
 
   render() {
     // if diagram id or editor mode changes -> redraw
-    const key = (this.props.diagram?.id || uuid()) + this.props.options.mode;
+    const key = (this.props.diagram?.id || uuid()) + this.props.options.mode + this.props.options.type;
     return <ApollonContainer key={key} ref={this.containerRef} />;
   }
 }
