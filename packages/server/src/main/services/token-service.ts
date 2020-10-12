@@ -4,8 +4,6 @@ import { Diagram } from '../entity/diagram';
 import { getRepository, Repository } from 'typeorm';
 import { Token } from '../entity/token';
 
-const serverSecret = '301e44f939178f35d1bf578d1f6b70e4';
-
 export class TokenService {
   private tokenRepository: Repository<Token>;
 
@@ -17,7 +15,7 @@ export class TokenService {
    * @param diagram
    * @param permissions
    */
-  createTokensForPermissions(diagram: Diagram, ...permissions: [DiagramPermission]): Promise<Token[]> {
+  createTokensForPermissions(diagram: Diagram, ...permissions: DiagramPermission[]): Promise<Token[]> {
     if (!permissions) {
       throw Error('You have to specify permissions if you want to create tokens');
     }
@@ -31,8 +29,9 @@ export class TokenService {
     const token = new Token();
     token.diagram = diagram;
     token.permission = permission;
+    const randomString = Math.random().toString(36);
     const value = createHash('md5')
-      .update(serverSecret + permission)
+      .update(randomString + permission)
       .digest('hex');
     token.value = value;
     return token;
@@ -44,6 +43,7 @@ export class TokenService {
   }
 
   async getTokensForOwnerToken(ownerToken: string): Promise<Token[]> {
+    // TODO: get all tokens
     return this.tokenRepository
       .createQueryBuilder('token')
       .leftJoin('token.diagram', 'diagram')

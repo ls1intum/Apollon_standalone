@@ -5,7 +5,7 @@ const resourceUrl = `${BASE_URL}/tokens`;
 
 export const TokenRepository = {
   getTokensForOwnerToken: (ownerToken: string): Promise<TokenDTO[]> => {
-    const url = `${resourceUrl}/${ownerToken}/tokens`;
+    const url = `${resourceUrl}/${ownerToken}/allTokens`;
     return fetch(url, {
       method: 'GET',
       headers: {

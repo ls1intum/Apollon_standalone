@@ -19,14 +19,14 @@ export const register = (app: express.Application) => {
 
   // routes
   // tokens
-  router.get('/tokens/:value/allTokens', (req, res) =>
+  router.get('/tokens/:ownerToken/allTokens', (req, res) =>
     tokenResource.getAllTokensForOwnerToken(req as Request<TokenCreationData>, res),
   );
 
   // diagrams
-  router.get('/diagrams/:id', (req, res) => diagramResource.getDiagram(req, res));
+  router.get('/diagrams/:token', (req, res) => diagramResource.getDiagram(req, res));
   router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagram(req, res));
-  router.put('/diagrams/:id', (req, res) => diagramResource.updateDiagram(req, res));
+  router.put('/diagrams/:token', (req, res) => diagramResource.updateDiagram(req, res));
 
   app.use('/api', router);
 };

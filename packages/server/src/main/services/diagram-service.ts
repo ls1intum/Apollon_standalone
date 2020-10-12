@@ -18,7 +18,11 @@ export class DiagramService {
     const diagram: Diagram = new Diagram();
     diagram.diagram = diagramDTO;
     return this.diagramRepository.save(diagram).then((savedDiagram) => {
-      return this.tokenService.createTokensForPermissions(savedDiagram, DiagramPermission.EDIT);
+      return this.tokenService.createTokensForPermissions(
+        savedDiagram,
+        DiagramPermission.EDIT,
+        DiagramPermission.FEEDBACK,
+      );
     });
   }
 

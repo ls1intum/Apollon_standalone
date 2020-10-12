@@ -7,8 +7,9 @@ import { Diagram } from '../../../services/diagram/diagram-types';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { DEPLOYMENT_URL } from '../../../constant';
+import { DEPLOYMENT_URL, localStorageDiagramPrefix } from '../../../constant';
 import { TokenDTO } from '../../../../../../shared/token-dto';
+import { isArray } from 'rxjs/internal-compatibility';
 
 type OwnProps = {
   show: boolean;
@@ -39,23 +40,18 @@ const getInitialState = () => {
 
 type State = typeof getInitialState;
 
+function getOwnerTokenLocalStorageKey(diagramId: string): string {
+  return `${localStorageDiagramPrefix}${diagramId}_owner_token`;
+}
+
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
   constructor(props: Props) {
     super(props);
     this.handleClose = this.handleClose.bind(this);
-    // this check fails in development setting because webpack dev server url !== deployment url
-    DiagramRepository.getDiagramFromServerByLink(DEPLOYMENT_URL).then((diagram) => {
-      if (!diagram) {
-        this.setState({ diagramExistsOnServer: false });
-      } else {
-        this.setState({
-          diagramExistsOnServer: true,
-          diagramSynchronizedWithServer: diagram.lastUpdate === this.props.diagram.lastUpdate,
-        });
-      }
-    });
+    //  TODO: get diagram tokens with owner token for share link
+    this.loadTokens();
   }
 
   handleClose = () => {
@@ -64,7 +60,11 @@ class ShareModalComponent extends Component<Props, State> {
 
   getLinkForPermission = (permission: DiagramPermission) => {
     const tokenForPermission = this.state.tokens.find((token) => token.permission === permission)!;
-    return `${DEPLOYMENT_URL}/${tokenForPermission.value}`;
+    if (!tokenForPermission) {
+      return '';
+    } else {
+      return `${DEPLOYMENT_URL}/${tokenForPermission.value}`;
+    }
   };
 
   changePermission = (permission: DiagramPermission) => {
@@ -72,20 +72,25 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   copyLink = () => {
-    // TODO
-    // navigator.clipboard.writeText(this.state.link);
+    const link = this.getLinkForPermission(this.state.permission);
+    navigator.clipboard.writeText(link);
   };
 
   publishDiagram = () => {
     DiagramRepository.publishDiagramOnServer(this.props.diagram)
       .then((tokens: TokenDTO[]) => {
         this.setState({ diagramExistsOnServer: true, tokens });
+        const ownerToken = this.getOwnerToken();
+        const key = getOwnerTokenLocalStorageKey(this.props.diagram.id);
+        // owner token must be present after we published the diagram
+        localStorage.setItem(key, JSON.stringify(ownerToken));
       })
       .catch((error) => console.error(error));
   };
 
   async loadTokens() {
-    if (!this.state.tokens) {
+    console.log(!this.state.tokens);
+    if (isArray(this.state.tokens) && this.state.tokens.length === 0) {
       const ownerToken = this.getOwnerToken();
       if (!ownerToken) {
         throw Error('You cannot share the diagram, you are not the owner');
@@ -101,8 +106,10 @@ class ShareModalComponent extends Component<Props, State> {
       ownerToken = this.state.tokens.find((token) => token.permission === DiagramPermission.EDIT);
     }
     if (!ownerToken) {
-      // TODO: look in local storage
-      // ownerToken = new TokenDTO(DiagramPermission.EDIT, 'test');
+      const storedOwnerToken = localStorage.getItem(getOwnerTokenLocalStorageKey(this.props.diagram.id));
+      if (storedOwnerToken) {
+        ownerToken = JSON.parse(storedOwnerToken);
+      }
     }
     return ownerToken;
   }

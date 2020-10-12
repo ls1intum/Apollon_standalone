@@ -81,8 +81,8 @@ class ApollonEditorComponent extends Component<Props, State> {
       if (url !== DEPLOYMENT_URL) {
         // this check fails in development setting because webpack dev server url !== deployment url
         DiagramRepository.getDiagramFromServerByLink(url).then((diagram) => {
+          console.log(diagram);
           if (diagram) {
-            console.log(diagram.model?.type);
             this.props.importDiagram(JSON.stringify(diagram));
           }
         });

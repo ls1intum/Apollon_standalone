@@ -2,6 +2,7 @@ import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction }
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { BASE_URL } from '../../constant';
 import { TokenDTO } from '../../../../../shared/token-dto';
+import { DiagramDTO } from "../../../../../shared/diagram-dto";
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
@@ -18,25 +19,9 @@ export const DiagramRepository = {
       values,
     },
   }),
-  getDiagramFromServerByLink(url: string): Promise<Diagram | null> {
-    const link = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
-    const resourceUrl = `${BASE_URL}/links/${link}/diagram/`;
-    return fetch(resourceUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        // error occured or no diagram found
-        return null;
-      }
-    });
-  },
-  getDiagramFromServerByDiagramId(diagramId: string): Promise<Diagram | null> {
-    const resourceUrl = `${BASE_URL}/diagrams/${diagramId}`;
+  getDiagramFromServerByLink(url: string): Promise<DiagramDTO | null> {
+    const token = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
+    const resourceUrl = `${BASE_URL}/diagrams/${token}`;
     return fetch(resourceUrl, {
       method: 'GET',
       headers: {

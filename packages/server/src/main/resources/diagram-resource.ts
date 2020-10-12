@@ -10,17 +10,17 @@ export class DiagramResource {
   diagramService = new DiagramService();
 
   getDiagram = (req: any, res: any) => {
-    const tokenValue = req.params.link;
+    const tokenValue = req.params.token;
     this.diagramService
       .getDiagramByToken(tokenValue)
       .then((diagram: Diagram | undefined) => {
         if (diagram) {
-          res.json(diagram);
+          res.json(diagram.diagram);
         } else {
           res.status(404).send('Diagram not found');
         }
       })
-      .catch(() => res.status(404).send('Not found'));
+      .catch(() => res.status(503).send('Error occurred'));
   };
 
   publishDiagram = (req: any, res: any) => {

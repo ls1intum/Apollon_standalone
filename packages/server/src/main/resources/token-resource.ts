@@ -11,7 +11,7 @@ export class TokenResource {
   tokenService = new TokenService();
 
   async getAllTokensForOwnerToken(req: Request<TokenCreationData>, res: any) {
-    const ownerToken = req.body.ownerToken;
+    const ownerToken = req.params.ownerToken;
 
     const token = await this.tokenService.getTokenByValue(ownerToken);
     if (token.permission !== DiagramPermission.EDIT) {
