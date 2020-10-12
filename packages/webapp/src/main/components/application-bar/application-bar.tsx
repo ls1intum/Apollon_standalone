@@ -104,6 +104,12 @@ class ApplicationBarComponent extends Component<Props, State> {
             <Nav className="mr-auto">
               <FileMenu />
               <ViewMenu />
+              {APPLICATION_SERVER_VERSION && (
+                <Nav.Item>
+                  <Nav.Link onClick={(event: any) => this.setState({ showShareModal: true })}>Share</Nav.Link>
+                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal} />
+                </Nav.Item>
+              )}
               <HelpMenu />
               <DiagramTitle
                 type="text"
@@ -111,12 +117,6 @@ class ApplicationBarComponent extends Component<Props, State> {
                 onChange={this.changeDiagramTitlePreview}
                 onBlur={this.changeDiagramTitleApplicationState}
               />
-              {APPLICATION_SERVER_VERSION && (
-                <>
-                  <button onClick={(event) => this.setState({ showShareModal: true })}>Share</button>
-                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal} />
-                </>
-              )}
             </Nav>
           </Navbar.Collapse>
         </Navbar>

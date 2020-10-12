@@ -8,7 +8,6 @@ import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
 import { uuid } from '../../utils/uuid';
 import { of } from 'rxjs';
-import { LocalStorageRepository } from '../local-storage/local-storage-repository';
 import { ErrorRepository } from '../error-management/error-repository';
 import { ErrorActionType, ImportDiagramErrorAction } from '../error-management/error-types';
 
@@ -26,10 +25,7 @@ export const importEpic: Epic<
           const { json } = importAction.payload;
           const diagram: Diagram = JSON.parse(json);
           diagram.id = uuid();
-          return of(
-            DiagramRepository.updateDiagram({ ...diagram, ...{ diagramType: diagram.model?.type } }),
-            LocalStorageRepository.store(diagram),
-          );
+          return of(DiagramRepository.updateDiagram({ ...diagram, ...{ diagramType: diagram.model?.type } }));
         }),
         catchError((error) =>
           of(

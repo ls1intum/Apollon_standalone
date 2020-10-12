@@ -66,13 +66,13 @@ class ApollonEditorComponent extends Component<Props, State> {
     this.containerRef = (element: HTMLDivElement) => {
       this.ref = element;
       if (this.ref) {
+        console.log(this.props.options);
         const editor = new ApollonEditor(this.ref, this.props.options);
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           this.props.updateDiagram(diagram);
         });
         this.props.setEditor(editor);
-        this.setState({ forceRecreate: false });
       }
     };
     if (DEPLOYMENT_URL) {
@@ -81,7 +81,6 @@ class ApollonEditorComponent extends Component<Props, State> {
       if (url !== DEPLOYMENT_URL) {
         // this check fails in development setting because webpack dev server url !== deployment url
         DiagramRepository.getDiagramFromServerByLink(url).then((diagram) => {
-          console.log(diagram);
           if (diagram) {
             this.props.importDiagram(JSON.stringify(diagram));
           }

@@ -53,6 +53,12 @@ class ShareModalComponent extends Component<Props, State> {
     this.loadTokens();
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
+    if (prevProps.diagram.id !== this.props.diagram.id) {
+      this.setState(getInitialState());
+    }
+  }
+
   handleClose = () => {
     this.props.close();
   };
@@ -95,7 +101,6 @@ class ShareModalComponent extends Component<Props, State> {
       }
       const tokens = await TokenRepository.getTokensForOwnerToken(ownerToken.value);
       this.setState({ tokens });
-      console.log(tokens);
     }
   }
 

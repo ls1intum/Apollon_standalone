@@ -22,8 +22,12 @@ type Props = {};
 type State = {
   options?: ApollonOptions;
   editor?: ApollonEditor;
-  initialApplicationState: ApplicationState;
 };
+
+const initialState: State = Object.freeze({
+  model: undefined as ApollonOptions | undefined,
+  editor: undefined as ApollonEditor | undefined,
+});
 
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
@@ -45,19 +49,10 @@ const getInitialStore = (): ApplicationState => {
   };
 };
 
-const initialState: State = Object.freeze({
-  model: undefined as ApollonOptions | undefined,
-  editor: undefined as ApollonEditor | undefined,
-  initialApplicationState: getInitialStore(),
-});
+const initialStore = getInitialStore();
 
 export class Application extends React.Component<Props, State> {
   state = initialState;
-
-  constructor(props: Props) {
-    super(props);
-  }
-
   setEditor = (ref: ApollonEditor) => {
     if (ref) {
       this.setState({ editor: ref });
@@ -69,7 +64,7 @@ export class Application extends React.Component<Props, State> {
     const context: ApollonEditorContext | null = { editor: this.state.editor, setEditor: this.setEditor };
     return (
       <ApollonEditorProvider value={context}>
-        <ApplicationStore initialState={this.state.initialApplicationState}>
+        <ApplicationStore initialState={initialStore}>
           <ApplicationBar />
           {isFirefox && <FirefoxIncompatibilityHint />}
           <ErrorPanel />
