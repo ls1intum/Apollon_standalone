@@ -1,7 +1,7 @@
 import express, { Request } from 'express';
 import cors from 'cors';
-import { DiagramResource } from "./resources/diagram-resource";
-import { TokenCreationData, TokenResource } from "./resources/token-resource";
+import { DiagramResource } from './resources/diagram-resource';
+import { TokenCreationData, TokenResource } from './resources/token-resource';
 
 //options for cors midddleware
 const options: cors.CorsOptions = {

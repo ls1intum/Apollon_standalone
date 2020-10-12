@@ -20,6 +20,10 @@ export class TokenResource {
     }
 
     const allDiagramTokens = await this.tokenService.getTokensForOwnerToken(ownerToken);
+    if (!allDiagramTokens) {
+      res.status(404).send('Not found');
+      return;
+    }
     const dtos: TokenDTO[] = allDiagramTokens.map((token) => new TokenDTO(token.permission, token.value));
 
     res.json(dtos);

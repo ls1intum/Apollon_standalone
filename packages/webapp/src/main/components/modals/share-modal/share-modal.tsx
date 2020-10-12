@@ -50,7 +50,6 @@ class ShareModalComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.handleClose = this.handleClose.bind(this);
-    //  TODO: get diagram tokens with owner token for share link
     this.loadTokens();
   }
 
@@ -89,7 +88,6 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   async loadTokens() {
-    console.log(!this.state.tokens);
     if (isArray(this.state.tokens) && this.state.tokens.length === 0) {
       const ownerToken = this.getOwnerToken();
       if (!ownerToken) {
@@ -97,6 +95,7 @@ class ShareModalComponent extends Component<Props, State> {
       }
       const tokens = await TokenRepository.getTokensForOwnerToken(ownerToken.value);
       this.setState({ tokens });
+      console.log(tokens);
     }
   }
 

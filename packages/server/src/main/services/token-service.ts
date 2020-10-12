@@ -10,6 +10,7 @@ export class TokenService {
   constructor() {
     this.tokenRepository = getRepository(Token);
   }
+
   /**
    * creates tokens, one token for each permission
    * @param diagram
@@ -42,13 +43,15 @@ export class TokenService {
     return token;
   }
 
-  async getTokensForOwnerToken(ownerToken: string): Promise<Token[]> {
-    // TODO: get all tokens
+  async getTokensForOwnerToken(ownerToken: string): Promise<Token[] | undefined> {
     return this.tokenRepository
       .createQueryBuilder('token')
-      .leftJoin('token.diagram', 'diagram')
+      .leftJoinAndSelect('token.diagram', 'diagram')
       .leftJoinAndSelect('diagram.tokens', 'token1')
       .where('token.value = :tokenValue', { tokenValue: ownerToken })
-      .getMany();
+      .getOne()
+      .then((token) => {
+        return token?.diagram.tokens;
+      });
   }
 }

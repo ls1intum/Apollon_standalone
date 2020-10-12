@@ -2,7 +2,7 @@ import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction }
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { BASE_URL } from '../../constant';
 import { TokenDTO } from '../../../../../shared/token-dto';
-import { DiagramDTO } from "../../../../../shared/diagram-dto";
+import { DiagramDTO } from '../../../../../shared/diagram-dto';
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
