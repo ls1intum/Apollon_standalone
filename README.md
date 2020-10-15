@@ -39,7 +39,7 @@ build docker container
 `docker build -t apollon_standalone .`
 
 run docker container 
-`docker run -d --name apollon_standalone apollon_standalone`
+`docker run -d --name apollon_standalone -p 3333:3333 apollon_standalone`
 
 
 useful command to debug:

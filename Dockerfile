@@ -22,14 +22,19 @@ FROM node:14
 ARG build_dir
 
 EXPOSE 3333
-ENTRYPOINT /var/apollon_standalone/build/server/server.js
 
 RUN useradd -r -s /bin/false apollon_standalone \
     && mkdir /var/apollon_standalone \
     && mkdir /var/apollon_standalone/diagrams
+
+RUN chown apollon_standalone /var/apollon_standalone -R
 
 USER apollon_standalone
 WORKDIR /var/apollon_standalone
 
 # copies build result from first stage
 COPY --chown=apollon_standalone:apollon_standalone --from=0 $build_dir .
+
+WORKDIR /var/apollon_standalone/build/server
+
+CMD [ "node", "./server.js" ]
