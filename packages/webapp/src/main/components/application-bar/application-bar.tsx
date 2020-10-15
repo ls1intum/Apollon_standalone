@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { appVersion } from '../../application-constants';
 import { Diagram } from '../../services/diagram/diagram-types';
-import { ViewMenu } from './menues/view-menu';
 import { APPLICATION_SERVER_VERSION } from '../../constant';
 import { ShareModal } from '../modals/share-modal/share-modal';
 
@@ -103,11 +102,11 @@ class ApplicationBarComponent extends Component<Props, State> {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <FileMenu />
-              <ViewMenu />
+              {/*<ViewMenu />*/}
               {APPLICATION_SERVER_VERSION && (
                 <Nav.Item>
                   <Nav.Link onClick={(event: any) => this.setState({ showShareModal: true })}>Share</Nav.Link>
-                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal} />
+                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal}/>
                 </Nav.Item>
               )}
               <HelpMenu />
