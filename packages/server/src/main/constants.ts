@@ -1,6 +1,6 @@
-import path from "path";
+import path from 'path';
 
-export const webappPath = `../../dist`;
+export const webappPath = `../../build/webapp`;
 export const indexHtml = path.resolve(`${webappPath}/index.html`);
 
 export const diagramStoragePath = path.resolve(`../../diagrams`);

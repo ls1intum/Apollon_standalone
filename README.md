@@ -8,7 +8,7 @@ Standalone version of Apollon Editor
 
 `yarn build`
 
-the build result will be stored in the dist dir in the content root
+the build result will be stored in the build dir in the project root
 
 ### With application server and sharing function on linux machine
 
@@ -31,6 +31,23 @@ Install the cronjob for deleting stale files
 Remove cronjob
 
 `crontab -r -u apollon_standalone`
+
+### Docker Container
+
+build docker container
+
+`docker build -t apollon_standalone .`
+
+run docker container 
+`docker run -d --name apollon_standalone apollon_standalone`
+
+
+useful command to debug:
+
+`docker run -it --entrypoint /bin/bash apollon_standalone`
+
+it will run the docker container with a bash session, so you can further 
+look into the content of the docker image. 
 
 ## Developer Setup
 

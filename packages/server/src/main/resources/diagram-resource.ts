@@ -1,5 +1,5 @@
-import { DiagramService } from "../services/diagram-service";
-import { DiagramDTO } from "../../../../shared/src/diagram-dto";
+import { DiagramService } from '../services/diagram-service';
+import { DiagramDTO } from 'shared/src/main/diagram-dto';
 
 export class DiagramResource {
   diagramService = new DiagramService();
@@ -17,12 +17,12 @@ export class DiagramResource {
           if (diagram) {
             res.json(diagram);
           } else {
-            res.status(404).send("Diagram not found");
+            res.status(404).send('Diagram not found');
           }
         })
-        .catch(() => res.status(503).send("Error occurred"));
+        .catch(() => res.status(503).send('Error occurred'));
     } else {
-      res.status(503).send("Error occurred");
+      res.status(503).send('Error occurred');
     }
   };
 

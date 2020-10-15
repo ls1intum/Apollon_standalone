@@ -1,18 +1,18 @@
-import React, { Component, ComponentClass } from "react";
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel } from "@ls1intum/apollon";
-import styled from "styled-components";
-import { compose } from "redux";
-import { connect } from "react-redux";
-import { ApplicationState } from "../store/application-state";
-import { withApollonEditor } from "./with-apollon-editor";
-import { ApollonEditorContext } from "./apollon-editor-context";
-import { Diagram } from "../../services/diagram/diagram-types";
-import { DiagramRepository } from "../../services/diagram/diagram-repository";
-import { uuid } from "../../utils/uuid";
-import { DEPLOYMENT_URL } from "../../constant";
-import { EditorOptionsRepository } from "../../services/editor-options/editor-options-repository";
-import { DiagramView } from "../../../../../shared/src/diagram-view";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, { Component, ComponentClass } from 'react';
+import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel } from '@ls1intum/apollon';
+import styled from 'styled-components';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { ApplicationState } from '../store/application-state';
+import { withApollonEditor } from './with-apollon-editor';
+import { ApollonEditorContext } from './apollon-editor-context';
+import { Diagram } from '../../services/diagram/diagram-types';
+import { DiagramRepository } from '../../services/diagram/diagram-repository';
+import { uuid } from '../../utils/uuid';
+import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL } from '../../constant';
+import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository';
+import { DiagramView } from 'shared/src/main/diagram-view';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -56,15 +56,15 @@ const enhance = compose<ComponentClass<OwnProps>>(
         enablePopups: state.editorOptions.enablePopups,
         model: state.diagram?.model,
         theme: state.editorOptions.theme,
-        locale: state.editorOptions.locale
+        locale: state.editorOptions.locale,
       },
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
       changeDiagramType: EditorOptionsRepository.changeDiagramType,
       changeEditorMode: EditorOptionsRepository.changeEditorMode,
-      changeReadonlyMode: EditorOptionsRepository.changeReadonlyMode
-    }
+      changeReadonlyMode: EditorOptionsRepository.changeReadonlyMode,
+    },
   ),
 );
 
@@ -85,7 +85,7 @@ class ApollonEditorComponent extends Component<Props, State> {
         this.props.setEditor(editor);
       }
     };
-    if (DEPLOYMENT_URL) {
+    if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
       // hosted with backend
       const { token } = this.props.match.params;
       if (token) {
@@ -97,7 +97,7 @@ class ApollonEditorComponent extends Component<Props, State> {
 
             // get query param
             const query = new URLSearchParams(this.props.location.search);
-            const view: DiagramView | null = query.get("view") as DiagramView;
+            const view: DiagramView | null = query.get('view') as DiagramView;
             if (view) {
               switch (view) {
                 case DiagramView.SEE_FEEDBACK:
@@ -127,7 +127,7 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.props.options.mode +
       this.props.options.type +
       this.props.options.readonly;
-    return <ApollonContainer key={key} ref={this.containerRef}/>;
+    return <ApollonContainer key={key} ref={this.containerRef} />;
   }
 }
 

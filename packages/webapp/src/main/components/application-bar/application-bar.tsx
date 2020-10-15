@@ -106,7 +106,7 @@ class ApplicationBarComponent extends Component<Props, State> {
               {APPLICATION_SERVER_VERSION && (
                 <Nav.Item>
                   <Nav.Link onClick={(event: any) => this.setState({ showShareModal: true })}>Share</Nav.Link>
-                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal}/>
+                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal} />
                 </Nav.Item>
               )}
               <HelpMenu />

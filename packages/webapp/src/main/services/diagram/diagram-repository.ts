@@ -1,7 +1,7 @@
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from "./diagram-types";
-import { UMLDiagramType, UMLModel } from "@ls1intum/apollon";
-import { BASE_URL } from "../../constant";
-import { DiagramDTO } from "../../../../../shared/src/diagram-dto";
+import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
+import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { BASE_URL } from '../../constant';
+import { DiagramDTO } from 'shared/src/main/diagram-dto';
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
@@ -9,8 +9,8 @@ export const DiagramRepository = {
     payload: {
       diagramType,
       diagramTitle,
-      template
-    }
+      template,
+    },
   }),
   updateDiagram: (values: Partial<Diagram & { diagramType: UMLDiagramType }>): UpdateDiagramAction => ({
     type: DiagramActionTypes.UPDATE_DIAGRAM,
@@ -21,10 +21,10 @@ export const DiagramRepository = {
   getDiagramFromServerByToken(token: string): Promise<DiagramDTO | null> {
     const resourceUrl = `${BASE_URL}/diagrams/${token}`;
     return fetch(resourceUrl, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json"
-      }
+        'Content-Type': 'application/json',
+      },
     }).then((response) => {
       if (response.ok) {
         return response.json();
@@ -38,11 +38,11 @@ export const DiagramRepository = {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
     const body = JSON.stringify(diagram);
     return fetch(resourceUrl, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       },
-      body
+      body,
     }).then((response: Response) => {
       if (response.ok) {
         return response.text();

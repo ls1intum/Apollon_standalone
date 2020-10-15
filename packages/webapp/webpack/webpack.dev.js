@@ -16,7 +16,7 @@ module.exports = merge(common, {
     removeEmptyChunks: false,
   },
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(__dirname, "../../build/webapp"),
     host: "0.0.0.0",
     port: 8888,
     proxy: {

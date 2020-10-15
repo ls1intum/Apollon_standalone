@@ -1,7 +1,7 @@
-import { DiagramDTO } from "shared/src/diagram-dto";
-import { FileStorageService } from "./storage-service/file-storage-service";
-import { diagramStoragePath, tokenLength } from "../constants";
-import { randomString } from "../utils";
+import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { FileStorageService } from './storage-service/file-storage-service';
+import { diagramStoragePath, tokenLength } from '../constants';
+import { randomString } from '../utils';
 
 export class DiagramService {
   private fileStorageService: FileStorageService = new FileStorageService();

@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from "react-bootstrap";
-import { createPortal } from "react-dom";
-import { Diagram } from "../../../services/diagram/diagram-types";
-import { connect } from "react-redux";
-import { ApplicationState } from "../../store/application-state";
-import { DiagramRepository } from "../../../services/diagram/diagram-repository";
-import { DEPLOYMENT_URL } from "../../../constant";
-import { DiagramView } from "shared/src/diagram-view";
+import React, { Component } from 'react';
+import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from 'react-bootstrap';
+import { createPortal } from 'react-dom';
+import { Diagram } from '../../../services/diagram/diagram-types';
+import { connect } from 'react-redux';
+import { ApplicationState } from '../../store/application-state';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { DEPLOYMENT_URL } from '../../../constant';
+import { DiagramView } from 'shared/src/main/diagram-view';
 
 type OwnProps = {
   show: boolean;
@@ -30,8 +30,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((
 const getInitialState = () => {
   return {
     view: DiagramView.EDIT,
-    token: "",
-    isOwner: window.location.href === DEPLOYMENT_URL
+    token: '',
   };
 };
 
@@ -40,11 +39,11 @@ type State = typeof getInitialState;
 const getDisplayValueForView = (view: DiagramView) => {
   switch (view) {
     case DiagramView.EDIT:
-      return "Edit";
+      return 'Edit';
     case DiagramView.GIVE_FEEDBACK:
-      return "Give Feedback";
+      return 'Give Feedback';
     case DiagramView.SEE_FEEDBACK:
-      return "See Feedback";
+      return 'See Feedback';
   }
 };
 
@@ -68,7 +67,7 @@ class ShareModalComponent extends Component<Props, State> {
 
   getLinkForView = (view: DiagramView) => {
     if (!this.state.token) {
-      return "";
+      return '';
     } else {
       return `${DEPLOYMENT_URL}/${this.state.token}?view=${view}`;
     }
@@ -105,7 +104,7 @@ class ShareModalComponent extends Component<Props, State> {
                 <FormControl
                   readOnly
                   value={`Everyone with this link can ${
-                    this.state.view === DiagramView.EDIT ? "edit" : "give feedback to"
+                    this.state.view === DiagramView.EDIT ? 'edit' : 'give feedback to'
                   } this diagram`}
                   bsCustomPrefix="w-100"
                 />
@@ -124,7 +123,7 @@ class ShareModalComponent extends Component<Props, State> {
                 </DropdownButton>
               </InputGroup>
               <InputGroup className="mb-3">
-                <FormControl readOnly value={this.getLinkForView(this.state.view)}/>
+                <FormControl readOnly value={this.getLinkForView(this.state.view)} />
                 <InputGroup.Append className="w-25">
                   <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
                     Copy Link
