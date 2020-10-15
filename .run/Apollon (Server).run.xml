@@ -12,7 +12,7 @@
         <package-json value="$PROJECT_DIR$/package.json" />
         <command value="run" />
         <scripts>
-          <script value="build:webapp" />
+          <script value="build:webapp:local"/>
         </scripts>
         <node-interpreter value="project" />
         <envs />

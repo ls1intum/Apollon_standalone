@@ -8,6 +8,7 @@
     "lint:ts": "tslint --force -p tsconfig.json -c tslint.json -t stylish",
     "lint:css": "stylelint 'src/**/*.ts'",
     "build": "rm -rf ../../dist && webpack --config ./webpack/webpack.prod.js",
+    "build:local": "rm -rf ../../dist && DEPLOYMENT_URL=http://localhost:3333 webpack --config ./webpack/webpack.prod.js",
     "postinstall": "yarn build"
   },
   "dependencies": {

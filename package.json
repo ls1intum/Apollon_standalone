@@ -16,6 +16,7 @@
     "start:webapp": "yarn workspace webapp start",
     "start:server": "yarn workspace server start",
     "build:webapp": "yarn workspace webapp build",
+    "build:webapp:local": "yarn workspace webapp build:local",
     "lint": "concurrently \"yarn lint:webapp\" \"yarn lint:server\"",
     "lint:webapp": "yarn workspace webapp lint",
     "lint:server": "yarn workspace server lint",
