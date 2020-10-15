@@ -1,65 +1,39 @@
-import { DiagramPermission } from '../../../../shared/diagram-permission';
-import { TokenService } from './token-service';
-import { getRepository, Repository } from 'typeorm';
-import { Diagram } from '../entity/diagram';
-import { Token } from '../entity/token';
-import { DiagramDTO } from '../../../../shared/diagram-dto';
+import { DiagramView } from "shared/src/diagram-view";
+import { DiagramDTO } from "shared/src/diagram-dto";
+import { TokenDTO } from "shared/src/token-dto";
+import { FileStorageService } from "./storage-service/file-storage-service";
+import { diagramStoragePath, tokenLength } from "../constants";
+import { randomString } from "../utils";
 
 export class DiagramService {
-  private tokenService: TokenService = new TokenService();
-  private diagramRepository: Repository<Diagram> = getRepository(Diagram);
+  private fileStorageService: FileStorageService = new FileStorageService();
 
   /**
-   * publishes the diagram and generates tokens for different permissions
+   * saves the diagram (if no file for diagram yet exists) and generates tokens which are used to access the diagram in different views
    * @param diagramDTO
    * @returns editor token which gives full right to edit and share the diagram
    */
-  publishDiagram(diagramDTO: DiagramDTO): Promise<Token[]> {
-    const diagram: Diagram = new Diagram();
-    diagram.diagram = diagramDTO;
-    return this.diagramRepository.save(diagram).then((savedDiagram) => {
-      return this.tokenService.createTokensForPermissions(
-        savedDiagram,
-        DiagramPermission.EDIT,
-        DiagramPermission.FEEDBACK,
-      );
+  saveDiagramAndGenerateTokens(diagramDTO: DiagramDTO): Promise<TokenDTO[]> {
+    // alpha numeric token with length = tokenLength
+    const token = randomString(tokenLength);
+    const path = this.getFilePathForToken(token);
+    return this.fileStorageService.doesFileExist(path).then((exists) => {
+      if (exists) {
+        throw Error(`File at ${path} already exists`);
+      } else {
+        return this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO)).then(() => {
+          return [DiagramView.EDIT, DiagramView.FEEDBACK].map((view) => new TokenDTO(view, token));
+        });
+      }
     });
   }
 
-  getDiagramByToken(tokenValue: string): Promise<Diagram | undefined> {
-    return this.diagramRepository
-      .createQueryBuilder('diagram')
-      .leftJoin('diagram.tokens', 'token')
-      .where('token.value = :token', { token: tokenValue })
-      .getOne();
+  getDiagramByLink(token: string): Promise<DiagramDTO | undefined> {
+    const path = this.getFilePathForToken(token);
+    return this.fileStorageService.getFileContent(path).then((fileContent) => JSON.parse(fileContent) as DiagramDTO);
   }
 
-  async updateDiagram(diagram: DiagramDTO, tokenValue: string): Promise<Diagram> {
-    const currentDiagram: Diagram | undefined = await this.getDiagramByToken(tokenValue);
-    if (!currentDiagram) {
-      throw Error('Cannot update diagram. No diagram for token exists');
-    }
-    const token: Token = await this.tokenService.getTokenByValue(tokenValue);
-    const mergedDiagram = this.mergeDiagram(currentDiagram, diagram, token.permission);
-    return this.diagramRepository.save(mergedDiagram);
-  }
-
-  private mergeDiagram(existingDiagram: Diagram, updatedDiagram: DiagramDTO, permission: DiagramPermission): Diagram {
-    let mergedDiagram: Diagram = existingDiagram;
-    switch (permission) {
-      case DiagramPermission.EDIT:
-        if (mergedDiagram.diagram.model && existingDiagram.diagram.model) {
-          mergedDiagram.diagram.model.assessments = existingDiagram.diagram.model.assessments;
-        }
-        break;
-      case DiagramPermission.FEEDBACK:
-        if (mergedDiagram.diagram.model && updatedDiagram.model) {
-          mergedDiagram.diagram.model.assessments = updatedDiagram.model.assessments;
-        }
-        break;
-      default:
-        throw Error('Unknown permission for diagram');
-    }
-    return mergedDiagram;
+  getFilePathForToken(token: string): string {
+    return `${diagramStoragePath}/${token}.json`;
   }
 }

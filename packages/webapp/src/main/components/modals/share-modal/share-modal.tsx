@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from 'react-bootstrap';
-import { createPortal } from 'react-dom';
-import { DiagramPermission } from '../../../../../../shared/diagram-permission';
-import { TokenRepository } from '../../../services/token/token-repository';
-import { Diagram } from '../../../services/diagram/diagram-types';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { DEPLOYMENT_URL, localStorageDiagramPrefix } from '../../../constant';
-import { TokenDTO } from '../../../../../../shared/token-dto';
-import { isArray } from 'rxjs/internal-compatibility';
+import React, { Component } from "react";
+import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from "react-bootstrap";
+import { createPortal } from "react-dom";
+import { Diagram } from "../../../services/diagram/diagram-types";
+import { connect } from "react-redux";
+import { ApplicationState } from "../../store/application-state";
+import { DiagramRepository } from "../../../services/diagram/diagram-repository";
+import { DEPLOYMENT_URL } from "../../../constant";
+import { TokenDTO } from "shared/src/token-dto";
+import { DiagramView } from "shared/src/diagram-view";
 
 type OwnProps = {
   show: boolean;
@@ -32,17 +30,13 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((
 
 const getInitialState = () => {
   return {
-    permission: DiagramPermission.EDIT,
+    permission: DiagramView.EDIT,
     tokens: [] as TokenDTO[],
-    isOwner: window.location.href === DEPLOYMENT_URL,
+    isOwner: window.location.href === DEPLOYMENT_URL
   };
 };
 
 type State = typeof getInitialState;
-
-function getOwnerTokenLocalStorageKey(diagramId: string): string {
-  return `${localStorageDiagramPrefix}${diagramId}_owner_token`;
-}
 
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
@@ -50,7 +44,6 @@ class ShareModalComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.handleClose = this.handleClose.bind(this);
-    this.loadTokens();
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
@@ -63,60 +56,31 @@ class ShareModalComponent extends Component<Props, State> {
     this.props.close();
   };
 
-  getLinkForPermission = (permission: DiagramPermission) => {
-    const tokenForPermission = this.state.tokens.find((token) => token.permission === permission)!;
+  getLinkForView = (view: DiagramView) => {
+    const tokenForPermission = this.state.tokens.find((token) => token.view === view)!;
     if (!tokenForPermission) {
-      return '';
+      return "";
     } else {
       return `${DEPLOYMENT_URL}/${tokenForPermission.value}`;
     }
   };
 
-  changePermission = (permission: DiagramPermission) => {
+  changePermission = (permission: DiagramView) => {
     this.setState({ permission });
   };
 
   copyLink = () => {
-    const link = this.getLinkForPermission(this.state.permission);
+    const link = this.getLinkForView(this.state.permission);
     navigator.clipboard.writeText(link);
   };
 
   publishDiagram = () => {
     DiagramRepository.publishDiagramOnServer(this.props.diagram)
       .then((tokens: TokenDTO[]) => {
-        this.setState({ diagramExistsOnServer: true, tokens });
-        const ownerToken = this.getOwnerToken();
-        const key = getOwnerTokenLocalStorageKey(this.props.diagram.id);
-        // owner token must be present after we published the diagram
-        localStorage.setItem(key, JSON.stringify(ownerToken));
+        this.setState({ tokens });
       })
       .catch((error) => console.error(error));
   };
-
-  async loadTokens() {
-    if (isArray(this.state.tokens) && this.state.tokens.length === 0) {
-      const ownerToken = this.getOwnerToken();
-      if (!ownerToken) {
-        throw Error('You cannot share the diagram, you are not the owner');
-      }
-      const tokens = await TokenRepository.getTokensForOwnerToken(ownerToken.value);
-      this.setState({ tokens });
-    }
-  }
-
-  getOwnerToken(): TokenDTO | undefined {
-    let ownerToken: TokenDTO | undefined;
-    if (this.state.tokens) {
-      ownerToken = this.state.tokens.find((token) => token.permission === DiagramPermission.EDIT);
-    }
-    if (!ownerToken) {
-      const storedOwnerToken = localStorage.getItem(getOwnerTokenLocalStorageKey(this.props.diagram.id));
-      if (storedOwnerToken) {
-        ownerToken = JSON.parse(storedOwnerToken);
-      }
-    }
-    return ownerToken;
-  }
 
   render() {
     const { show } = this.props;
@@ -126,13 +90,13 @@ class ShareModalComponent extends Component<Props, State> {
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.getOwnerToken() ? (
+          {this.state.tokens && this.state.tokens.length > 0 ? (
             <>
               <InputGroup className="mb-3">
                 <FormControl
                   readOnly
                   value={`Everyone with this link can ${
-                    this.state.permission === DiagramPermission.EDIT ? 'edit' : 'give feedback to'
+                    this.state.permission === DiagramView.EDIT ? "edit" : "give feedback to"
                   } this diagram`}
                   bsCustomPrefix="w-100"
                 />
@@ -143,7 +107,7 @@ class ShareModalComponent extends Component<Props, State> {
                   variant="outline-secondary"
                   className="w-25"
                 >
-                  {Object.values(DiagramPermission).map((value) => (
+                  {Object.values(DiagramView).map((value) => (
                     <Dropdown.Item key={value} onSelect={(eventKey) => this.changePermission(value)}>
                       {value}
                     </Dropdown.Item>
@@ -151,7 +115,7 @@ class ShareModalComponent extends Component<Props, State> {
                 </DropdownButton>
               </InputGroup>
               <InputGroup className="mb-3">
-                <FormControl readOnly value={this.getLinkForPermission(this.state.permission)} />
+                <FormControl readOnly value={this.getLinkForView(this.state.permission)}/>
                 <InputGroup.Append className="w-25">
                   <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
                     Copy Link

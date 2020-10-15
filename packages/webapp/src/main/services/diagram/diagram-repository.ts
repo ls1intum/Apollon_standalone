@@ -1,8 +1,8 @@
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
-import { BASE_URL } from '../../constant';
-import { TokenDTO } from '../../../../../shared/token-dto';
-import { DiagramDTO } from '../../../../../shared/diagram-dto';
+import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from "./diagram-types";
+import { UMLDiagramType, UMLModel } from "@ls1intum/apollon";
+import { BASE_URL } from "../../constant";
+import { DiagramDTO } from "../../../../../shared/src/diagram-dto";
+import { TokenDTO } from "../../../../../shared/src/token-dto";
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
@@ -10,8 +10,8 @@ export const DiagramRepository = {
     payload: {
       diagramType,
       diagramTitle,
-      template,
-    },
+      template
+    }
   }),
   updateDiagram: (values: Partial<Diagram & { diagramType: UMLDiagramType }>): UpdateDiagramAction => ({
     type: DiagramActionTypes.UPDATE_DIAGRAM,
@@ -51,24 +51,6 @@ export const DiagramRepository = {
       } else {
         // error occured or no diagram found
         throw Error('Publish of diagram failed');
-      }
-    });
-  },
-  updateDiagramOnServer(diagram: Diagram): Promise<void> {
-    const resourceUrl = `${BASE_URL}/diagrams/${diagram.id}`;
-    const body = JSON.stringify(diagram);
-    return fetch(resourceUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    }).then((response) => {
-      if (response.ok) {
-        return;
-      } else {
-        // error occured or no diagram found
-        throw Error('Update of diagram on server failed');
       }
     });
   },
