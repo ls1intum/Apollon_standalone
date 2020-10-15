@@ -16,12 +16,12 @@ module.exports = merge(common, {
     removeEmptyChunks: false,
   },
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
-    host: '0.0.0.0',
+    contentBase: path.join(__dirname, "dist"),
+    host: "0.0.0.0",
     port: 8888,
     proxy: {
-      '/': 'http://localhost:3333',
-    },
+      "/": "http://localhost:3333"
+    }
   },
 
   plugins: [

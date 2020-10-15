@@ -1,23 +1,26 @@
-import React from 'react';
-import { ApplicationBar } from './components/application-bar/application-bar';
-import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
-import { ApplicationStore } from './components/store/application-store';
-import { ApplicationState } from './components/store/application-state';
-import { localStorageDiagramPrefix, localStorageLatest } from './constant';
+import React from "react";
+import { ApplicationBar } from "./components/application-bar/application-bar";
+import { ApollonEditorWrapper } from "./components/apollon-editor-component/apollon-editor-component";
+import { ApollonEditor, ApollonOptions } from "@ls1intum/apollon";
+import { ApplicationStore } from "./components/store/application-store";
+import { ApplicationState } from "./components/store/application-state";
+import { localStorageDiagramPrefix, localStorageLatest } from "./constant";
 import {
   ApollonEditorContext,
-  ApollonEditorProvider,
-} from './components/apollon-editor-component/apollon-editor-context';
-import { uuid } from './utils/uuid';
-import moment from 'moment';
-import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
-import { defaultEditorOptions } from './services/editor-options/editor-options-reducer';
-import { EditorOptions } from './services/editor-options/editor-options-types';
-import { ErrorPanel } from './components/error-handling/error-panel';
-import { Diagram } from './services/diagram/diagram-types';
+  ApollonEditorProvider
+} from "./components/apollon-editor-component/apollon-editor-context";
+import { uuid } from "./utils/uuid";
+import moment from "moment";
+import { FirefoxIncompatibilityHint } from "./components/incompatability-hints/firefox-incompatibility-hint";
+import { defaultEditorOptions } from "./services/editor-options/editor-options-reducer";
+import { EditorOptions } from "./services/editor-options/editor-options-types";
+import { ErrorPanel } from "./components/error-handling/error-panel";
+import { Diagram } from "./services/diagram/diagram-types";
+import { BrowserRouter, RouteComponentProps, Route, Switch } from "react-router-dom";
 
-type Props = {};
+type OwnProps = {};
+
+type Props = OwnProps & RouteComponentProps;
 
 type State = {
   options?: ApollonOptions;
@@ -26,7 +29,7 @@ type State = {
 
 const initialState: State = Object.freeze({
   model: undefined as ApollonOptions | undefined,
-  editor: undefined as ApollonEditor | undefined,
+  editor: undefined as ApollonEditor | undefined
 });
 
 const getInitialStore = (): ApplicationState => {
@@ -65,12 +68,23 @@ export class Application extends React.Component<Props, State> {
     return (
       <ApollonEditorProvider value={context}>
         <ApplicationStore initialState={initialStore}>
-          <ApplicationBar />
-          {isFirefox && <FirefoxIncompatibilityHint />}
-          <ErrorPanel />
-          <ApollonEditorWrapper />
+          <ApplicationBar/>
+          {isFirefox && <FirefoxIncompatibilityHint/>}
+          <ErrorPanel/>
+          <ApollonEditorWrapper/>
         </ApplicationStore>
       </ApollonEditorProvider>
     );
   }
+}
+
+export function RoutedApplication() {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path={"/:token"} render={(props) => <Application {...props} />}/>
+        <Route path={"/"} render={(props) => <Application {...props} />}/>
+      </Switch>
+    </BrowserRouter>
+  );
 }

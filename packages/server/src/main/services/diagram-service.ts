@@ -1,6 +1,4 @@
-import { DiagramView } from "shared/src/diagram-view";
 import { DiagramDTO } from "shared/src/diagram-dto";
-import { TokenDTO } from "shared/src/token-dto";
 import { FileStorageService } from "./storage-service/file-storage-service";
 import { diagramStoragePath, tokenLength } from "../constants";
 import { randomString } from "../utils";
@@ -13,7 +11,7 @@ export class DiagramService {
    * @param diagramDTO
    * @returns editor token which gives full right to edit and share the diagram
    */
-  saveDiagramAndGenerateTokens(diagramDTO: DiagramDTO): Promise<TokenDTO[]> {
+  saveDiagramAndGenerateTokens(diagramDTO: DiagramDTO): Promise<string> {
     // alpha numeric token with length = tokenLength
     const token = randomString(tokenLength);
     const path = this.getFilePathForToken(token);
@@ -21,9 +19,7 @@ export class DiagramService {
       if (exists) {
         throw Error(`File at ${path} already exists`);
       } else {
-        return this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO)).then(() => {
-          return [DiagramView.EDIT, DiagramView.FEEDBACK].map((view) => new TokenDTO(view, token));
-        });
+        return this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO)).then(() => token);
       }
     });
   }

@@ -12,11 +12,12 @@ export type EditorOptions = {
   locale: Locale;
 };
 
-export type EditorOptionsActions = ChangeDiagramTypeAction | ChangeEditorModeAction;
+export type EditorOptionsActions = ChangeDiagramTypeAction | ChangeEditorModeAction | ChangeReadonlyModeAction;
 
 export const enum EditorOptionsActionTypes {
-  CHANGE_DIAGRAM_TYPE = '@@editor-options/change_diagram_type',
-  CHANGE_EDITOR_MODE = '@@editor-options/change_editor_mode',
+  CHANGE_DIAGRAM_TYPE = "@@editor-options/change_diagram_type",
+  CHANGE_EDITOR_MODE = "@@editor-options/change_editor_mode",
+  CHANGE_READONLY_MODE = "@@editor-options/change_readonly_mode",
 }
 
 export type ChangeDiagramTypeAction = Action<EditorOptionsActionTypes.CHANGE_DIAGRAM_TYPE> & {
@@ -28,5 +29,11 @@ export type ChangeDiagramTypeAction = Action<EditorOptionsActionTypes.CHANGE_DIA
 export type ChangeEditorModeAction = Action<EditorOptionsActionTypes.CHANGE_EDITOR_MODE> & {
   payload: {
     mode: ApollonMode;
+  };
+};
+
+export type ChangeReadonlyModeAction = Action<EditorOptionsActionTypes.CHANGE_READONLY_MODE> & {
+  payload: {
+    readonly: boolean;
   };
 };

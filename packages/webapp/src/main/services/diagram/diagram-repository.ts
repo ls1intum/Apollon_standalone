@@ -2,7 +2,6 @@ import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction }
 import { UMLDiagramType, UMLModel } from "@ls1intum/apollon";
 import { BASE_URL } from "../../constant";
 import { DiagramDTO } from "../../../../../shared/src/diagram-dto";
-import { TokenDTO } from "../../../../../shared/src/token-dto";
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
@@ -19,14 +18,13 @@ export const DiagramRepository = {
       values,
     },
   }),
-  getDiagramFromServerByLink(url: string): Promise<DiagramDTO | null> {
-    const token = url.substring(url.indexOf(BASE_URL) - 1 + BASE_URL.length - 1);
+  getDiagramFromServerByToken(token: string): Promise<DiagramDTO | null> {
     const resourceUrl = `${BASE_URL}/diagrams/${token}`;
     return fetch(resourceUrl, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-      },
+        "Content-Type": "application/json"
+      }
     }).then((response) => {
       if (response.ok) {
         return response.json();
@@ -36,18 +34,18 @@ export const DiagramRepository = {
       }
     });
   },
-  publishDiagramOnServer(diagram: Diagram): Promise<TokenDTO[]> {
+  publishDiagramOnServer(diagram: Diagram): Promise<string> {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
     const body = JSON.stringify(diagram);
     return fetch(resourceUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json"
       },
-      body,
+      body
     }).then((response: Response) => {
       if (response.ok) {
-        return response.json();
+        return response.text();
       } else {
         // error occured or no diagram found
         throw Error('Publish of diagram failed');

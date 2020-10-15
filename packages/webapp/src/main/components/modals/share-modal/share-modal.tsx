@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { ApplicationState } from "../../store/application-state";
 import { DiagramRepository } from "../../../services/diagram/diagram-repository";
 import { DEPLOYMENT_URL } from "../../../constant";
-import { TokenDTO } from "shared/src/token-dto";
 import { DiagramView } from "shared/src/diagram-view";
 
 type OwnProps = {
@@ -30,13 +29,24 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((
 
 const getInitialState = () => {
   return {
-    permission: DiagramView.EDIT,
-    tokens: [] as TokenDTO[],
+    view: DiagramView.EDIT,
+    token: "",
     isOwner: window.location.href === DEPLOYMENT_URL
   };
 };
 
 type State = typeof getInitialState;
+
+const getDisplayValueForView = (view: DiagramView) => {
+  switch (view) {
+    case DiagramView.EDIT:
+      return "Edit";
+    case DiagramView.GIVE_FEEDBACK:
+      return "Give Feedback";
+    case DiagramView.SEE_FEEDBACK:
+      return "See Feedback";
+  }
+};
 
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
@@ -47,7 +57,7 @@ class ShareModalComponent extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
-    if (prevProps.diagram.id !== this.props.diagram.id) {
+    if (!prevProps.show && this.props.show) {
       this.setState(getInitialState());
     }
   }
@@ -57,27 +67,26 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   getLinkForView = (view: DiagramView) => {
-    const tokenForPermission = this.state.tokens.find((token) => token.view === view)!;
-    if (!tokenForPermission) {
+    if (!this.state.token) {
       return "";
     } else {
-      return `${DEPLOYMENT_URL}/${tokenForPermission.value}`;
+      return `${DEPLOYMENT_URL}/${this.state.token}?view=${view}`;
     }
   };
 
-  changePermission = (permission: DiagramView) => {
-    this.setState({ permission });
+  changePermission = (view: DiagramView) => {
+    this.setState({ view });
   };
 
   copyLink = () => {
-    const link = this.getLinkForView(this.state.permission);
+    const link = this.getLinkForView(this.state.view);
     navigator.clipboard.writeText(link);
   };
 
   publishDiagram = () => {
     DiagramRepository.publishDiagramOnServer(this.props.diagram)
-      .then((tokens: TokenDTO[]) => {
-        this.setState({ tokens });
+      .then((token: string) => {
+        this.setState({ token });
       })
       .catch((error) => console.error(error));
   };
@@ -90,32 +99,32 @@ class ShareModalComponent extends Component<Props, State> {
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.state.tokens && this.state.tokens.length > 0 ? (
+          {this.state.token ? (
             <>
               <InputGroup className="mb-3">
                 <FormControl
                   readOnly
                   value={`Everyone with this link can ${
-                    this.state.permission === DiagramView.EDIT ? "edit" : "give feedback to"
+                    this.state.view === DiagramView.EDIT ? "edit" : "give feedback to"
                   } this diagram`}
                   bsCustomPrefix="w-100"
                 />
                 <DropdownButton
                   id="permission-selection-dropdown"
-                  title={this.state.permission}
+                  title={getDisplayValueForView(this.state.view)}
                   as={InputGroup.Append}
                   variant="outline-secondary"
                   className="w-25"
                 >
                   {Object.values(DiagramView).map((value) => (
                     <Dropdown.Item key={value} onSelect={(eventKey) => this.changePermission(value)}>
-                      {value}
+                      {getDisplayValueForView(value)}
                     </Dropdown.Item>
                   ))}
                 </DropdownButton>
               </InputGroup>
               <InputGroup className="mb-3">
-                <FormControl readOnly value={this.getLinkForView(this.state.permission)}/>
+                <FormControl readOnly value={this.getLinkForView(this.state.view)}/>
                 <InputGroup.Append className="w-25">
                   <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
                     Copy Link

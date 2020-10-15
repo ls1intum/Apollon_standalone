@@ -23,6 +23,10 @@ export const EditorOptionsReducer: Reducer<EditorOptions, Actions> = (state = de
       const mode = action.payload.mode;
       return { ...state, mode };
     }
+    case EditorOptionsActionTypes.CHANGE_READONLY_MODE: {
+      const readonly = action.payload.readonly;
+      return { ...state, readonly };
+    }
   }
 
   return state;
