@@ -56,7 +56,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
         enablePopups: state.editorOptions.enablePopups,
         model: state.diagram?.model,
         theme: state.editorOptions.theme,
-        locale: state.editorOptions.locale,
+        locale: state.editorOptions.locale
       },
     }),
     {

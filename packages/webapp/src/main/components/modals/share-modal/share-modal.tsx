@@ -135,9 +135,10 @@ class ShareModalComponent extends Component<Props, State> {
           ) : (
             <>
               <p>
-                Your diagram is currently not published on the server. If you want to share the current version of your
-                diagram with other users, click on the publish button. Your diagram will then be stored for x days on
-                the server.
+                If you want to share the current version of your diagram with other users, click on the publish button.
+                A copy of your current diagram version is then stored on the server so that other users can access it.
+                It will be accessible for 12 weeks with the correct link. The links are shown after you clicked on the
+                publish button.
               </p>
               <Button variant="outline-primary" onClick={(event) => this.publishDiagram()}>
                 Publish
