@@ -28,11 +28,13 @@ RUN useradd -r -s /bin/false apollon_standalone \
     && mkdir /var/apollon_standalone/diagrams \
     && touch /var/log/cron.log
 
+# TODO: cron not working
 COPY delete-stale-diagrams.cronjob.txt /etc/cron.d/delete-stale-diagrams
 
 RUN chmod 0644 /etc/cron.d/delete-stale-diagrams
 RUN crontab /etc/cron.d/delete-stale-diagrams
 
+RUN touch /var/log/cron.log
 
 RUN chown apollon_standalone /var/apollon_standalone -R
 RUN chmod 777 /var/apollon_standalone/diagrams
