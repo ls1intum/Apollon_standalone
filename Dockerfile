@@ -7,7 +7,7 @@ ARG build_dir=/build_application
 FROM node:14
 
 ARG build_dir
-ENV DEPLOYMENT_URL="http://localhost:3333"
+ENV DEPLOYMENT_URL="http://localhost:8080"
 
 # make build dir
 WORKDIR $build_dir
@@ -21,7 +21,7 @@ FROM node:14
 
 RUN apt-get update && apt-get -y install cron
 
-EXPOSE 3333
+EXPOSE 8080
 
 RUN useradd -r -s /bin/false apollon_standalone \
     && mkdir /var/apollon_standalone \

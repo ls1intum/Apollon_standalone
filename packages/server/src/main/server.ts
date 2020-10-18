@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import * as routes from './routes';
 import { indexHtml, webappPath } from './constants';
 
-const port = 3333;
+const port = 8080;
 
 export const app = express();
 

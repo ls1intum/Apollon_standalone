@@ -9,7 +9,7 @@
     "lint:ts": "tslint --force -p tsconfig.json -c tslint.json -t stylish",
     "lint:css": "stylelint 'src/**/*.ts'",
     "build": "yarn clean && webpack --config ./webpack/webpack.prod.js",
-    "build:local": "yarn clean && DEPLOYMENT_URL=http://localhost:3333 webpack --config ./webpack/webpack.prod.js"
+    "build:local": "yarn clean && DEPLOYMENT_URL=http://localhost:8080 webpack --config ./webpack/webpack.prod.js"
   },
   "dependencies": {
     "@ls1intum/apollon": "2.2.1",
