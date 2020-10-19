@@ -110,6 +110,10 @@ Error codes on server start:
 Install the cronjob for deleting stale files
 
 ```
+# create a log file for the cron job
+touch /var/log/cron.log
+chmod 622 /var/log/cron.log
+
 # adjust period after which stale diagrams should be deleted
 # cronjob file: delete-stale-diagrams.cronjob.txt
 # default: delete stale diagrams after 12 weeks

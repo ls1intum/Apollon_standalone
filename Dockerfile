@@ -24,31 +24,25 @@ RUN apt-get update && apt-get -y install cron
 EXPOSE 8080
 
 RUN useradd -r -s /bin/false apollon_standalone \
-    && mkdir /var/apollon_standalone \
-    && mkdir /var/apollon_standalone/diagrams \
-    && touch /var/log/cron.log
-
-# TODO: cron not working
-COPY delete-stale-diagrams.cronjob.txt /etc/cron.d/delete-stale-diagrams
-
-RUN chmod 0644 /etc/cron.d/delete-stale-diagrams
-RUN crontab /etc/cron.d/delete-stale-diagrams
-
-RUN touch /var/log/cron.log
-
-RUN chown apollon_standalone /var/apollon_standalone -R
-RUN chmod 777 /var/apollon_standalone/diagrams
+    && mkdir /opt/apollon_standalone \
+    && touch /var/log/cron.log \
+    && chmod 622 /var/log/cron.log
 
 RUN service cron start
+RUN chown -R apollon_standalone /opt/apollon_standalone
 
 USER apollon_standalone
-WORKDIR /var/apollon_standalone
+WORKDIR /opt/apollon_standalone
+
+RUN mkdir diagrams
 
 ARG build_dir
 
 # copies build result from first stage
 COPY --chown=apollon_standalone:apollon_standalone --from=0 $build_dir .
 
-WORKDIR /var/apollon_standalone/build/server
+RUN crontab delete-stale-diagrams.cronjob.txt
+
+WORKDIR /opt/apollon_standalone/build/server
 
 CMD [ "node", "./server.js" ]
