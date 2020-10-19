@@ -1,2 +1,2 @@
-* * * * * root find /var/apollon_standalone/diagrams/* -mmin +1 -type f -delete >> /var/log/cron.log 2>&1
+* * * * * apollon_standalone find /var/apollon_standalone/diagrams/* -mmin +1 -type f -delete >> /var/log/cron.log 2>&1
 # An empty line is required at the end of this file for a valid cron file.
