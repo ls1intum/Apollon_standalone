@@ -77,8 +77,8 @@ module.exports = {
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.DefinePlugin({
-      APPLICATION_SERVER_VERSION: JSON.stringify(process.env.APPLICATION_SERVER_VERSION || true),
-      DEPLOYMENT_URL: JSON.stringify(process.env.DEPLOYMENT_URL || 'http://localhost:8888'),
+      'process.env.APPLICATION_SERVER_VERSION': JSON.stringify(process.env.APPLICATION_SERVER_VERSION || true),
+      'process.env.DEPLOYMENT_URL': JSON.stringify(process.env.DEPLOYMENT_URL || 'http://localhost:8888'),
     }),
   ],
 };

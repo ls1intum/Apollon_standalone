@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { DiagramResource } from './resources/diagram-resource';
 
-//options for cors midddleware
+// options for cors midddleware
 const options: cors.CorsOptions = {
   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Access-Token'],
   credentials: true,
