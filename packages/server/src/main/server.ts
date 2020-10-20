@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import * as routes from './routes';
+import { register } from './routes';
 import { indexHtml, webappPath } from './constants';
 
 const port = 8080;
@@ -16,7 +16,7 @@ app.use(
 );
 
 // registers routes
-routes.register(app);
+register(app);
 
 // if nothing matches return webapp
 // must be registered after other routes

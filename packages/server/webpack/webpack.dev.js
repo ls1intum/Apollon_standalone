@@ -1,0 +1,24 @@
+const path = require('path');
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
+
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  output: {
+    pathinfo: false,
+  },
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      // eslint: true,
+    }),
+    new ForkTsCheckerNotifierWebpackPlugin({ title: 'Apollon Standalone Server', excludeWarnings: false }),
+  ],
+});
