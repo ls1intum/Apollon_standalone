@@ -10,6 +10,7 @@
     ]
     /* Specify library files to be included in the compilation. */,
     "outDir": "../../build/server",
+    "rootDir": ".",
     /* Strict Type-Checking Options */
     "noImplicitAny": true
     /* Raise error on expressions and declarations with an implied 'any' type. */,

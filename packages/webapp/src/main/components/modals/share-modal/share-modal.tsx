@@ -93,7 +93,7 @@ class ShareModalComponent extends Component<Props, State> {
   render() {
     const { show } = this.props;
     return createPortal(
-      <Modal id="share-modal" centered show={show} size="lg" onHide={this.handleClose} dialogClassName="w-75">
+      <Modal id="share-modal" centered show={show} size="lg" onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
