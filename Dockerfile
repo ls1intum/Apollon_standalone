@@ -45,4 +45,4 @@ RUN crontab delete-stale-diagrams.cronjob.txt
 
 WORKDIR /opt/apollon_standalone/build/server
 
-CMD [ "node", "./server.js" ]
+CMD [ "node", "./src/main/server.js" ]
