@@ -8,6 +8,7 @@ export type EditorOptions = {
   mode?: ApollonMode;
   readonly?: boolean;
   enablePopups?: boolean;
+  enableCopyPaste?: boolean;
   theme?: DeepPartial<Styles>;
   locale: Locale;
 };

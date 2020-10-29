@@ -9,6 +9,7 @@ export const defaultEditorOptions = {
   mode: ApollonMode.Modelling,
   readonly: false,
   enablePopups: true,
+  enableCopyPaste: true,
   locale: Locale.en,
 };
 

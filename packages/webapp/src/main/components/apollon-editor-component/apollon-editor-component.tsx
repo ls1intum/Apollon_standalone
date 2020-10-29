@@ -54,6 +54,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
         mode: state.editorOptions.mode,
         readonly: state.editorOptions.readonly,
         enablePopups: state.editorOptions.enablePopups,
+        copyPasteToClipboard: state.editorOptions.enableCopyPaste,
         model: state.diagram?.model,
         theme: state.editorOptions.theme,
         locale: state.editorOptions.locale,
