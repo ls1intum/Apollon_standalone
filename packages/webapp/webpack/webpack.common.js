@@ -4,7 +4,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const outputDir = path.resolve(__dirname, "../../../build/webapp");
+const outputDir = path.resolve(__dirname, '../../../build/webapp');
 
 module.exports = {
   entry: './src/main/index.tsx',
@@ -65,6 +65,7 @@ module.exports = {
     new CircularDependencyPlugin({ exclude: /node_modules/ }),
     new HtmlWebpackPlugin({
       template: './src/main/index.html',
+      favicon: './assets/images/favicon.ico',
       xhtml: true,
     }),
     new CopyPlugin({
