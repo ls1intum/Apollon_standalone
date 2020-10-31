@@ -4,7 +4,7 @@ import { EditorOptions, EditorOptionsActionTypes } from './editor-options-types'
 import { UMLDiagramType } from '@ls1intum/apollon';
 import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
 
-export const defaultEditorOptions = {
+export const defaultEditorOptions: EditorOptions = {
   type: UMLDiagramType.ClassDiagram,
   mode: ApollonMode.Modelling,
   readonly: false,
