@@ -9,7 +9,8 @@ import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { appVersion } from '../../application-constants';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { APPLICATION_SERVER_VERSION } from '../../constant';
-import { ShareModal } from '../modals/share-modal/share-modal';
+import { ModalRepository } from '../../services/modal/modal-repository';
+import { ModalContentType } from '../modals/application-modal-types';
 
 type OwnProps = {};
 
@@ -34,6 +35,7 @@ const ApplicationVersion = styled.span`
 
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
+  openModal: typeof ModalRepository.showModal;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -46,15 +48,15 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   },
   {
     updateDiagram: DiagramRepository.updateDiagram,
+    openModal: ModalRepository.showModal,
   },
 );
 
-type State = { diagramTitle: string; showShareModal: boolean };
+type State = { diagramTitle: string };
 
 const getInitialState = (props: Props): State => {
   return {
     diagramTitle: props.diagram?.title ? props.diagram.title : '',
-    showShareModal: false,
   };
 };
 
@@ -65,7 +67,6 @@ class ApplicationBarComponent extends Component<Props, State> {
     super(props);
     this.changeDiagramTitlePreview = this.changeDiagramTitlePreview.bind(this);
     this.changeDiagramTitleApplicationState = this.changeDiagramTitleApplicationState.bind(this);
-    this.closeShareModal = this.closeShareModal.bind(this);
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
@@ -85,10 +86,6 @@ class ApplicationBarComponent extends Component<Props, State> {
     }
   }
 
-  closeShareModal() {
-    this.setState({ showShareModal: false });
-  }
-
   render() {
     return (
       <>
@@ -105,8 +102,9 @@ class ApplicationBarComponent extends Component<Props, State> {
               {/*<ViewMenu />*/}
               {APPLICATION_SERVER_VERSION && (
                 <Nav.Item>
-                  <Nav.Link onClick={(event: any) => this.setState({ showShareModal: true })}>Share</Nav.Link>
-                  <ShareModal show={this.state.showShareModal} close={this.closeShareModal} />
+                  <Nav.Link onClick={(event: any) => this.props.openModal(ModalContentType.ShareModal, 'lg')}>
+                    Share
+                  </Nav.Link>
                 </Nav.Item>
               )}
               <HelpMenu />

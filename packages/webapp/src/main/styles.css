@@ -17,6 +17,6 @@ body {
   flex-grow: 1;
 }
 
-#share-modal #permission-selection-dropdown {
+#application-modal #permission-selection-dropdown {
   width: 100%;
 }

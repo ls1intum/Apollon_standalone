@@ -1,5 +1,4 @@
-import React, { Component, ReactPortal } from 'react';
-import { createPortal } from 'react-dom';
+import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
 import {
@@ -10,7 +9,6 @@ import {
 } from '../../../application-constants';
 
 type Props = {
-  show: boolean;
   close: () => void;
 };
 
@@ -35,10 +33,9 @@ export class InformationModal extends Component<Props, State> {
     this.setState(getInitialState());
   };
 
-  render(): ReactPortal {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={this.handleClose}>
+  render() {
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Information about Apollon</Modal.Title>
         </Modal.Header>
@@ -71,8 +68,7 @@ export class InformationModal extends Component<Props, State> {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }

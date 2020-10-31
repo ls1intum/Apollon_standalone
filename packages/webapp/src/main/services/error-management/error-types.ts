@@ -1,16 +1,10 @@
 import { Action } from 'redux';
 
-export type ErrorActions =
-  | LoadDiagramErrorAction
-  | SaveDiagramErrorAction
-  | ImportDiagramErrorAction
-  | DismissErrorAction;
+export type ErrorActions = DisplayErrorAction | DismissErrorAction;
 
 export const enum ErrorActionType {
-  ERROR_LOAD_DIAGRAM = '@@error/load_diagram',
-  ERROR_SAVE_DIAGRAM = '@@error/save-diagram',
-  ERROR_IMPORT_DIAGRAM = '@@error/import-diagram',
-  DISMISS_ERROR = '@@error/dismiss-error',
+  DISPLAY_ERROR = '@@error/display',
+  DISMISS_ERROR = '@@error/dismiss',
 }
 
 export type ApollonError = { id: string; headerText: string; bodyText: string };
@@ -19,7 +13,5 @@ export type ErrorAction = {
   payload: ApollonError;
 };
 
-export type LoadDiagramErrorAction = Action<ErrorActionType.ERROR_LOAD_DIAGRAM> & ErrorAction;
-export type SaveDiagramErrorAction = Action<ErrorActionType.ERROR_SAVE_DIAGRAM> & ErrorAction;
-export type ImportDiagramErrorAction = Action<ErrorActionType.ERROR_IMPORT_DIAGRAM> & ErrorAction;
+export type DisplayErrorAction = Action<ErrorActionType.DISPLAY_ERROR> & ErrorAction;
 export type DismissErrorAction = Action<ErrorActionType.DISMISS_ERROR> & ErrorAction;

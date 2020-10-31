@@ -1,12 +1,10 @@
-import React, { ChangeEvent, Component, ReactPortal } from 'react';
-import { createPortal } from 'react-dom';
+import React, { ChangeEvent, Component } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { ImportRepository } from '../../../services/import/import-repository';
 
 type OwnProps = {
-  show: boolean;
   close: () => void;
 };
 
@@ -73,10 +71,9 @@ class ImportDiagramModalComponent extends Component<Props, State> {
     }
   }
 
-  render(): ReactPortal {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={this.handleClose}>
+  render() {
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Import Diagram</Modal.Title>
         </Modal.Header>
@@ -102,8 +99,7 @@ class ImportDiagramModalComponent extends Component<Props, State> {
             Import Diagram
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }

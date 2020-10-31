@@ -8,13 +8,13 @@ import { DiagramRepository } from '../diagram/diagram-repository';
 import { uuid } from '../../utils/uuid';
 import { of } from 'rxjs';
 import { ErrorRepository } from '../error-management/error-repository';
-import { ErrorActionType, ImportDiagramErrorAction } from '../error-management/error-types';
+import { DisplayErrorAction, ErrorActionType } from '../error-management/error-types';
 import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
 import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
 
 export const importEpic: Epic<
   Action,
-  UpdateDiagramAction | ChangeDiagramTypeAction | ImportDiagramErrorAction,
+  UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction,
   ApplicationState
 > = (action$, store) => {
   return action$.pipe(
@@ -34,10 +34,10 @@ export const importEpic: Epic<
         catchError((error) =>
           of(
             ErrorRepository.createError(
-              ErrorActionType.ERROR_IMPORT_DIAGRAM,
+              ErrorActionType.DISPLAY_ERROR,
               'Import failed',
               'Could not import selected file. Are you sure it contains a diagram.json?',
-            ) as ImportDiagramErrorAction,
+            ) as DisplayErrorAction,
           ),
         ),
       );

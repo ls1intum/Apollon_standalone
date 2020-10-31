@@ -17,6 +17,7 @@ import { EditorOptions } from './services/editor-options/editor-options-types';
 import { ErrorPanel } from './components/error-handling/error-panel';
 import { Diagram } from './services/diagram/diagram-types';
 import { BrowserRouter, RouteComponentProps, Route, Switch } from 'react-router-dom';
+import { ApplicationModal } from './components/modals/application-modal';
 
 type OwnProps = {};
 
@@ -49,6 +50,10 @@ const getInitialStore = (): ApplicationState => {
     ...diagram,
     editorOptions,
     errors: [],
+    modal: {
+      type: null,
+      size: 'sm',
+    },
   };
 };
 
@@ -69,6 +74,7 @@ export class Application extends React.Component<Props, State> {
       <ApollonEditorProvider value={context}>
         <ApplicationStore initialState={initialStore}>
           <ApplicationBar />
+          <ApplicationModal />
           {isFirefox && <FirefoxIncompatibilityHint />}
           <ErrorPanel />
           <ApollonEditorWrapper />

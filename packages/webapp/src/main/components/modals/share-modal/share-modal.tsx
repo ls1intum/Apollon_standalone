@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from 'react-bootstrap';
-import { createPortal } from 'react-dom';
 import { Diagram } from '../../../services/diagram/diagram-types';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { DEPLOYMENT_URL } from '../../../constant';
 import { DiagramView } from 'shared/src/main/diagram-view';
+import { ErrorRepository } from '../../../services/error-management/error-repository';
+import { ErrorActionType } from '../../../services/error-management/error-types';
+import { ModalRepository } from '../../../services/modal/modal-repository';
 
 type OwnProps = {
-  show: boolean;
   close: () => void;
 };
 
@@ -17,15 +18,21 @@ type StateProps = {
   diagram: Diagram;
 };
 
-type DispatchProps = {};
+type DispatchProps = {
+  createError: typeof ErrorRepository.createError;
+  closeModal: typeof ModalRepository.hideModal;
+};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((state) => {
-  return {
-    diagram: state.diagram,
-  };
-});
+const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+  (state) => {
+    return {
+      diagram: state.diagram,
+    };
+  },
+  { createError: ErrorRepository.createError, closeModal: ModalRepository.hideModal },
+);
 
 const getInitialState = () => {
   return {
@@ -50,21 +57,6 @@ const getDisplayValueForView = (view: DiagramView) => {
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
-  constructor(props: Props) {
-    super(props);
-    this.handleClose = this.handleClose.bind(this);
-  }
-
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any) {
-    if (!prevProps.show && this.props.show) {
-      this.setState(getInitialState());
-    }
-  }
-
-  handleClose = () => {
-    this.props.close();
-  };
-
   getLinkForView = (view: DiagramView) => {
     if (!this.state.token) {
       return '';
@@ -87,13 +79,20 @@ class ShareModalComponent extends Component<Props, State> {
       .then((token: string) => {
         this.setState({ token });
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        this.props.createError(
+          ErrorActionType.DISPLAY_ERROR,
+          'Connection failed',
+          'Connection to the server failed. Please try again or report a problem.',
+        );
+        this.props.closeModal();
+        console.error(error);
+      });
   };
 
   render() {
-    const { show } = this.props;
-    return createPortal(
-      <Modal id="share-modal" centered show={show} size="lg" onHide={this.handleClose}>
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
@@ -145,8 +144,7 @@ class ShareModalComponent extends Component<Props, State> {
             </>
           )}
         </Modal.Body>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }

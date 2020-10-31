@@ -1,60 +1,49 @@
 import React, { Component } from 'react';
 import { NavDropdown } from 'react-bootstrap';
-import { InformationModal } from '../../modals/information-modal/information-modal';
 import { bugReportURL } from '../../../constant';
-import { HelpModelingModal } from '../../modals/help-modeling-modal/help-modeling-modal';
+import { ModalRepository } from '../../../services/modal/modal-repository';
+import { connect } from 'react-redux';
+import { ApplicationState } from '../../store/application-state';
+import { ModalContentType } from '../../modals/application-modal-types';
 
-type Props = {};
+type OwnProps = {};
 
-type State = {
-  showInformationModal: boolean;
-  showHelpModelingModal: boolean;
+type State = {};
+
+type StateProps = {};
+
+type DispatchProps = {
+  openModal: typeof ModalRepository.showModal;
 };
 
-const getInitialState = (): State => {
-  return { showInformationModal: false, showHelpModelingModal: false };
-};
+type Props = OwnProps & StateProps & DispatchProps;
 
-export class HelpMenu extends Component<Props, State> {
-  state = getInitialState();
+const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {
+  openModal: ModalRepository.showModal,
+});
 
+class HelpMenuComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.openInformationModal = this.openInformationModal.bind(this);
-    this.closeInformationModal = this.closeInformationModal.bind(this);
-    this.openHelpModelingModal = this.openHelpModelingModal.bind(this);
-    this.closeHelpModelingModal = this.closeHelpModelingModal.bind(this);
-  }
-
-  closeInformationModal(): void {
-    this.setState({ showInformationModal: false });
-  }
-
-  openInformationModal(): void {
-    this.setState({ showInformationModal: true });
-  }
-
-  closeHelpModelingModal(): void {
-    this.setState({ showHelpModelingModal: false });
-  }
-
-  openHelpModelingModal(): void {
-    this.setState({ showHelpModelingModal: true });
   }
 
   render() {
     return (
       <>
         <NavDropdown id="file-menu-item" title="Help" style={{ paddingTop: 0, paddingBottom: 0 }}>
-          <NavDropdown.Item onClick={this.openHelpModelingModal}>How does this Editor work?</NavDropdown.Item>
-          <NavDropdown.Item onClick={this.openInformationModal}>About Apollon</NavDropdown.Item>
+          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.HelpModelingModal, 'lg')}>
+            How does this Editor work?
+          </NavDropdown.Item>
+          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.InformationModal)}>
+            About Apollon
+          </NavDropdown.Item>
           <a href={bugReportURL} target="_blank" style={{ color: '#212529' }} className="dropdown-item">
             Report a Problem
           </a>
         </NavDropdown>
-        <InformationModal show={this.state.showInformationModal} close={this.closeInformationModal} />
-        <HelpModelingModal show={this.state.showHelpModelingModal} close={this.closeHelpModelingModal} />
       </>
     );
   }
 }
+
+export const HelpMenu = enhance(HelpMenuComponent);

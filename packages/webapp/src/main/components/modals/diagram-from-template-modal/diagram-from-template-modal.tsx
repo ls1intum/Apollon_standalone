@@ -1,12 +1,11 @@
-import React, { Component, ComponentClass, ReactPortal } from 'react';
-import { createPortal } from 'react-dom';
+import React, { Component, ComponentClass } from 'react';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { ListGroup, Modal, Tabs, Button, Tab, InputGroup, FormControl } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { getPatternsForCategory, Pattern, PatternCategory, PatternToModelMapping } from './pattern-catalogue-types';
+import { getPatternsForCategory, Pattern, PatternCategory, PatternToModelMapping } from './diagram-from-template-modal-types';
 import { UMLDiagramType } from '@ls1intum/apollon/lib/typings';
 
 function patternTabComponentForCategory(
@@ -33,7 +32,6 @@ function patternTabComponentForCategory(
 }
 
 type OwnProps = {
-  show: boolean;
   close: () => void;
 };
 
@@ -64,18 +62,13 @@ const enhance = compose<ComponentClass<OwnProps>>(
   }),
 );
 
-class PatternCatalogueModalComponent extends Component<Props, State> {
+class DiagramFromTemplateModalComponent extends Component<Props, State> {
   state = getInitialState();
 
   constructor(props: Props) {
     super(props);
     this.createNewDiagram = this.createNewDiagram.bind(this);
   }
-
-  handleClose = () => {
-    this.props.close();
-    this.setState(getInitialState());
-  };
 
   selectPattern = (pattern: Pattern) => {
     const newState: State = { ...this.state, selectedPattern: pattern };
@@ -93,13 +86,11 @@ class PatternCatalogueModalComponent extends Component<Props, State> {
       UMLDiagramType.ClassDiagram,
       PatternToModelMapping[this.state.selectedPattern],
     );
-    this.handleClose();
   }
 
-  render(): ReactPortal {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={this.handleClose}>
+  render() {
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Create New Diagram</Modal.Title>
         </Modal.Header>
@@ -119,17 +110,16 @@ class PatternCatalogueModalComponent extends Component<Props, State> {
           </Tabs>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>
+          <Button variant="secondary" onClick={this.props.close}>
             Close
           </Button>
           <Button variant="primary" onClick={this.createNewDiagram} disabled={!this.state.selectedPattern}>
             Create Diagram
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }
 
-export const PatternCatalogueModal = enhance(PatternCatalogueModalComponent);
+export const DiagramFromTemplateModal = enhance(DiagramFromTemplateModalComponent);

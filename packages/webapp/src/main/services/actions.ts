@@ -4,6 +4,7 @@ import { EditorOptionsActions } from './editor-options/editor-options-types';
 import { ImportActions } from './import/import-types';
 import { DiagramActions } from './diagram/diagram-types';
 import { ErrorActions } from './error-management/error-types';
+import { ModalActions } from './modal/modal-types';
 
 export type Actions =
   | LocalStorageActions
@@ -11,7 +12,8 @@ export type Actions =
   | EditorOptionsActions
   | ImportActions
   | DiagramActions
-  | ErrorActions;
+  | ErrorActions
+  | ModalActions;
 
 export const enum StopActionType {
   STOP_ACTION = '@@stop_action',

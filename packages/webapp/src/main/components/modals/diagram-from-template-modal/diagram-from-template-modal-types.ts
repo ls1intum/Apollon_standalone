@@ -1,9 +1,9 @@
 import { UMLModel } from '@ls1intum/apollon';
-import observerModel from '../../../pattern/behavioral/observer.json';
-import commandModel from '../../../pattern/behavioral/command.json';
-import adapterModel from '../../../pattern/structural/adapter.json';
-import bridgeModel from '../../../pattern/structural/bridge.json';
-import factoryModel from '../../../pattern/creational/factory.json';
+import observerModel from '../../../templates/pattern/behavioral/observer.json';
+import commandModel from '../../../templates/pattern/behavioral/command.json';
+import adapterModel from '../../../templates/pattern/structural/adapter.json';
+import bridgeModel from '../../../templates/pattern/structural/bridge.json';
+import factoryModel from '../../../templates/pattern/creational/factory.json';
 
 export enum PatternCategory {
   CREATIONAL = 'Creational',

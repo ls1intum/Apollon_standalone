@@ -1,24 +1,16 @@
-import React from 'react';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { createPortal } from 'react-dom';
 
 type Props = {
-  show: boolean;
   close: () => void;
 };
 
 type State = {};
 
 export class HelpModelingModal extends Component<Props, State> {
-  handleClose = () => {
-    this.props.close();
-  };
-
   render() {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" size="lg" centered show={show} onHide={this.handleClose}>
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>How to use this editor?</Modal.Title>
         </Modal.Header>
@@ -83,12 +75,11 @@ export class HelpModelingModal extends Component<Props, State> {
           </table>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>
+          <Button variant="secondary" onClick={this.props.close}>
             Close
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }

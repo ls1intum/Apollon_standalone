@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { Actions } from '../actions';
 import { Diagram, DiagramActionTypes } from './diagram-types';
 
-export const DiagramReducer: Reducer<Diagram | null, Actions> = (state, action) => {
+export const DiagramReducer: Reducer<Diagram | null, Actions> = (state = null, action) => {
   switch (action.type) {
     case DiagramActionTypes.UPDATE_DIAGRAM: {
       const { payload } = action;
@@ -14,5 +14,5 @@ export const DiagramReducer: Reducer<Diagram | null, Actions> = (state, action) 
     }
   }
 
-  return !state ? null : state;
+  return state;
 };

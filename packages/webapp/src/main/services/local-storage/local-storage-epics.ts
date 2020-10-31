@@ -8,7 +8,7 @@ import { StopAction, StopActionType } from '../actions';
 import moment from 'moment';
 import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
-import { ErrorActionType, LoadDiagramErrorAction } from '../error-management/error-types';
+import { ErrorActionType, DisplayErrorAction } from '../error-management/error-types';
 import { ErrorRepository } from '../error-management/error-repository';
 import { of } from 'rxjs';
 import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
@@ -54,7 +54,7 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
 
 export const loadDiagramEpic: Epic<
   Action,
-  UpdateDiagramAction | ChangeDiagramTypeAction | LoadDiagramErrorAction,
+  UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction,
   ApplicationState
 > = (action$, store) => {
   return action$.pipe(
@@ -75,10 +75,10 @@ export const loadDiagramEpic: Epic<
       } else {
         return of(
           ErrorRepository.createError(
-            ErrorActionType.ERROR_LOAD_DIAGRAM,
+            ErrorActionType.DISPLAY_ERROR,
             'Could not load diagram',
             `The key for diagram with id ${id} could not be found. Maybe you deleted it from your local storage?`,
-          ) as LoadDiagramErrorAction,
+          ) as DisplayErrorAction,
         );
       }
     }),

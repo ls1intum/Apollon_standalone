@@ -1,7 +1,6 @@
-import { Component, ComponentClass, ReactPortal } from 'react';
+import { Component, ComponentClass } from 'react';
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { createPortal } from 'react-dom';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
@@ -9,11 +8,11 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import { LoadDiagramContent } from './load-diagram-content';
+import { localStorageDiagramsList } from '../../../constant';
+import moment from 'moment';
 
 type OwnProps = {
-  show: boolean;
   close: () => void;
-  diagrams: LocalStorageDiagramListItem[];
 };
 
 type State = {
@@ -50,6 +49,25 @@ class LoadDiagramModalComponent extends Component<Props, State> {
     this.select = this.select.bind(this);
   }
 
+  getSavedDiagrams(): LocalStorageDiagramListItem[] {
+    // load localStorageList
+    const localStorageDiagramList = window.localStorage.getItem(localStorageDiagramsList);
+    let localDiagrams: LocalStorageDiagramListItem[];
+    if (localStorageDiagramList) {
+      localDiagrams = JSON.parse(localStorageDiagramList);
+      // create full moment dates
+      localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
+      // sort desc to lastUpdate -> * -1
+      localDiagrams.sort(
+        (first: LocalStorageDiagramListItem, second: LocalStorageDiagramListItem) =>
+          (first.lastUpdate.valueOf() - second.lastUpdate.valueOf()) * -1,
+      );
+    } else {
+      localDiagrams = [];
+    }
+    return localDiagrams;
+  }
+
   handleClose = () => {
     this.props.close();
     this.setState(getInitialState());
@@ -64,15 +82,14 @@ class LoadDiagramModalComponent extends Component<Props, State> {
     this.handleClose();
   };
 
-  render(): ReactPortal {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={this.handleClose}>
+  render() {
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Load Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoadDiagramContent diagrams={this.props.diagrams} onSelect={this.select} />
+          <LoadDiagramContent diagrams={this.getSavedDiagrams()} onSelect={this.select} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
@@ -86,8 +103,7 @@ class LoadDiagramModalComponent extends Component<Props, State> {
             Load Diagram
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }

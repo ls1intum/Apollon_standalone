@@ -4,14 +4,7 @@ import { ApollonError, ErrorActionType } from './error-types';
 
 export const ErrorReducer: Reducer<ApollonError[], Actions> = (state = [], action) => {
   switch (action.type) {
-    case ErrorActionType.ERROR_IMPORT_DIAGRAM: {
-      // currently there is no difference between the errors, that might changes
-      const { payload } = action;
-      const errors: ApollonError[] = state ? [...state] : [];
-      errors.push({ ...payload });
-      return errors;
-    }
-    case ErrorActionType.ERROR_LOAD_DIAGRAM: {
+    case ErrorActionType.DISPLAY_ERROR: {
       const { payload } = action;
       const errors: ApollonError[] = state ? [...state] : [];
       errors.push({ ...payload });

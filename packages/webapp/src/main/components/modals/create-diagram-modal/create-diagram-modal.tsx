@@ -1,6 +1,5 @@
 import { UMLDiagramType } from '@ls1intum/apollon';
-import React, { Component, ComponentClass, ReactPortal } from 'react';
-import { createPortal } from 'react-dom';
+import React, { Component, ComponentClass } from 'react';
 import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
@@ -9,7 +8,6 @@ import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 
 type OwnProps = {
-  show: boolean;
   close: () => void;
 };
 
@@ -44,18 +42,13 @@ const enhance = compose<ComponentClass<OwnProps>>(
 
 const diagramsInBeta = [UMLDiagramType.PetriNet.valueOf(), UMLDiagramType.SyntaxTree.valueOf()];
 
-class NewDiagramModalComponent extends Component<Props, State> {
+class CreateDiagramModalComponent extends Component<Props, State> {
   state = getInitialState();
 
   constructor(props: Props) {
     super(props);
     this.createNewDiagram = this.createNewDiagram.bind(this);
   }
-
-  handleClose = () => {
-    this.props.close();
-    this.setState(getInitialState());
-  };
 
   select = (diagramType: UMLDiagramType) => {
     const newState = { ...this.state, selectedDiagramType: diagramType };
@@ -71,17 +64,16 @@ class NewDiagramModalComponent extends Component<Props, State> {
 
   createNewDiagram() {
     this.props.createDiagram(this.state.diagramTitle, this.state.selectedDiagramType as UMLDiagramType);
-    this.handleClose();
+    this.props.close();
   }
 
   generateDiagramTitle(type: UMLDiagramType): string {
     return type;
   }
 
-  render(): ReactPortal {
-    const { show } = this.props;
-    return createPortal(
-      <Modal aria-labelledby="contained-modal-title-vcenter" centered show={show} onHide={this.handleClose}>
+  render() {
+    return (
+      <>
         <Modal.Header closeButton>
           <Modal.Title>Create New Diagram</Modal.Title>
         </Modal.Header>
@@ -110,17 +102,16 @@ class NewDiagramModalComponent extends Component<Props, State> {
           </ListGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>
+          <Button variant="secondary" onClick={this.props.close}>
             Close
           </Button>
           <Button variant="primary" onClick={this.createNewDiagram} disabled={!this.state.selectedDiagramType}>
             Create Diagram
           </Button>
         </Modal.Footer>
-      </Modal>,
-      document.body,
+      </>
     );
   }
 }
 
-export const NewDiagramModal = enhance(NewDiagramModalComponent);
+export const CreateDiagramModal = enhance(CreateDiagramModalComponent);
