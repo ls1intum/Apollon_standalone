@@ -1,9 +1,10 @@
 import { DiagramDTO } from 'shared/src/main/diagram-dto';
-import { FileStorageService } from './storage-service/file-storage-service';
-import { diagramStoragePath, tokenLength } from '../constants';
-import { randomString } from '../utils';
+import { FileStorageService } from '../storage-service/file-storage-service';
+import { randomString } from '../../utils';
+import { diagramStoragePath, tokenLength } from '../../constants';
+import { DiagramService } from './diagram-service';
 
-export class DiagramService {
+export class FileDiagramService implements DiagramService {
   private fileStorageService: FileStorageService = new FileStorageService();
 
   /**
@@ -29,7 +30,7 @@ export class DiagramService {
     return this.fileStorageService.getFileContent(path).then((fileContent) => JSON.parse(fileContent) as DiagramDTO);
   }
 
-  getFilePathForToken(token: string): string {
+  private getFilePathForToken(token: string): string {
     return `${diagramStoragePath}/${token}.json`;
   }
 }
