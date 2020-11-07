@@ -5,7 +5,7 @@ import { ImportDiagramModal } from './import-diagram-modal/import-diagram-modal'
 import { InformationModal } from './information-modal/information-modal';
 import { LoadDiagramModal } from './load-diagram-modal/load-diagram-modal';
 import { CreateDiagramModal } from './create-diagram-modal/create-diagram-modal';
-import { DiagramFromTemplateModal } from './diagram-from-template-modal/diagram-from-template-modal';
+import { CreateFromTemplateModal } from './create-diagram-from-template-modal/create-from-template-modal';
 import { ShareModal } from './share-modal/share-modal';
 
 export const ApplicationModalContent: { [key in ModalContentType]: ComponentType<any> } = {
@@ -14,6 +14,6 @@ export const ApplicationModalContent: { [key in ModalContentType]: ComponentType
   [ModalContentType.InformationModal]: InformationModal,
   [ModalContentType.LoadDiagramModal]: LoadDiagramModal,
   [ModalContentType.CreateDiagramModal]: CreateDiagramModal,
-  [ModalContentType.CreateDiagramFromTemplateModal]: DiagramFromTemplateModal,
+  [ModalContentType.CreateDiagramFromTemplateModal]: CreateFromTemplateModal,
   [ModalContentType.ShareModal]: ShareModal,
 };

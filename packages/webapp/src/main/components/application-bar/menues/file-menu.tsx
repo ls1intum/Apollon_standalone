@@ -71,8 +71,10 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramModal)}>
             New
           </NavDropdown.Item>
-          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramFromTemplateModal)}>
-            Start from Pattern
+          <NavDropdown.Item
+            onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramFromTemplateModal, 'lg')}
+          >
+            Start from Template
           </NavDropdown.Item>
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.LoadDiagramModal)}>
             Load
