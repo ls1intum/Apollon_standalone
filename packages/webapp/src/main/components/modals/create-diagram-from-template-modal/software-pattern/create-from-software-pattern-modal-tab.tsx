@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
-import { SoftwarePatternFactory } from './software-pattern-factory';
 import { SoftwarePatternTemplate, SoftwarePatternCategory, SoftwarePatternType } from './software-pattern-types';
 import { Template } from '../template-types';
+import { TemplateFactory } from '../template-factory';
 
 type Props = {
-  factory: SoftwarePatternFactory;
   selectedTemplate: SoftwarePatternTemplate;
   selectTemplate: (template: Template) => void;
 };
@@ -59,7 +58,9 @@ export class CreateFromSoftwarePatternModalTab extends Component<Props, State> {
   };
 
   render() {
-    const allPatterns = Object.values(SoftwarePatternType).map((pattern) => this.props.factory.getTemplate(pattern));
+    const allPatterns = Object.values(SoftwarePatternType).map((pattern) =>
+      TemplateFactory.createSoftwarePattern(pattern),
+    );
 
     return (
       <>

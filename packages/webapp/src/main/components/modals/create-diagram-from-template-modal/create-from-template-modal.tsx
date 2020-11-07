@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { Modal, Button, InputGroup, FormControl, Tab, Col, Row, Nav } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { TemplateFactory } from './template-factory';
-import { SoftwarePatternFactory } from './software-pattern/software-pattern-factory';
 import { Template, TemplateCategory } from './template-types';
 import { SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern/software-pattern-types';
 import { CreateFromSoftwarePatternModalTab } from './software-pattern/create-from-software-pattern-modal-tab';
+import { TemplateFactory } from './template-factory';
 
 type OwnProps = {
   close: () => void;
@@ -20,9 +19,9 @@ type State = {
   selectedTemplateCategory: TemplateCategory;
 };
 
-const getInitialState = (factory: TemplateFactory): State => {
+const getInitialState = (): State => {
   return {
-    selectedTemplate: factory.getTemplate(SoftwarePatternType.ADAPTER),
+    selectedTemplate: TemplateFactory.createSoftwarePattern(SoftwarePatternType.ADAPTER),
     selectedTemplateCategory: TemplateCategory.SOFTWARE_PATTERN,
   };
 };
@@ -43,8 +42,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
 );
 
 class DiagramFromTemplateModalComponent extends Component<Props, State> {
-  factory: TemplateFactory = new SoftwarePatternFactory();
-  state = getInitialState(this.factory);
+  state = getInitialState();
 
   constructor(props: Props) {
     super(props);
@@ -54,7 +52,6 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
 
   selectTemplateCategory = (templateCategory: TemplateCategory) => {
     const newState: State = { ...this.state, selectedTemplateCategory: templateCategory };
-    // exchange factory here if new template category is added
     this.setState(newState);
   };
 
@@ -107,7 +104,6 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
                 <Tab.Content>
                   <Tab.Pane eventKey={TemplateCategory.SOFTWARE_PATTERN}>
                     <CreateFromSoftwarePatternModalTab
-                      factory={this.factory as SoftwarePatternFactory}
                       selectedTemplate={this.state.selectedTemplate as SoftwarePatternTemplate}
                       selectTemplate={this.selectTemplate}
                     />
