@@ -3,10 +3,9 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { ImportRepository } from '../../../services/import/import-repository';
+import { ModalContentProps } from "../application-modal-types";
 
-type OwnProps = {
-  close: () => void;
-};
+type OwnProps = {} & ModalContentProps;
 
 type State = {
   selectedFile?: File;

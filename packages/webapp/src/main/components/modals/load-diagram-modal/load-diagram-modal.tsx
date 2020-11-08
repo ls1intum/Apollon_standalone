@@ -10,10 +10,9 @@ import { LocalStorageDiagramListItem } from '../../../services/local-storage/loc
 import { LoadDiagramContent } from './load-diagram-content';
 import { localStorageDiagramsList } from '../../../constant';
 import moment from 'moment';
+import { ModalContentProps } from '../application-modal-types';
 
-type OwnProps = {
-  close: () => void;
-};
+type OwnProps = {} & ModalContentProps;
 
 type State = {
   selectedDiagramId?: string;

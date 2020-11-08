@@ -24,13 +24,14 @@ function patternTabComponentForCategory(
   selectedPattern: SoftwarePatternTemplate,
   selectPattern: (pattern: SoftwarePatternTemplate) => void,
 ) {
-  const pattern = softwarePatternTemplates.filter(
+  // BEHAVIORAL, STRUCTURAL, CREATIONAL
+  const categoryPatterns = softwarePatternTemplates.filter(
     (patternTemplate) => patternTemplate.softwarePatternCategory === category,
   );
   return (
     <Tab eventKey={category} title={category} tabClassName="pl-2 pr-2" className="mt-1">
       <ListGroup id="diagram-type-list">
-        {pattern.map((softwarePattern, index, array) => (
+        {categoryPatterns.map((softwarePattern, index, array) => (
           <ListGroup.Item
             key={softwarePattern.type}
             action

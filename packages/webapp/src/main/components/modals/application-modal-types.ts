@@ -14,3 +14,7 @@ export const ModalContentType = {
  * type of ModalProps.size
  */
 export type ModalSize = 'sm' | 'lg' | 'xl' | undefined;
+
+export type ModalContentProps = {
+  close: () => void;
+};

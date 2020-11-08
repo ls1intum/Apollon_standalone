@@ -9,10 +9,9 @@ import { Template, TemplateCategory } from './template-types';
 import { SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern/software-pattern-types';
 import { CreateFromSoftwarePatternModalTab } from './software-pattern/create-from-software-pattern-modal-tab';
 import { TemplateFactory } from './template-factory';
+import { ModalContentProps } from '../application-modal-types';
 
-type OwnProps = {
-  close: () => void;
-};
+type OwnProps = {} & ModalContentProps;
 
 type State = {
   selectedTemplate: Template;

@@ -9,10 +9,9 @@ import { DiagramView } from 'shared/src/main/diagram-view';
 import { ErrorRepository } from '../../../services/error-management/error-repository';
 import { ErrorActionType } from '../../../services/error-management/error-types';
 import { ModalRepository } from '../../../services/modal/modal-repository';
+import { ModalContentProps } from '../application-modal-types';
 
-type OwnProps = {
-  close: () => void;
-};
+type OwnProps = {} & ModalContentProps;
 
 type StateProps = {
   diagram: Diagram;

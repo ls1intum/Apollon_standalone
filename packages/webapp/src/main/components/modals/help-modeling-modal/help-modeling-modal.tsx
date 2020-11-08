@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { ModalContentProps } from '../application-modal-types';
 
-type Props = {
-  close: () => void;
-};
+type Props = {} & ModalContentProps;
 
 type State = {};
 

@@ -6,10 +6,9 @@ import { withApollonEditor } from '../../apollon-editor-component/with-apollon-e
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { ModalContentProps } from "../application-modal-types";
 
-type OwnProps = {
-  close: () => void;
-};
+type OwnProps = {} & ModalContentProps;
 
 type State = {
   selectedDiagramType: string;

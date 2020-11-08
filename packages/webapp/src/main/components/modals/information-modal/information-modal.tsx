@@ -7,10 +7,9 @@ import {
   apollonStandaloneRepositoryLink,
   appVersion,
 } from '../../../application-constants';
+import { ModalContentProps } from '../application-modal-types';
 
-type Props = {
-  close: () => void;
-};
+type Props = {} & ModalContentProps;
 
 type State = {
   selectedFile?: File;
