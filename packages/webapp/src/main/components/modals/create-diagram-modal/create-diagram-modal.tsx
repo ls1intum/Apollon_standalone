@@ -6,7 +6,7 @@ import { withApollonEditor } from '../../apollon-editor-component/with-apollon-e
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { ModalContentProps } from "../application-modal-types";
+import { ModalContentProps } from '../application-modal-types';
 
 type OwnProps = {} & ModalContentProps;
 

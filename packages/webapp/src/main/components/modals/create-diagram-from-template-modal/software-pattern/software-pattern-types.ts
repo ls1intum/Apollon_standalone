@@ -30,13 +30,12 @@ export class SoftwarePatternTemplate extends Template {
    * @param patternCategory
    */
   constructor(
-    templateCategory: TemplateCategory,
     templateType: TemplateType,
     diagramType: UMLDiagramType,
     diagram: UMLModel,
     patternCategory: SoftwarePatternCategory,
   ) {
-    super(templateCategory, templateType, diagramType, diagram);
+    super(templateType, diagramType, diagram);
     this.softwarePatternCategory = patternCategory;
   }
 }

@@ -18,7 +18,6 @@ export class TemplateFactory {
     switch (softwarePatternType) {
       case SoftwarePatternType.ADAPTER:
         return new SoftwarePatternTemplate(
-          TemplateCategory.SOFTWARE_PATTERN,
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
           adapterModel as any,
@@ -26,7 +25,6 @@ export class TemplateFactory {
         );
       case SoftwarePatternType.BRIDGE:
         return new SoftwarePatternTemplate(
-          TemplateCategory.SOFTWARE_PATTERN,
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
           bridgeModel as any,
@@ -34,7 +32,6 @@ export class TemplateFactory {
         );
       case SoftwarePatternType.COMMAND:
         return new SoftwarePatternTemplate(
-          TemplateCategory.SOFTWARE_PATTERN,
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
           commandModel as any,
@@ -42,7 +39,6 @@ export class TemplateFactory {
         );
       case SoftwarePatternType.FACTORY:
         return new SoftwarePatternTemplate(
-          TemplateCategory.SOFTWARE_PATTERN,
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
           factoryModel as any,
@@ -50,7 +46,6 @@ export class TemplateFactory {
         );
       case SoftwarePatternType.OBSERVER:
         return new SoftwarePatternTemplate(
-          TemplateCategory.SOFTWARE_PATTERN,
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
           observerModel as any,
