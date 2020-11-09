@@ -77,7 +77,7 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
         <Modal.Body>
           <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.selectedTemplateCategory}>
             <Row>
-              <Col sm={4} className="border-right border-secondary">
+              <Col sm={3} className="border-right border-secondary">
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
                     <Nav.Link
@@ -95,7 +95,7 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
                   {/*</Nav.Item>*/}
                 </Nav>
               </Col>
-              <Col sm={8}>
+              <Col sm={9}>
                 <label htmlFor="selected-template">Selected Template</label>
                 <InputGroup className="mb-3">
                   <FormControl id="selected-template" value={this.state.selectedTemplate.type} disabled />
