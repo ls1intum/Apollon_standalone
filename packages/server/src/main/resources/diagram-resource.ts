@@ -1,9 +1,9 @@
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
-import { FileDiagramService } from "../services/diagram-service/file-diagram-service";
+import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
 
 export class DiagramResource {
-  diagramService: DiagramService = new FileDiagramService();
+  diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());
 
   getDiagram = (req: any, res: any) => {
     const tokenValue: string = req.params.token;

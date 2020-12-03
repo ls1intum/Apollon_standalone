@@ -5,8 +5,8 @@
   "scripts": {
     "clean": "rm -rf ../../build/server",
     "start": "ts-node-dev src/main/server.ts",
-    "build": "yarn clean && tsc --build tsconfig.json && cp package.json ../../build/server",
-    "lint": "tslint --force -p tsconfig.json -c tslint.json -t stylish"
+    "build": "webpack --config webpack/webpack.config.js",
+    "lint": "tslint --force -p tsconfig.json -c tslint.json"
   },
   "dependencies": {
     "body-parser": "1.19.0",

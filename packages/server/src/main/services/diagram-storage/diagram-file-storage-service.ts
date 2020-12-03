@@ -1,20 +1,13 @@
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
 import { FileStorageService } from '../storage-service/file-storage-service';
-import { randomString } from '../../utils';
-import { diagramStoragePath, tokenLength } from '../../constants';
-import { DiagramService } from './diagram-service';
+import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
+import { diagramStoragePath } from '../../constants';
+import { DiagramStorageService } from './diagram-storage-service';
 
-export class FileDiagramService implements DiagramService {
+export class DiagramFileStorageService implements DiagramStorageService {
   private fileStorageService: FileStorageService = new FileStorageService();
 
-  /**
-   * saves the diagram (if no file for diagram yet exists) and generates tokens which are used to access the diagram in different views
-   * @param diagramDTO
-   * @returns editor token which gives full right to edit and share the diagram
-   */
-  saveDiagramAndGenerateTokens(diagramDTO: DiagramDTO): Promise<string> {
+  saveDiagram(diagramDTO: DiagramDTO, token: string): Promise<string> {
     // alpha numeric token with length = tokenLength
-    const token = randomString(tokenLength);
     const path = this.getFilePathForToken(token);
     return this.fileStorageService.doesFileExist(path).then((exists) => {
       if (exists) {
@@ -24,7 +17,6 @@ export class FileDiagramService implements DiagramService {
       }
     });
   }
-
   getDiagramByLink(token: string): Promise<DiagramDTO | undefined> {
     const path = this.getFilePathForToken(token);
     return this.fileStorageService.getFileContent(path).then((fileContent) => JSON.parse(fileContent) as DiagramDTO);
