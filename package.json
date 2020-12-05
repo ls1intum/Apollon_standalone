@@ -16,6 +16,7 @@
     "start:webapp": "yarn workspace webapp start",
     "start:server": "yarn workspace server start",
     "build": "concurrently \"yarn build:webapp\" \"yarn build:server\" ",
+    "build:local": "concurrently \"yarn build:webapp:local\" \"yarn build:server\" ",
     "build:webapp": "yarn workspace webapp build",
     "build:webapp:local": "yarn workspace webapp build:local",
     "build:server": "yarn workspace server build",

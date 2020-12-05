@@ -4,8 +4,11 @@ module.exports = {
   entry: './src/main/server.ts',
   target: "node",
   devtool: 'inline-source-map',
+  node: {
+    __dirname: true
+  },
   output: {
-    path: path.resolve(__dirname, '../../../build/server/src/main/test'),
+    path: path.resolve(__dirname, '../../../build/server/'),
     filename: 'bundle.js'
   },
   resolve: {

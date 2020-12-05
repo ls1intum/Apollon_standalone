@@ -8,7 +8,6 @@ import { DEPLOYMENT_URL } from '../../../constant';
 import { DiagramView } from 'shared/src/main/diagram-view';
 import { ErrorRepository } from '../../../services/error-management/error-repository';
 import { ErrorActionType } from '../../../services/error-management/error-types';
-import { ModalRepository } from '../../../services/modal/modal-repository';
 import { ModalContentProps } from '../application-modal-types';
 
 type OwnProps = {} & ModalContentProps;
@@ -19,7 +18,6 @@ type StateProps = {
 
 type DispatchProps = {
   createError: typeof ErrorRepository.createError;
-  closeModal: typeof ModalRepository.hideModal;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -30,7 +28,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
       diagram: state.diagram,
     };
   },
-  { createError: ErrorRepository.createError, closeModal: ModalRepository.hideModal },
+  { createError: ErrorRepository.createError },
 );
 
 const getInitialState = () => {
@@ -73,6 +71,11 @@ class ShareModalComponent extends Component<Props, State> {
     navigator.clipboard.writeText(link);
   };
 
+  handleClose = () => {
+    this.props.close();
+    this.setState(getInitialState());
+  };
+
   publishDiagram = () => {
     DiagramRepository.publishDiagramOnServer(this.props.diagram)
       .then((token: string) => {
@@ -84,7 +87,7 @@ class ShareModalComponent extends Component<Props, State> {
           'Connection failed',
           'Connection to the server failed. Please try again or report a problem.',
         );
-        this.props.closeModal();
+        this.handleClose();
         console.error(error);
       });
   };
