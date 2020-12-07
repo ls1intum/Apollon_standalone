@@ -42,6 +42,9 @@ export const updateDiagramEpic: Epic<Action, StoreAction, ApplicationState> = (a
     filter((action) => action.type === DiagramActionTypes.UPDATE_DIAGRAM),
     map((action) => action as UpdateDiagramAction),
     map((action: UpdateDiagramAction) => {
+      if (!store.value.diagram) {
+        throw Error('Updated diagram is not undefined or null');
+      }
       return LocalStorageRepository.store(store.value.diagram);
     }),
   );

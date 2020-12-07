@@ -13,7 +13,7 @@ import { ModalContentProps } from '../application-modal-types';
 type OwnProps = {} & ModalContentProps;
 
 type StateProps = {
-  diagram: Diagram;
+  diagram: Diagram | null;
 };
 
 type DispatchProps = {
@@ -77,19 +77,21 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   publishDiagram = () => {
-    DiagramRepository.publishDiagramOnServer(this.props.diagram)
-      .then((token: string) => {
-        this.setState({ token });
-      })
-      .catch((error) => {
-        this.props.createError(
-          ErrorActionType.DISPLAY_ERROR,
-          'Connection failed',
-          'Connection to the server failed. Please try again or report a problem.',
-        );
-        this.handleClose();
-        console.error(error);
-      });
+    if (this.props.diagram) {
+      DiagramRepository.publishDiagramOnServer(this.props.diagram)
+        .then((token: string) => {
+          this.setState({ token });
+        })
+        .catch((error) => {
+          this.props.createError(
+            ErrorActionType.DISPLAY_ERROR,
+            'Connection failed',
+            'Connection to the server failed. Please try again or report a problem.',
+          );
+          this.handleClose();
+          console.error(error);
+        });
+    }
   };
 
   render() {
