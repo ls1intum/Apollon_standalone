@@ -12,7 +12,9 @@ import { ModalContentType } from '../../modals/application-modal-types';
 
 type Props = {};
 
-type State = {};
+type State = {
+  show: boolean;
+};
 
 type StateProps = {
   diagram: Diagram | null;
@@ -49,6 +51,25 @@ class FileMenuComponent extends Component<OwnProps, State> {
     super(props);
     this.exportDiagram = this.exportDiagram.bind(this);
   }
+
+  componentDidMount() {
+    document.addEventListener('click', this.hideMenu);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.hideMenu);
+  }
+
+  showMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    this.setState({ show: true });
+    event.stopPropagation();
+  };
+
+  hideMenu = (event: MouseEvent) => {
+    this.setState({ show: false });
+    event.stopPropagation();
+  };
+
   exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON'): void {
     if (this.props.editor && this.props.diagram?.title) {
       switch (exportType) {
@@ -67,7 +88,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
   render() {
     return (
       <>
-        <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0">
+        <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0" onClick={this.showMenu}>
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramModal)}>
             New
           </NavDropdown.Item>

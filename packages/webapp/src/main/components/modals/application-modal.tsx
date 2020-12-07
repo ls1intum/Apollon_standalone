@@ -33,6 +33,9 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 class ApplicationModalComponent extends Component<Props, State> {
   render() {
     if (!this.props.displayModal) {
+      // Problem: when returned null the listeners are still kept at the document level to close the modal -> they hinder dropdowns to open
+      // -> dropdowns: on show -> stopPropagation
+      // if this is resolved at some point, the visibility management in menus can be removed
       return null;
     }
 

@@ -8,7 +8,7 @@ import { ModalContentType } from '../../modals/application-modal-types';
 
 type OwnProps = {};
 
-type State = {};
+type State = { show: boolean };
 
 type StateProps = {};
 
@@ -27,10 +27,33 @@ class HelpMenuComponent extends Component<Props, State> {
     super(props);
   }
 
+  componentDidMount() {
+    document.addEventListener('click', this.hideMenu);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.hideMenu);
+  }
+
+  showMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    this.setState({ show: true });
+    event.stopPropagation();
+  };
+
+  hideMenu = (event: MouseEvent) => {
+    this.setState({ show: false });
+    event.stopPropagation();
+  };
+
   render() {
     return (
       <>
-        <NavDropdown id="file-menu-item" title="Help" style={{ paddingTop: 0, paddingBottom: 0 }}>
+        <NavDropdown
+          id="file-menu-item"
+          title="Help"
+          style={{ paddingTop: 0, paddingBottom: 0 }}
+          onClick={this.showMenu}
+        >
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.HelpModelingModal, 'lg')}>
             How does this Editor work?
           </NavDropdown.Item>
