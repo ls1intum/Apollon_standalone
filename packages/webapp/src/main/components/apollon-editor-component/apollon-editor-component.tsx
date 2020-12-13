@@ -13,6 +13,7 @@ import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL } from '../../constant';
 import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository';
 import { DiagramView } from 'shared/src/main/diagram-view';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { ImportRepository } from '../../services/import/import-repository';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -35,7 +36,7 @@ type StateProps = {
 
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
-  changeDiagramType: typeof EditorOptionsRepository.changeDiagramType;
+  importDiagram: typeof ImportRepository.importJSON;
   changeEditorMode: typeof EditorOptionsRepository.changeEditorMode;
   changeReadonlyMode: typeof EditorOptionsRepository.changeReadonlyMode;
 };
@@ -62,7 +63,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
-      changeDiagramType: EditorOptionsRepository.changeDiagramType,
+      importDiagram: ImportRepository.importJSON,
       changeEditorMode: EditorOptionsRepository.changeEditorMode,
       changeReadonlyMode: EditorOptionsRepository.changeReadonlyMode,
     },
@@ -93,8 +94,7 @@ class ApollonEditorComponent extends Component<Props, State> {
         // this check fails in development setting because webpack dev server url !== deployment url
         DiagramRepository.getDiagramFromServerByToken(token).then((diagram) => {
           if (diagram) {
-            this.props.updateDiagram(diagram);
-            this.props.changeDiagramType(diagram.model.type);
+            this.props.importDiagram(JSON.stringify(diagram));
 
             // get query param
             const query = new URLSearchParams(this.props.location.search);
