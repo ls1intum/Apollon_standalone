@@ -11,6 +11,10 @@
     "build": "yarn clean && webpack --config ./webpack/webpack.prod.js",
     "build:local": "yarn clean && DEPLOYMENT_URL=http://localhost:8080 webpack --config ./webpack/webpack.prod.js"
   },
+  "engines": {
+    "node": ">=14.1.0",
+    "yarn": ">=1.22.5"
+  },
   "dependencies": {
     "@ls1intum/apollon": "2.3.1",
     "bootstrap": "4.5.3",
