@@ -39,7 +39,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
   }),
 );
 
-const diagramsInBeta = [UMLDiagramType.PetriNet.valueOf(), UMLDiagramType.SyntaxTree.valueOf()];
+const diagramsInBeta: string [] = [];
 
 class CreateDiagramModalComponent extends Component<Props, State> {
   state = getInitialState();
