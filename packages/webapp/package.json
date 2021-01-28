@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "clean": "rm -rf ../../build/webapp",
@@ -16,7 +16,7 @@
     "yarn": ">=1.22.5"
   },
   "dependencies": {
-    "@ls1intum/apollon": "2.3.2",
+    "@ls1intum/apollon": "2.4.0",
     "bootstrap": "4.5.3",
     "moment": "2.29.1",
     "react": "17.0.1",
