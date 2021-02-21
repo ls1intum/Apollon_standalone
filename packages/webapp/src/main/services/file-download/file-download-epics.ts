@@ -10,11 +10,17 @@ export const fileDownloadEpic: Epic<Action, StopAction, ApplicationState> = (act
     filter((action) => action.type === FileDownloadActionTypes.FILE_DOWNLOAD),
     map((action) => action as FileDownloadAction),
     map((action: FileDownloadAction) => {
-      const file: File = action.payload.file;
+      const file: File | Blob = action.payload.file;
       // TODO: find better way to download
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(file);
-      link.download = file.name;
+      if (action.payload.filename) {
+        link.download = action.payload.filename;
+      } else if (file instanceof File) {
+        link.download = file.name;
+      } else {
+        link.download = 'file';
+      }
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

@@ -52,4 +52,22 @@ export const DiagramRepository = {
       }
     });
   },
+  convertSvgToPdf(svg: string, width: number, height: number): Promise<Blob | null | undefined> {
+    const resourceUrl = `${BASE_URL}/diagrams/pdf`;
+    const body = JSON.stringify({ svg, width, height });
+    return fetch(resourceUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response) => {
+      if (response.ok) {
+        return response.blob();
+      } else {
+        // error occured or no diagram found
+        return null;
+      }
+    });
+  },
 };

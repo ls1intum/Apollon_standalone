@@ -1,5 +1,8 @@
-import { DiagramService } from '../services/diagram-service/diagram-service';
+// @ts-ignore
+import SVGtoPDF from 'svg-to-pdfkit';
+import PDFDocument from 'pdfkit';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
+import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
 
 export class DiagramResource {
@@ -32,5 +35,17 @@ export class DiagramResource {
     this.diagramService.saveDiagramAndGenerateTokens(diagram).then((token: string) => {
       res.status(200).send(token);
     });
+  };
+
+  convertSvgToPdf = (req: any, res: any) => {
+    const width: number = req.body.width;
+    const height: number = req.body.height;
+    const size = width && height ? [width, height] : 'a4';
+    const doc = new PDFDocument({ size });
+    const svg = req.body.svg;
+    SVGtoPDF(doc, svg, 0, 0);
+
+    doc.pipe(res);
+    doc.end();
   };
 }

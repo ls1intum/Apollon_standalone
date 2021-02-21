@@ -6,6 +6,7 @@ export const enum ExportActionTypes {
   EXPORT_SVG = '@@export/svg',
   EXPORT_PNG = '@@export/png',
   EXPORT_JSON = '@@export/json',
+  EXPORT_PDF = '@@export/pdf',
 }
 
 export type ExportSVGAction = Action<ExportActionTypes.EXPORT_SVG> & {
@@ -29,5 +30,13 @@ export type ExportJSONAction = Action<ExportActionTypes.EXPORT_JSON> & {
     // needs reference to ApollonEditor to perform export
     editor: ApollonEditor;
     diagram: Diagram;
+  };
+};
+
+export type ExportPDFAction = Action<ExportActionTypes.EXPORT_PDF> & {
+  payload: {
+    // needs reference to ApollonEditor to perform export
+    editor: ApollonEditor;
+    diagramTitle: string;
   };
 };
