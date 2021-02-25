@@ -40,7 +40,8 @@ export class DiagramResource {
   convertSvgToPdf = (req: any, res: any) => {
     const width: number = req.body.width;
     const height: number = req.body.height;
-    const size = width && height ? [width, height] : 'a4';
+    // 1 px is 1/96 inch and 1 pt is 1/72 inch so 1 pt is 1.33 px
+    const size = width && height ? [width / 1.33, height / 1.33] : 'a4';
     const doc = new PDFDocument({ size });
     const svg = req.body.svg;
     SVGtoPDF(doc, svg, 0, 0);
