@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@ls1intum/apollon": "2.4.0",
-    "moment": "2.29.1"
+    "moment": "2.29.1",
+    "ws": "7.4.4"
   }
 }

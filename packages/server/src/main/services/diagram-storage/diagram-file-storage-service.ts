@@ -6,11 +6,11 @@ import { DiagramStorageService } from './diagram-storage-service';
 export class DiagramFileStorageService implements DiagramStorageService {
   private fileStorageService: FileStorageService = new FileStorageService();
 
-  saveDiagram(diagramDTO: DiagramDTO, token: string): Promise<string> {
+  saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
     // alpha numeric token with length = tokenLength
     const path = this.getFilePathForToken(token);
     return this.fileStorageService.doesFileExist(path).then((exists) => {
-      if (exists) {
+      if (exists && !shared) {
         throw Error(`File at ${path} already exists`);
       } else {
         return this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO)).then(() => token);

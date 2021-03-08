@@ -42,7 +42,9 @@ const getInitialStore = (): ApplicationState => {
     diagram = { diagram: latestDiagram };
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
-    diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
+    diagram = {
+      diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() },
+    };
   }
 
   // initial application state
@@ -53,6 +55,10 @@ const getInitialStore = (): ApplicationState => {
     modal: {
       type: null,
       size: 'sm',
+    },
+    share: {
+      count: 0,
+      fromServer: false,
     },
   };
 };

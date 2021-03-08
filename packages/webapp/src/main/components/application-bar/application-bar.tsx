@@ -11,18 +11,18 @@ import { Diagram } from '../../services/diagram/diagram-types';
 import { APPLICATION_SERVER_VERSION } from '../../constant';
 import { ModalRepository } from '../../services/modal/modal-repository';
 import { ModalContentType } from '../modals/application-modal-types';
-
+import { ConnectClientsComponent } from './connected-clients-component';
 type OwnProps = {};
 
 type StateProps = {
   diagram: Diagram | null;
+  clientCount: number;
 };
 
 const DiagramTitle = styled.input`
   font-size: x-large;
   font-weight: bold;
   color: #fff;
-  margin-left: 1rem;
   background-color: transparent;
   border: none;
 `;
@@ -44,6 +44,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => {
     return {
       diagram: state.diagram,
+      clientCount: state.share.count,
     };
   },
   {
@@ -115,6 +116,7 @@ class ApplicationBarComponent extends Component<Props, State> {
                 onBlur={this.changeDiagramTitleApplicationState}
               />
             </Nav>
+            <ConnectClientsComponent numberOfClients={this.props.clientCount} />
           </Navbar.Collapse>
         </Navbar>
       </>

@@ -14,6 +14,9 @@ import { EditorOptionsRepository } from '../../services/editor-options/editor-op
 import { DiagramView } from 'shared/src/main/diagram-view';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { ImportRepository } from '../../services/import/import-repository';
+//@ts-ignore
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import { ShareRepository } from '../../services/share/share-repository';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -32,6 +35,7 @@ type State = {};
 type StateProps = {
   diagram: Diagram | null;
   options: ApollonOptions;
+  fromServer: boolean;
 };
 
 type DispatchProps = {
@@ -39,6 +43,8 @@ type DispatchProps = {
   importDiagram: typeof ImportRepository.importJSON;
   changeEditorMode: typeof EditorOptionsRepository.changeEditorMode;
   changeReadonlyMode: typeof EditorOptionsRepository.changeReadonlyMode;
+  updateClientCount: typeof ShareRepository.updateClientCount;
+  gotFromServer: typeof ShareRepository.gotFromServer;
 };
 
 type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext & RouteComponentProps<RouteProps>;
@@ -60,12 +66,15 @@ const enhance = compose<ComponentClass<OwnProps>>(
         theme: state.editorOptions.theme,
         locale: state.editorOptions.locale,
       },
+      fromServer: state.share.fromServer,
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
       importDiagram: ImportRepository.importJSON,
       changeEditorMode: EditorOptionsRepository.changeEditorMode,
       changeReadonlyMode: EditorOptionsRepository.changeReadonlyMode,
+      updateClientCount: ShareRepository.updateClientCount,
+      gotFromServer: ShareRepository.gotFromServer,
     },
   ),
 );
@@ -73,6 +82,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
 class ApollonEditorComponent extends Component<Props, State> {
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
+  private client: any;
 
   constructor(props: Props) {
     super(props);
@@ -83,6 +93,11 @@ class ApollonEditorComponent extends Component<Props, State> {
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           this.props.updateDiagram(diagram);
+          if (this.client && !this.props.fromServer) {
+            const { token } = this.props.match.params;
+            this.client.send(JSON.stringify({ token, diagram }));
+          }
+          this.props.gotFromServer(false);
         });
         this.props.setEditor(editor);
       }
@@ -91,11 +106,19 @@ class ApollonEditorComponent extends Component<Props, State> {
       // hosted with backend
       const { token } = this.props.match.params;
       if (token) {
-        // this check fails in development setting because webpack dev server url !== deployment url
-        DiagramRepository.getDiagramFromServerByToken(token).then((diagram) => {
+        this.client = new W3CWebSocket('ws://localhost:8080');
+        this.client.onopen = () => {
+          this.client.send(JSON.stringify({ token }));
+        };
+        this.client.onmessage = (message: any) => {
+          console.log(message);
+          const { count, diagram } = JSON.parse(message.data);
+          if (count) {
+            this.props.updateClientCount(count);
+          }
           if (diagram) {
+            this.props.gotFromServer(true);
             this.props.importDiagram(JSON.stringify(diagram));
-
             // get query param
             const query = new URLSearchParams(this.props.location.search);
             const view: DiagramView | null = query.get('view') as DiagramView;
@@ -116,7 +139,33 @@ class ApollonEditorComponent extends Component<Props, State> {
               }
             }
           }
-        });
+        };
+        // this check fails in development setting because webpack dev server url !== deployment url
+        // DiagramRepository.getDiagramFromServerByToken(token).then((diagram) => {
+        //   if (diagram) {
+        //     this.props.importDiagram(JSON.stringify(diagram));
+
+        //     // get query param
+        //     const query = new URLSearchParams(this.props.location.search);
+        //     const view: DiagramView | null = query.get('view') as DiagramView;
+        //     if (view) {
+        //       switch (view) {
+        //         case DiagramView.SEE_FEEDBACK:
+        //           this.props.changeEditorMode(ApollonMode.Assessment);
+        //           this.props.changeReadonlyMode(true);
+        //           break;
+        //         case DiagramView.GIVE_FEEDBACK:
+        //           this.props.changeEditorMode(ApollonMode.Assessment);
+        //           this.props.changeReadonlyMode(false);
+        //           break;
+        //         case DiagramView.EDIT:
+        //           this.props.changeEditorMode(ApollonMode.Modelling);
+        //           this.props.changeReadonlyMode(false);
+        //           break;
+        //       }
+        //     }
+        //   }
+        // });
       }
     }
   }

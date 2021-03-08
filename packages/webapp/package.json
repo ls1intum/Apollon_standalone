@@ -16,6 +16,9 @@
     "yarn": ">=1.22.5"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@ls1intum/apollon": "2.4.0",
     "bootstrap": "4.5.3",
     "moment": "2.29.1",
@@ -31,7 +34,8 @@
     "styled-components": "5.2.1",
     "tslib": "2.0.3",
     "typesafe-actions": "5.1.0",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "websocket": "^1.0.33"
   },
   "devDependencies": {
     "@types/react": "17.0.0",
