@@ -52,7 +52,7 @@ export const DiagramRepository = {
       }
     });
   },
-  convertSvgToPdf(svg: string, width: number, height: number): Promise<Blob | null | undefined> {
+  convertSvgToPdf(svg: string, width: number, height: number): Promise<Blob | undefined> {
     const resourceUrl = `${BASE_URL}/diagrams/pdf`;
     const body = JSON.stringify({ svg, width, height });
     return fetch(resourceUrl, {
@@ -66,7 +66,7 @@ export const DiagramRepository = {
         return response.blob();
       } else {
         // error occured or no diagram found
-        return null;
+        return undefined;
       }
     });
   },
