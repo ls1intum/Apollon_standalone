@@ -1,11 +1,14 @@
-import { DiagramService } from '../services/diagram-service/diagram-service';
+// @ts-ignore
+import SVGtoPDF from 'svg-to-pdfkit';
+import PDFDocument from 'pdfkit';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
+import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
-
+import { Request, Response } from 'express';
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());
 
-  getDiagram = (req: any, res: any) => {
+  getDiagram = (req: Request, res: Response) => {
     const tokenValue: string = req.params.token;
 
     // we want to make sure that we do not return all files requested by the user over this endpoint
@@ -27,10 +30,23 @@ export class DiagramResource {
     }
   };
 
-  publishDiagram = (req: any, res: any) => {
+  publishDiagram = (req: Request, res: Response) => {
     const diagram: DiagramDTO = req.body;
     this.diagramService.saveDiagramAndGenerateTokens(diagram).then((token: string) => {
       res.status(200).send(token);
     });
+  };
+
+  convertSvgToPdf = (req: Request, res: Response) => {
+    const width: number = req.body.width;
+    const height: number = req.body.height;
+    // 1 px is 1/96 inch and 1 pt is 1/72 inch so 1 pt is 1.33 px
+    const size = width && height ? [width / 1.33, height / 1.33] : 'a4';
+    const doc = new PDFDocument({ size });
+    const svg = req.body.svg;
+    SVGtoPDF(doc, svg, 0, 0);
+
+    doc.pipe(res);
+    doc.end();
   };
 }

@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
     "clean": "rm -rf ../../build/webapp",
@@ -16,7 +16,7 @@
     "yarn": ">=1.22.5"
   },
   "dependencies": {
-    "@ls1intum/apollon": "2.4.0",
+    "@ls1intum/apollon": "2.5.0",
     "bootstrap": "4.5.3",
     "moment": "2.29.1",
     "react": "17.0.1",
@@ -27,7 +27,7 @@
     "redux": "4.0.5",
     "redux-observable": "1.2.0",
     "rxjs": "6.6.3",
-    "shared": "1.0.1",
+    "shared": "1.1.1",
     "styled-components": "5.2.1",
     "tslib": "2.0.3",
     "typesafe-actions": "5.1.0",
