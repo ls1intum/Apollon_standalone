@@ -32,13 +32,18 @@ const clients: { [key: string]: string } = {};
 
 const wsServer = new WebSocket.Server({ noServer: true });
 
-const onConnectionLost = (socket: any) => {
-  console.log('socket.apollonId');
-  const token = clients[socket.apollonId];
-  delete clients[socket.apollonId];
-  const tokenClients = Object.values(clients).filter((clientToken) => {
+const getTokenClients = (id: string, deleteClient: boolean) => {
+  const token = clients[id];
+  if (deleteClient) {
+    delete clients[id];
+  }
+  return Object.values(clients).filter((clientToken) => {
     return clientToken === token;
   });
+};
+
+const onConnectionLost = (socket: any) => {
+  const tokenClients = getTokenClients(socket.apollonId, true);
   wsServer.clients.forEach(function each(clientSocket: any) {
     if (clientSocket !== socket && clientSocket.readyState === WebSocket.OPEN) {
       clientSocket.send(JSON.stringify({ count: tokenClients.length }));
@@ -48,9 +53,7 @@ const onConnectionLost = (socket: any) => {
 
 const onConnection = (socket: any, token: string) => {
   clients[socket.apollonId] = token;
-  const tokenClients = Object.keys(clients).filter((clientId) => {
-    return clients[clientId] === token;
-  });
+  const tokenClients = getTokenClients(socket.apollonId, false);
   wsServer.clients.forEach(function each(clientSocket: any) {
     if (
       clientSocket !== socket &&
@@ -66,13 +69,14 @@ const onDiagramUpdate = (socket: any, token: string, diagram: any) => {
   const diagramService = new DiagramFileStorageService();
   diagramService.saveDiagram(diagram, token, true);
   clients[socket.apollonId] = token;
+  const tokenClients = getTokenClients(socket.apollonId, false);
   wsServer.clients.forEach(function each(clientSocket: any) {
     if (
       clientSocket !== socket &&
       clientSocket.readyState === WebSocket.OPEN &&
       clients[clientSocket.apollonId] === token
     ) {
-      clientSocket.send(JSON.stringify({ diagram }));
+      clientSocket.send(JSON.stringify({ count: tokenClients.length, diagram }));
     }
   });
 };

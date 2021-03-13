@@ -107,6 +107,25 @@ class ApollonEditorComponent extends Component<Props, State> {
       const { token } = this.props.match.params;
       if (token) {
         this.client = new W3CWebSocket('ws://localhost:8080');
+        // get query param
+        const query = new URLSearchParams(this.props.location.search);
+        const view: DiagramView | null = query.get('view') as DiagramView;
+        if (view) {
+          switch (view) {
+            case DiagramView.SEE_FEEDBACK:
+              this.props.changeEditorMode(ApollonMode.Assessment);
+              this.props.changeReadonlyMode(true);
+              break;
+            case DiagramView.GIVE_FEEDBACK:
+              this.props.changeEditorMode(ApollonMode.Assessment);
+              this.props.changeReadonlyMode(false);
+              break;
+            case DiagramView.EDIT:
+              this.props.changeEditorMode(ApollonMode.Modelling);
+              this.props.changeReadonlyMode(false);
+              break;
+          }
+        }
         this.client.onopen = () => {
           this.client.send(JSON.stringify({ token }));
         };
@@ -119,25 +138,6 @@ class ApollonEditorComponent extends Component<Props, State> {
           if (diagram) {
             this.props.gotFromServer(true);
             this.props.importDiagram(JSON.stringify(diagram));
-            // get query param
-            const query = new URLSearchParams(this.props.location.search);
-            const view: DiagramView | null = query.get('view') as DiagramView;
-            if (view) {
-              switch (view) {
-                case DiagramView.SEE_FEEDBACK:
-                  this.props.changeEditorMode(ApollonMode.Assessment);
-                  this.props.changeReadonlyMode(true);
-                  break;
-                case DiagramView.GIVE_FEEDBACK:
-                  this.props.changeEditorMode(ApollonMode.Assessment);
-                  this.props.changeReadonlyMode(false);
-                  break;
-                case DiagramView.EDIT:
-                  this.props.changeEditorMode(ApollonMode.Modelling);
-                  this.props.changeReadonlyMode(false);
-                  break;
-              }
-            }
           }
         };
         // this check fails in development setting because webpack dev server url !== deployment url
