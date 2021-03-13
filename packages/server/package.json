@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf ../../build/server",
@@ -12,7 +12,7 @@
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "express": "4.17.1",
-    "shared": "1.0.1",
+    "shared": "1.1.1",
     "svg-to-pdfkit": "0.1.8"
   },
   "devDependencies": {

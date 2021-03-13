@@ -226,10 +226,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@ls1intum/apollon@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.4.0.tgz#6b35b31f5f4c72dc0fbdd20164e093669bea085d"
-  integrity sha512-lP2AKtrj7UYZhl6P0uei6tJBjvEILxJHGE30g4Go9XnRabQfqwDd2pg6BewBTAfltCRHy8bHtsMdChEwK0zEww==
+"@ls1intum/apollon@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.5.0.tgz#f28bdd0cd522b0695f41d1ca1d38786edbc98985"
+  integrity sha512-k5mCNIXVQu69ePApsXiek5NlWjS1gKRtQ09T+CF+klwvCAk2gs83ERb35cqEF4YptzRmo2h1gNVgaEtl+cKewQ==
   dependencies:
     is-mobile "2.2.2"
     pepjs "0.5.3"
