@@ -1,10 +1,12 @@
+import { Request, Response } from 'express';
 // @ts-ignore
-import SVGtoPDF from 'svg-to-pdfkit';
-import PDFDocument from 'pdfkit';
+import pdfMake from 'pdfmake/build/pdfmake.min';
+// @ts-ignore
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
-import { Request, Response } from 'express';
+
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());
 
@@ -40,13 +42,24 @@ export class DiagramResource {
   convertSvgToPdf = (req: Request, res: Response) => {
     const width: number = req.body.width;
     const height: number = req.body.height;
-    // 1 px is 1/96 inch and 1 pt is 1/72 inch so 1 pt is 1.33 px
-    const size = width && height ? [width / 1.33, height / 1.33] : 'a4';
-    const doc = new PDFDocument({ size });
-    const svg = req.body.svg;
-    SVGtoPDF(doc, svg, 0, 0);
+    if (width === undefined || height === undefined) {
+      res.status(400).send('Both width and height must be defined');
+    } else {
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      const svg = req.body.svg;
+      var doc = pdfMake.createPdf({
+        content: [
+          {
+            svg,
+          },
+        ],
+        pageSize: { width, height },
+        pageMargins: 0,
+      });
+      const document = doc.getStream();
 
-    doc.pipe(res);
-    doc.end();
+      document.pipe(res);
+      document.end();
+    }
   };
 }
