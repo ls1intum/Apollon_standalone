@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 // @ts-ignore
 import pdfMake from 'pdfmake/build/pdfmake.min';
+// @ts-ignore
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
