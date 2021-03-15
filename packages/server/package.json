@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf ../../build/server",
@@ -13,7 +13,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "pdfmake": "0.1.70",
-    "shared": "1.1.1"
+    "shared": "1.2.1"
   },
   "devDependencies": {
     "@types/cors": "2.8.10",
