@@ -1,5 +1,5 @@
 import { ApollonEditor } from '@ls1intum/apollon';
-import { ExportActionTypes, ExportJSONAction, ExportPNGAction, ExportSVGAction } from './export-types';
+import { ExportActionTypes, ExportJSONAction, ExportPDFAction, ExportPNGAction, ExportSVGAction } from './export-types';
 import { Diagram } from '../diagram/diagram-types';
 
 export const ExportRepository = {
@@ -22,6 +22,13 @@ export const ExportRepository = {
     payload: {
       editor,
       diagram,
+    },
+  }),
+  exportAsPDF: (editor: ApollonEditor, diagramTitle: string): ExportPDFAction => ({
+    type: ExportActionTypes.EXPORT_PDF,
+    payload: {
+      editor,
+      diagramTitle,
     },
   }),
 };

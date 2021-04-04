@@ -6,6 +6,7 @@ export const enum FileDownloadActionTypes {
 
 export type FileDownloadAction = Action<FileDownloadActionTypes.FILE_DOWNLOAD> & {
   payload: {
-    file: File;
+    file: File | Blob;
+    filename?: string;
   };
 };

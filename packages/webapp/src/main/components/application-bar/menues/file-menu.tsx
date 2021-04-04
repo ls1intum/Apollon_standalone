@@ -24,6 +24,7 @@ type DispatchProps = {
   exportAsSVG: typeof ExportRepository.exportAsSVG;
   exportAsPNG: typeof ExportRepository.exportAsPNG;
   exportAsJSON: typeof ExportRepository.exportAsJSON;
+  exportAsPDF: typeof ExportRepository.exportAsPDF;
   openModal: typeof ModalRepository.showModal;
 };
 
@@ -39,6 +40,7 @@ const enhance = compose<ComponentClass<Props>>(
       exportAsSVG: ExportRepository.exportAsSVG,
       exportAsPNG: ExportRepository.exportAsPNG,
       exportAsJSON: ExportRepository.exportAsJSON,
+      exportAsPDF: ExportRepository.exportAsPDF,
       openModal: ModalRepository.showModal,
     },
   ),
@@ -70,7 +72,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
     event.stopPropagation();
   };
 
-  exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON'): void {
+  exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON' | 'PDF'): void {
     if (this.props.editor && this.props.diagram?.title) {
       switch (exportType) {
         case 'SVG':
@@ -78,6 +80,9 @@ class FileMenuComponent extends Component<OwnProps, State> {
           break;
         case 'PNG':
           this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+          break;
+        case 'PDF':
+          this.props.exportAsPDF(this.props.editor, this.props.diagram?.title);
           break;
         case 'JSON':
           this.props.exportAsJSON(this.props.editor, this.props.diagram);
@@ -115,6 +120,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('SVG')}>As SVG</Dropdown.Item>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>As PNG</Dropdown.Item>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('JSON')}>As JSON</Dropdown.Item>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PDF')}>As PDF</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </NavDropdown>

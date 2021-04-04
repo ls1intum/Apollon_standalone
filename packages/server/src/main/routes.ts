@@ -20,6 +20,6 @@ export const register = (app: express.Application) => {
   // diagrams
   router.get('/diagrams/:token', (req, res) => diagramResource.getDiagram(req, res));
   router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagram(req, res));
-
+  router.post('/diagrams/pdf', (req, res) => diagramResource.convertSvgToPdf(req, res));
   app.use('/api', router);
 };
