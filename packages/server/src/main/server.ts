@@ -28,17 +28,17 @@ app.get('/*', (req, res) => {
   res.sendFile(indexHtml);
 });
 
-const clients: { [key: string]: string } = {};
+const clients: { [key: string]: { token: string; name: string } } = {};
 
 const wsServer = new WebSocket.Server({ noServer: true });
 
 const getTokenClients = (id: string, deleteClient: boolean) => {
-  const token = clients[id];
+  const token = clients[id].token;
   if (deleteClient) {
     delete clients[id];
   }
-  return Object.values(clients).filter((clientToken) => {
-    return clientToken === token;
+  return Object.values(clients).filter((client) => {
+    return client.token === token;
   });
 };
 
@@ -51,32 +51,39 @@ const onConnectionLost = (socket: any) => {
   });
 };
 
-const onConnection = (socket: any, token: string) => {
-  clients[socket.apollonId] = token;
+const onNameUpdate = (socket: any, name: string) => {
+  clients[socket.apollonId] = { ...clients[socket.apollonId], name };
+  const token = clients[socket.apollonId].token;
   const tokenClients = getTokenClients(socket.apollonId, false);
   wsServer.clients.forEach(function each(clientSocket: any) {
-    if (
-      clientSocket !== socket &&
-      clientSocket.readyState === WebSocket.OPEN &&
-      tokenClients.includes(clientSocket.apollonId)
-    ) {
-      clientSocket.send(JSON.stringify({ count: tokenClients.length }));
+    if (clientSocket.readyState === WebSocket.OPEN && clients[clientSocket.apollonId].token === token) {
+      clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name) }));
     }
   });
 };
 
-const onDiagramUpdate = (socket: any, token: string, diagram: any) => {
+const onConnection = (socket: any, token: string, name: string) => {
+  clients[socket.apollonId] = { token, name };
+  const tokenClients = getTokenClients(socket.apollonId, false);
+  wsServer.clients.forEach(function each(clientSocket: any) {
+    if (clientSocket.readyState === WebSocket.OPEN && clients[clientSocket.apollonId].token === token) {
+      clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name) }));
+    }
+  });
+};
+
+const onDiagramUpdate = (socket: any, token: string, name: string, diagram: any) => {
   const diagramService = new DiagramFileStorageService();
   diagramService.saveDiagram(diagram, token, true);
-  clients[socket.apollonId] = token;
+  clients[socket.apollonId] = { token, name };
   const tokenClients = getTokenClients(socket.apollonId, false);
   wsServer.clients.forEach(function each(clientSocket: any) {
     if (
       clientSocket !== socket &&
       clientSocket.readyState === WebSocket.OPEN &&
-      clients[clientSocket.apollonId] === token
+      clients[clientSocket.apollonId].token === token
     ) {
-      clientSocket.send(JSON.stringify({ count: tokenClients.length, diagram }));
+      clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name), diagram }));
     }
   });
 };
@@ -99,12 +106,16 @@ wsServer.on('connection', (socket: any) => {
     socket.isAlive = true;
   });
   socket.on('message', (message: any) => {
-    const { token, diagram } = JSON.parse(message);
+    const { token, name, diagram } = JSON.parse(message);
     if (token) {
       if (diagram) {
-        onDiagramUpdate(socket, token, diagram);
+        onDiagramUpdate(socket, token, name, diagram);
       } else {
-        onConnection(socket, token);
+        onConnection(socket, token, name);
+      }
+    } else {
+      if (name) {
+        onNameUpdate(socket, name);
       }
     }
   });

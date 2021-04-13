@@ -1,9 +1,18 @@
-import { GotFromServerAction, ShareActionTypes, UpdateClientCountAction } from './share-types';
+import {
+  GotFromServerAction,
+  ShareActionTypes,
+  UpdateCollaborationNameAction,
+  UpdateCollaboratorsAction,
+} from './share-types';
 
 export const ShareRepository = {
-  updateClientCount: (count: number): UpdateClientCountAction => ({
-    type: ShareActionTypes.UPDATE_CLIENT_COUNT,
-    payload: { count },
+  updateCollaborationName: (name: string): UpdateCollaborationNameAction => ({
+    type: ShareActionTypes.UPDATE_COLLABORATION_NAME,
+    payload: { name },
+  }),
+  updateCollaborators: (collaborators: string[]): UpdateCollaboratorsAction => ({
+    type: ShareActionTypes.UPDATE_COLLABORATORS,
+    payload: { collaborators },
   }),
   gotFromServer: (fromServer: boolean): GotFromServerAction => ({
     type: ShareActionTypes.GOT_FROM_SERVER,

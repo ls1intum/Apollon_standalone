@@ -16,7 +16,7 @@ type OwnProps = {};
 
 type StateProps = {
   diagram: Diagram | null;
-  clientCount: number;
+  collaborators: string[];
 };
 
 const DiagramTitle = styled.input`
@@ -44,7 +44,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => {
     return {
       diagram: state.diagram,
-      clientCount: state.share.count,
+      collaborators: state.share.collaborators,
     };
   },
   {
@@ -116,7 +116,7 @@ class ApplicationBarComponent extends Component<Props, State> {
                 onBlur={this.changeDiagramTitleApplicationState}
               />
             </Nav>
-            <ConnectClientsComponent numberOfClients={this.props.clientCount} />
+            <ConnectClientsComponent collaborators={this.props.collaborators} />
           </Navbar.Collapse>
         </Navbar>
       </>

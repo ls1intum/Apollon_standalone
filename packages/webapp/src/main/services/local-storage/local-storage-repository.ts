@@ -1,6 +1,6 @@
 import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
 import { Diagram } from '../diagram/diagram-types';
-import { localStorageDiagramsList } from '../../constant';
+import { localStorageCollaborationName, localStorageDiagramsList } from '../../constant';
 import moment from 'moment';
 
 export const LocalStorageRepository = {
@@ -32,5 +32,14 @@ export const LocalStorageRepository = {
       );
     }
     return localDiagrams;
+  },
+
+  getCollaborationName: () => {
+    let collaborationName: string = window.localStorage.getItem(localStorageCollaborationName) ?? '';
+    return collaborationName;
+  },
+
+  setCollaborationName: (name: string) => {
+    window.localStorage.setItem(localStorageCollaborationName, name);
   },
 };

@@ -48,6 +48,8 @@ const getDisplayValueForView = (view: DiagramView) => {
       return 'Give Feedback';
     case DiagramView.SEE_FEEDBACK:
       return 'See Feedback';
+    case DiagramView.COLLABORATE:
+      return 'Collaborate';
   }
 };
 
@@ -56,10 +58,26 @@ class ShareModalComponent extends Component<Props, State> {
 
   getLinkForView = (view: DiagramView) => {
     if (!this.state.token) {
-      return '';
+      return 'The diagram must be published';
     } else {
       return `${DEPLOYMENT_URL}/${this.state.token}?view=${view}`;
     }
+  };
+
+  getMessageForView = () => {
+    let innerMessage = 'edit';
+    switch (this.state.view) {
+      case DiagramView.GIVE_FEEDBACK:
+        innerMessage = 'give feedback';
+        break;
+      case DiagramView.SEE_FEEDBACK:
+        innerMessage = 'see feedback';
+        break;
+      case DiagramView.COLLABORATE:
+        innerMessage = 'collaborate';
+        break;
+    }
+    return `Everyone with this link receives a copy of this diagram to ${innerMessage}`;
   };
 
   changePermission = (view: DiagramView) => {
@@ -69,6 +87,9 @@ class ShareModalComponent extends Component<Props, State> {
   copyLink = () => {
     const link = this.getLinkForView(this.state.view);
     navigator.clipboard.writeText(link);
+    if (this.state.view === DiagramView.COLLABORATE) {
+      window.open(link);
+    }
   };
 
   handleClose = () => {
@@ -101,52 +122,44 @@ class ShareModalComponent extends Component<Props, State> {
           <Modal.Title>Share</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {this.state.token ? (
-            <>
-              <InputGroup className="mb-3">
-                <FormControl
-                  readOnly
-                  value={`Everyone with this link can ${
-                    this.state.view === DiagramView.EDIT ? 'edit' : 'give feedback to'
-                  } this diagram`}
-                  bsCustomPrefix="w-100"
-                />
-                <DropdownButton
-                  id="permission-selection-dropdown"
-                  title={getDisplayValueForView(this.state.view)}
-                  as={InputGroup.Append}
-                  variant="outline-secondary"
-                  className="w-25"
-                >
-                  {Object.values(DiagramView).map((value) => (
-                    <Dropdown.Item key={value} onSelect={(eventKey) => this.changePermission(value)}>
-                      {getDisplayValueForView(value)}
-                    </Dropdown.Item>
-                  ))}
-                </DropdownButton>
-              </InputGroup>
-              <InputGroup className="mb-3">
-                <FormControl readOnly value={this.getLinkForView(this.state.view)} />
-                <InputGroup.Append className="w-25">
+          <>
+            <p>
+              If you want to share the current version of your diagram with other users, click on the publish button. A
+              copy of your current diagram version is then stored on the server so that other users can access it. It
+              will be accessible for 12 weeks with the correct link. The links are shown after you clicked on the
+              publish button.
+            </p>
+            <InputGroup className="mb-3">
+              <FormControl readOnly value={this.getMessageForView()} bsCustomPrefix="w-100" />
+              <DropdownButton
+                id="permission-selection-dropdown"
+                title={getDisplayValueForView(this.state.view)}
+                as={InputGroup.Append}
+                variant="outline-secondary"
+                className="w-25"
+              >
+                {Object.values(DiagramView).map((value) => (
+                  <Dropdown.Item key={value} onSelect={(eventKey) => this.changePermission(value)}>
+                    {getDisplayValueForView(value)}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </InputGroup>
+            <InputGroup className="mb-3">
+              <FormControl readOnly value={this.getLinkForView(this.state.view)} />
+              <InputGroup.Append className="w-25">
+                {this.state.token ? (
                   <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
                     Copy Link
                   </Button>
-                </InputGroup.Append>
-              </InputGroup>
-            </>
-          ) : (
-            <>
-              <p>
-                If you want to share the current version of your diagram with other users, click on the publish button.
-                A copy of your current diagram version is then stored on the server so that other users can access it.
-                It will be accessible for 12 weeks with the correct link. The links are shown after you clicked on the
-                publish button.
-              </p>
-              <Button variant="outline-primary" onClick={(event) => this.publishDiagram()}>
-                Publish
-              </Button>
-            </>
-          )}
+                ) : (
+                  <Button variant="outline-secondary" className="w-100" onClick={(event) => this.publishDiagram()}>
+                    Get Link
+                  </Button>
+                )}
+              </InputGroup.Append>
+            </InputGroup>
+          </>
         </Modal.Body>
       </>
     );

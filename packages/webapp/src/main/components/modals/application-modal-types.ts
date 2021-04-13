@@ -8,6 +8,7 @@ export const ModalContentType = {
   CreateDiagramModal: 'CreateDiagramModal',
   CreateDiagramFromTemplateModal: 'CreateDiagramFromTemplateModal',
   ShareModal: 'ShareModal',
+  CollaborationModal: 'CollaborationModal',
 } as const;
 
 /**
@@ -17,4 +18,5 @@ export type ModalSize = 'sm' | 'lg' | 'xl' | undefined;
 
 export type ModalContentProps = {
   close: () => void;
+  onClosableChange?: (closable: boolean) => void;
 };

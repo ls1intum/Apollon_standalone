@@ -2,13 +2,23 @@ import { Reducer } from 'redux';
 import { Actions } from '../actions';
 import { ShareActionTypes, ShareState } from './share-types';
 
-export const ShareReducer: Reducer<ShareState, Actions> = (state = { count: 0, fromServer: false }, action) => {
+export const ShareReducer: Reducer<ShareState, Actions> = (
+  state = { collaborationName: '', collaborators: [], fromServer: false },
+  action,
+) => {
   switch (action.type) {
-    case ShareActionTypes.UPDATE_CLIENT_COUNT: {
+    case ShareActionTypes.UPDATE_COLLABORATION_NAME: {
       const { payload } = action;
       return {
         ...state,
-        count: payload.count,
+        collaborationName: payload.name,
+      } as ShareState;
+    }
+    case ShareActionTypes.UPDATE_COLLABORATORS: {
+      const { payload } = action;
+      return {
+        ...state,
+        collaborators: payload.collaborators,
       } as ShareState;
     }
     case ShareActionTypes.GOT_FROM_SERVER: {

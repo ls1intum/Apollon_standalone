@@ -1,17 +1,24 @@
 import { Action } from 'redux';
 
-export type ShareActions = UpdateClientCountAction | GotFromServerAction;
+export type ShareActions = UpdateCollaborationNameAction | UpdateCollaboratorsAction | GotFromServerAction;
 
-export type ShareState = { count: number; fromServer: boolean };
+export type ShareState = { collaborationName: string; collaborators: string[]; fromServer: boolean };
 
 export const enum ShareActionTypes {
-  UPDATE_CLIENT_COUNT = '@@share/update_client_count',
+  UPDATE_COLLABORATION_NAME = '@@share/update_collaboration_name',
+  UPDATE_COLLABORATORS = '@@share/update_collaborators',
   GOT_FROM_SERVER = '@@share/got_from_server',
 }
 
-export type UpdateClientCountAction = Action<ShareActionTypes.UPDATE_CLIENT_COUNT> & {
+export type UpdateCollaborationNameAction = Action<ShareActionTypes.UPDATE_COLLABORATION_NAME> & {
   payload: {
-    count: number;
+    name: string;
+  };
+};
+
+export type UpdateCollaboratorsAction = Action<ShareActionTypes.UPDATE_COLLABORATORS> & {
+  payload: {
+    collaborators: string[];
   };
 };
 
