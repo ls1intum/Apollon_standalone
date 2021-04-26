@@ -16,7 +16,7 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@ls1intum/apollon": "2.6.0",
+    "@ls1intum/apollon": "2.6.1",
     "bootstrap": "4.6.0",
     "moment": "2.29.1",
     "react": "17.0.1",
