@@ -27,7 +27,7 @@
     "redux": "4.1.0",
     "redux-observable": "1.2.0",
     "rxjs": "6.6.6",
-    "shared": "1.2.1",
+    "shared": "1.2.2",
     "styled-components": "5.2.3",
     "tslib": "2.2.0",
     "typesafe-actions": "5.1.0",
