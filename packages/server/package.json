@@ -13,7 +13,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "pdfmake": "0.1.71",
-    "shared": "1.2.1"
+    "shared": "1.2.2"
   },
   "devDependencies": {
     "@types/cors": "2.8.10",
