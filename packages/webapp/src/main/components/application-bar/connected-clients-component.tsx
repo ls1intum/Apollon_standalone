@@ -9,8 +9,8 @@ export const NameContainer = styled.div`
   color: #353d47;
   background-color: white;
   border-radius: 0.75rem;
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.5rem !important;
+  width: 1.5rem !important;
   margin-left: 0.5rem;
   text-transform: capitalize;
   &:first-of-type {
