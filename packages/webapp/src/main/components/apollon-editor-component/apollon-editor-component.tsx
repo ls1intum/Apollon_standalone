@@ -7,7 +7,7 @@ import { DiagramView } from 'shared/src/main/diagram-view';
 import styled from 'styled-components';
 //@ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
-import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL } from '../../constant';
+import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL } from '../../constant';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository';
@@ -184,7 +184,7 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   establishCollaborationConnection(token: string, name: string) {
-    this.client = new W3CWebSocket('ws://localhost:8080');
+    this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);
     this.client.onopen = () => {
       this.client.send(JSON.stringify({ token, name }));
     };
