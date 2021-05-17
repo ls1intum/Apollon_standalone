@@ -65,8 +65,13 @@ export class CollaborationService {
 
   onConnectionLost = (socket: any) => {
     const tokenClients = this.getTokenClients(socket.apollonId, true);
-    this.wsServer.clients.forEach(function each(clientSocket: any) {
-      if (clientSocket !== socket && clientSocket.readyState === WebSocket.OPEN) {
+    const token = this.clients[socket.apollonId].token;
+    this.wsServer.clients.forEach((clientSocket: any) => {
+      if (
+        clientSocket !== socket &&
+        clientSocket.readyState === WebSocket.OPEN &&
+        this.clients[clientSocket.apollonId].token === token
+      ) {
         clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name) }));
       }
     });
