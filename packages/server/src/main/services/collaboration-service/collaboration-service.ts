@@ -54,23 +54,23 @@ export class CollaborationService {
   }
 
   getTokenClients = (id: string, deleteClient: boolean) => {
-    const token = this.clients[id].token;
+    const token = this.clients[id]?.token;
     if (deleteClient) {
       delete this.clients[id];
     }
     return Object.values(this.clients).filter((client) => {
-      return client.token === token;
+      return client?.token === token;
     });
   };
 
   onConnectionLost = (socket: any) => {
-    const token = this.clients[socket.apollonId].token;
+    const token = this.clients[socket.apollonId]?.token;
     const tokenClients = this.getTokenClients(socket.apollonId, true);
     this.wsServer.clients.forEach((clientSocket: any) => {
       if (
         clientSocket !== socket &&
         clientSocket.readyState === WebSocket.OPEN &&
-        this.clients[clientSocket.apollonId].token === token
+        this.clients[clientSocket.apollonId]?.token === token
       ) {
         clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name) }));
       }
@@ -79,7 +79,7 @@ export class CollaborationService {
 
   onNameUpdate = (socket: any, name: string) => {
     this.clients[socket.apollonId] = { ...this.clients[socket.apollonId], name };
-    const token = this.clients[socket.apollonId].token;
+    const token = this.clients[socket.apollonId]?.token;
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.wsServer.clients.forEach((clientSocket: any) => {
       if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId].token === token) {
@@ -92,7 +92,7 @@ export class CollaborationService {
     this.clients[socket.apollonId] = { token, name };
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.wsServer.clients.forEach((clientSocket: any) => {
-      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId].token === token) {
+      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId]?.token === token) {
         if (clientSocket === socket) {
           this.diagramService.getDiagramByLink(token).then((diagram) => {
             clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name), diagram }));
@@ -113,7 +113,7 @@ export class CollaborationService {
       if (
         clientSocket !== socket &&
         clientSocket.readyState === WebSocket.OPEN &&
-        this.clients[clientSocket.apollonId].token === token
+        this.clients[clientSocket.apollonId]?.token === token
       ) {
         clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.name), diagram }));
       }
