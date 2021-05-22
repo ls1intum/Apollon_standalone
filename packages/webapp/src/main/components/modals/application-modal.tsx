@@ -8,7 +8,6 @@ import { ApplicationModalContent } from './application-modal-content';
 import { ModalRepository } from '../../services/modal/modal-repository';
 
 type OwnProps = {};
-type State = {};
 
 type StateProps = {
   displayModal?: ModalContentType | null;
@@ -30,7 +29,27 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   },
 );
 
+const getInitialState = () => {
+  return {
+    closable: true,
+  };
+};
+
+type State = typeof getInitialState;
+
 class ApplicationModalComponent extends Component<Props, State> {
+  state = getInitialState();
+
+  onClosableChange = (closable: boolean) => {
+    this.setState({ closable });
+  };
+
+  handleClose = () => {
+    if (this.state.closable) {
+      this.props.close();
+    }
+  };
+
   render() {
     if (!this.props.displayModal) {
       // Problem: when returned null the listeners are still kept at the document level to close the modal -> they hinder dropdowns to open
@@ -48,9 +67,9 @@ class ApplicationModalComponent extends Component<Props, State> {
         size={this.props.modalSize}
         centered
         show
-        onHide={this.props.close}
+        onHide={this.handleClose}
       >
-        <ModalContent close={this.props.close} />
+        <ModalContent close={this.props.close} onClosableChange={this.onClosableChange} />
       </Modal>,
       document.body,
     );

@@ -4,7 +4,7 @@ import { ApollonEditorWrapper } from './components/apollon-editor-component/apol
 import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
-import { localStorageDiagramPrefix, localStorageLatest } from './constant';
+import { localStorageCollaborationName, localStorageDiagramPrefix, localStorageLatest } from './constant';
 import {
   ApollonEditorContext,
   ApollonEditorProvider,
@@ -42,7 +42,9 @@ const getInitialStore = (): ApplicationState => {
     diagram = { diagram: latestDiagram };
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
-    diagram = { diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() } };
+    diagram = {
+      diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() },
+    };
   }
 
   // initial application state
@@ -53,6 +55,11 @@ const getInitialStore = (): ApplicationState => {
     modal: {
       type: null,
       size: 'sm',
+    },
+    share: {
+      collaborationName: window.localStorage.getItem(localStorageCollaborationName) || '',
+      collaborators: [],
+      fromServer: false,
     },
   };
 };
