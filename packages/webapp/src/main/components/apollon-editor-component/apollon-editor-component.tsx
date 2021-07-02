@@ -184,7 +184,7 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   establishCollaborationConnection(token: string, name: string) {
-    this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);
+    this.client = new W3CWebSocket(`wss://${NO_HTTP_URL}`);
     this.client.onopen = () => {
       this.client.send(JSON.stringify({ token, name }));
     };
