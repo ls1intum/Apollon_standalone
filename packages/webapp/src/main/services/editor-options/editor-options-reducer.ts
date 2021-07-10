@@ -11,6 +11,7 @@ export const defaultEditorOptions: EditorOptions = {
   enablePopups: true,
   enableCopyPaste: true,
   locale: Locale.en,
+  colorEnabled: true,
 };
 
 export const EditorOptionsReducer: Reducer<EditorOptions, Actions> = (state = defaultEditorOptions, action) => {

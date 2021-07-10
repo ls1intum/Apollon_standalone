@@ -69,6 +69,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
         model: state.diagram?.model,
         theme: state.editorOptions.theme,
         locale: state.editorOptions.locale,
+        colorEnabled: state.editorOptions.colorEnabled,
       },
       fromServer: state.share.fromServer,
       collaborationName: state.share.collaborationName,

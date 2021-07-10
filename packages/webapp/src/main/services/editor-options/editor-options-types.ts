@@ -11,6 +11,7 @@ export type EditorOptions = {
   enableCopyPaste?: boolean;
   theme?: DeepPartial<Styles>;
   locale: Locale;
+  colorEnabled?: boolean;
 };
 
 export type EditorOptionsActions = ChangeDiagramTypeAction | ChangeEditorModeAction | ChangeReadonlyModeAction;
