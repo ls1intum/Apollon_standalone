@@ -87,9 +87,6 @@ class ShareModalComponent extends Component<Props, State> {
   copyLink = () => {
     const link = this.getLinkForView(this.state.view);
     navigator.clipboard.writeText(link);
-    if (this.state.view === DiagramView.COLLABORATE) {
-      window.open(link);
-    }
   };
 
   handleClose = () => {
@@ -98,10 +95,13 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   publishDiagram = () => {
-    if (this.props.diagram) {
+    if (this.state.token) {
+      this.copyLink();
+    } else if (this.props.diagram) {
       DiagramRepository.publishDiagramOnServer(this.props.diagram)
         .then((token: string) => {
           this.setState({ token });
+          this.copyLink();
         })
         .catch((error) => {
           this.props.createError(
@@ -146,17 +146,21 @@ class ShareModalComponent extends Component<Props, State> {
               </DropdownButton>
             </InputGroup>
             <InputGroup className="mb-3">
-              <FormControl readOnly value={this.getLinkForView(this.state.view)} />
+              {!this.state.token ? (
+                <FormControl readOnly value={this.getLinkForView(this.state.view)} />
+              ) : (
+                <a className="w-75" target="blank" href={this.getLinkForView(this.state.view)}>
+                  <FormControl
+                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                    readOnly
+                    value={this.getLinkForView(this.state.view)}
+                  />
+                </a>
+              )}
               <InputGroup.Append className="w-25">
-                {this.state.token ? (
-                  <Button variant="outline-secondary" className="w-100" onClick={(event) => this.copyLink()}>
-                    Copy Link
-                  </Button>
-                ) : (
-                  <Button variant="outline-secondary" className="w-100" onClick={(event) => this.publishDiagram()}>
-                    Get Link
-                  </Button>
-                )}
+                <Button variant="outline-secondary" className="w-100" onClick={(event) => this.publishDiagram()}>
+                  Copy Link
+                </Button>
               </InputGroup.Append>
             </InputGroup>
           </>
