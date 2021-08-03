@@ -54,7 +54,7 @@ export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, s
 
 export const loadDiagramEpic: Epic<
   Action,
-  UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction,
+  UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction | StopAction,
   ApplicationState
 > = (action$, store) => {
   return action$.pipe(

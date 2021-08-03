@@ -1,19 +1,19 @@
 import bodyParser from 'body-parser';
-import express from 'express';
+import express, { Express, RequestHandler } from 'express';
 import { indexHtml, webappPath } from './constants';
 import { register } from './routes';
 import { CollaborationService } from './services/collaboration-service/collaboration-service';
 
 const port = 8080;
 
-export const app = express();
+export const app: Express = express();
 
 app.use('/', express.static(webappPath));
-app.use(bodyParser.json());
+app.use(bodyParser.json() as RequestHandler);
 app.use(
   bodyParser.urlencoded({
     extended: true,
-  }),
+  }) as RequestHandler,
 );
 
 // registers routes
