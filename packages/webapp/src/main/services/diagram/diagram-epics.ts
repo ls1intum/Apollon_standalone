@@ -37,7 +37,11 @@ export const createDiagramEpic: Epic<Action, UpdateDiagramAction | ChangeDiagram
  * @param action$
  * @param store
  */
-export const updateDiagramEpic: Epic<Action, StoreAction, ApplicationState> = (action$, store) => {
+export const updateDiagramEpic: Epic<
+  Action,
+  StoreAction | UpdateDiagramAction | ChangeDiagramTypeAction,
+  ApplicationState
+> = (action$, store) => {
   return action$.pipe(
     filter((action) => action.type === DiagramActionTypes.UPDATE_DIAGRAM),
     map((action) => action as UpdateDiagramAction),
@@ -50,4 +54,5 @@ export const updateDiagramEpic: Epic<Action, StoreAction, ApplicationState> = (a
   );
 };
 
-export const diagramEpics = combineEpics(createDiagramEpic, updateDiagramEpic);
+//TODO: Fix the types when library fixes it
+export const diagramEpics = combineEpics(createDiagramEpic, updateDiagramEpic) as any;
