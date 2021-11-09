@@ -28,6 +28,7 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "6.2.2"
-  }
+    "concurrently": "6.3.0"
+  },
+  "dependencies": {}
 }

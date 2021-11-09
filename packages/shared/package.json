@@ -6,6 +6,6 @@
   "dependencies": {
     "@ls1intum/apollon": "2.8.3-beta.1",
     "moment": "2.29.1",
-    "ws": "8.2.2"
+    "ws": "8.2.3"
   }
 }
