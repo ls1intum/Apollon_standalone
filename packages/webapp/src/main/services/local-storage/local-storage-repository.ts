@@ -35,7 +35,7 @@ export const LocalStorageRepository = {
   },
 
   getCollaborationName: () => {
-    let collaborationName: string = window.localStorage.getItem(localStorageCollaborationName) ?? '';
+    const collaborationName: string = window.localStorage.getItem(localStorageCollaborationName) ?? '';
     return collaborationName;
   },
 

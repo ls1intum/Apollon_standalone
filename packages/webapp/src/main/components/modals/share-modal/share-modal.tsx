@@ -110,6 +110,7 @@ class ShareModalComponent extends Component<Props, State> {
             'Connection to the server failed. Please try again or report a problem.',
           );
           this.handleClose();
+          // tslint:disable-next-line:no-console
           console.error(error);
         });
     }

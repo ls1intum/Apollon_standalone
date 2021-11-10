@@ -54,5 +54,5 @@ export const updateDiagramEpic: Epic<
   );
 };
 
-//TODO: Fix the types when library fixes it
+// TODO: Fix the types when library fixes it
 export const diagramEpics = combineEpics(createDiagramEpic, updateDiagramEpic) as any;
