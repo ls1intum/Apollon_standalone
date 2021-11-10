@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
 import styled from 'styled-components';
-//@ts-ignore
+// @ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL } from '../../constant';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
@@ -159,10 +159,10 @@ class ApollonEditorComponent extends Component<Props, State> {
               this.props.importDiagram(JSON.stringify(diagram));
 
               // get query param
-              const query = new URLSearchParams(this.props.location.search);
-              const view: DiagramView | null = query.get('view') as DiagramView;
-              if (view) {
-                switch (view) {
+              const queryParam = new URLSearchParams(this.props.location.search);
+              const diagramView: DiagramView | null = queryParam.get('view') as DiagramView;
+              if (diagramView) {
+                switch (diagramView) {
                   case DiagramView.SEE_FEEDBACK:
                     this.props.changeEditorMode(ApollonMode.Assessment);
                     this.props.changeReadonlyMode(true);

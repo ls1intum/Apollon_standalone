@@ -29,7 +29,7 @@ export const Container = styled.div`
 export function ConnectClientsComponent(props: Props) {
   const { collaborators } = props;
   const elements = collaborators.map((collaborator) => (
-    <NameContainer title={collaborator || 'Anonymous'}>
+    <NameContainer key={collaborator} title={collaborator || 'Anonymous'}>
       {collaborator ? collaborator.substring(0, 1) : 'A'}
     </NameContainer>
   ));
