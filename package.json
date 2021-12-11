@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:ls1intum/Apollon_standalone.git",
@@ -28,7 +28,7 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "6.3.0"
+    "concurrently": "6.4.0"
   },
   "dependencies": {}
 }
