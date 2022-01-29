@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2021",
+    "module": "es2020",
     "moduleResolution": "node",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2021", "dom"],
     "jsx": "react",
     "declaration": true,
     "strict": true,
