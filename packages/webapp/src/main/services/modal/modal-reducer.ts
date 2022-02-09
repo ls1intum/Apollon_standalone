@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { Actions } from '../actions';
-import { ModalActionType, ModalState } from './modal-types';
+import { Actions } from '../actions.js';
+import { ModalActionType, ModalState } from './modal-types.js';
 
 export const ModalReducer: Reducer<ModalState, Actions> = (state: ModalState = { type: null, size: 'sm' }, action) => {
   switch (action.type) {

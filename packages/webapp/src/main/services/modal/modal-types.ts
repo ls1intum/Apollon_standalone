@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ModalContentType, ModalSize } from '../../components/modals/application-modal-types';
+import { ModalContentType, ModalSize } from '../../components/modals/application-modal-types.js';
 
 export type ModalState = {
   type: ModalContentType | null;

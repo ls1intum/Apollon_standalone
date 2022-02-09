@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 // @ts-ignore
-import pdfMake from 'pdfmake/build/pdfmake.min';
+import pdfMake from 'pdfmake/build/pdfmake.min.js';
 // @ts-ignore
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ConversionService } from '../services/conversion-service/conversion-service';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { ConversionService } from '../services/conversion-service/conversion-service.js';
 import { UMLModel } from '@ls1intum/apollon';
 
 export class ConversionResource {

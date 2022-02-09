@@ -11,11 +11,11 @@ import {
   StoreEnhancer,
   PreloadedState,
 } from 'redux';
-import { Actions } from '../../services/actions';
-import { reducers } from '../../services/reducer';
+import { Actions } from '../../services/actions.js';
+import { reducers } from '../../services/reducer.js';
 import { Provider } from 'react-redux';
 import { createEpicMiddleware, EpicMiddleware } from 'redux-observable';
-import epics from '../../services/epics';
+import epics from '../../services/epics.js';
 
 type OwnProps = PropsWithChildren<{
   initialState: PreloadedState<ApplicationState>;

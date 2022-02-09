@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
-import { ApollonError } from '../../services/error-management/error-types';
-import { ErrorMessage } from './error-message';
-import { ErrorRepository } from '../../services/error-management/error-repository';
+import { ApplicationState } from '../store/application-state.js';
+import { ApollonError } from '../../services/error-management/error-types.js';
+import { ErrorMessage } from './error-message.js';
+import { ErrorRepository } from '../../services/error-management/error-repository.js';
 
 type OwnProps = {};
 

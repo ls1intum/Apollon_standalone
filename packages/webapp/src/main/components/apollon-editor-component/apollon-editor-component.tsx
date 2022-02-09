@@ -3,22 +3,22 @@ import React, { Component, ComponentClass } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import { DiagramView } from 'shared/src/main/diagram-view';
+import { DiagramView } from 'shared/src/main/diagram-view.js';
 import styled from 'styled-components';
 // @ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
-import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL } from '../../constant';
-import { DiagramRepository } from '../../services/diagram/diagram-repository';
-import { Diagram } from '../../services/diagram/diagram-types';
-import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository';
-import { ImportRepository } from '../../services/import/import-repository';
-import { ModalRepository } from '../../services/modal/modal-repository';
-import { ShareRepository } from '../../services/share/share-repository';
-import { uuid } from '../../utils/uuid';
-import { ModalContentType } from '../modals/application-modal-types';
-import { ApplicationState } from '../store/application-state';
-import { ApollonEditorContext } from './apollon-editor-context';
-import { withApollonEditor } from './with-apollon-editor';
+import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL } from '../../constant.js';
+import { DiagramRepository } from '../../services/diagram/diagram-repository.js';
+import { Diagram } from '../../services/diagram/diagram-types.js';
+import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository.js';
+import { ImportRepository } from '../../services/import/import-repository.js';
+import { ModalRepository } from '../../services/modal/modal-repository.js';
+import { ShareRepository } from '../../services/share/share-repository.js';
+import { uuid } from '../../utils/uuid.js';
+import { ModalContentType } from '../modals/application-modal-types.js';
+import { ApplicationState } from '../store/application-state.js';
+import { ApollonEditorContext } from './apollon-editor-context.js';
+import { withApollonEditor } from './with-apollon-editor.js';
 
 const ApollonContainer = styled.div`
   display: flex;

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
-import { ModalContentType, ModalSize } from './application-modal-types';
-import { ApplicationModalContent } from './application-modal-content';
-import { ModalRepository } from '../../services/modal/modal-repository';
+import { ApplicationState } from '../store/application-state.js';
+import { ModalContentType, ModalSize } from './application-modal-types.js';
+import { ApplicationModalContent } from './application-modal-content.js';
+import { ModalRepository } from '../../services/modal/modal-repository.js';
 
 type OwnProps = {};
 

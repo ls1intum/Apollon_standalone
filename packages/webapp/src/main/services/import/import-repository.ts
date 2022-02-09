@@ -1,4 +1,4 @@
-import { ImportActionTypes, ImportJSONAction } from './import-types';
+import { ImportActionTypes, ImportJSONAction } from './import-types.js';
 
 export const ImportRepository = {
   importJSON: (diagramJSON: string): ImportJSONAction => ({

@@ -2,11 +2,11 @@ import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { Action } from 'redux';
 import { Epic, ofType } from 'redux-observable';
 import { concatAll, map } from 'rxjs/operators';
-import { ApplicationState } from '../../../components/store/application-state';
-import { StopAction, StopActionType } from '../../actions';
-import { DiagramRepository } from '../../diagram/diagram-repository';
-import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types';
-import { ExportActionTypes, ExportPDFAction } from '../export-types';
+import { ApplicationState } from '../../../components/store/application-state.js';
+import { StopAction, StopActionType } from '../../actions.js';
+import { DiagramRepository } from '../../diagram/diagram-repository.js';
+import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types.js';
+import { ExportActionTypes, ExportPDFAction } from '../export-types.js';
 
 export const exportPDFEpic: Epic<Action, StopAction | FileDownloadAction, ApplicationState> = (action$, store) => {
   return action$.pipe(

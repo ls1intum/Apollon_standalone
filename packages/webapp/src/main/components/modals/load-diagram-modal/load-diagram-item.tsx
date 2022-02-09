@@ -1,10 +1,10 @@
 import React from 'react';
-import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
+import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types.js';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
+import { ApplicationState } from '../../store/application-state.js';
 import { Locale } from '@ls1intum/apollon';
-import { longDate } from '../../../constant';
+import { longDate } from '../../../constant.js';
 
 const SubTitle = styled.span`
   display: block;

@@ -1,17 +1,17 @@
 import React, { ChangeEvent, Component, ComponentType } from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
-import { FileMenu } from './menues/file-menu';
-import { HelpMenu } from './menues/help-menu';
+import { FileMenu } from './menues/file-menu.js';
+import { HelpMenu } from './menues/help-menu.js';
 import { connect, ConnectedComponent } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
+import { ApplicationState } from '../store/application-state.js';
 import styled from 'styled-components';
-import { DiagramRepository } from '../../services/diagram/diagram-repository';
-import { appVersion } from '../../application-constants';
-import { Diagram } from '../../services/diagram/diagram-types';
-import { APPLICATION_SERVER_VERSION } from '../../constant';
-import { ModalRepository } from '../../services/modal/modal-repository';
-import { ModalContentType } from '../modals/application-modal-types';
-import { ConnectClientsComponent } from './connected-clients-component';
+import { DiagramRepository } from '../../services/diagram/diagram-repository.js';
+import { appVersion } from '../../application-constants.js';
+import { Diagram } from '../../services/diagram/diagram-types.js';
+import { APPLICATION_SERVER_VERSION } from '../../constant.js';
+import { ModalRepository } from '../../services/modal/modal-repository.js';
+import { ModalContentType } from '../modals/application-modal-types.js';
+import { ConnectClientsComponent } from './connected-clients-component.js';
 type OwnProps = {};
 
 type StateProps = {

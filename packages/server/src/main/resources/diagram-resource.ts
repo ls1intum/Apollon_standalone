@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 // @ts-ignore
-import pdfMake from 'pdfmake/build/pdfmake.min';
+import pdfMake from 'pdfmake/build/pdfmake.min.js';
 // @ts-ignore
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
-import { DiagramService } from '../services/diagram-service/diagram-service';
-import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { DiagramDTO } from '../../../../shared/src/main/diagram-dto.js';
+import { DiagramService } from '../services/diagram-service/diagram-service.js';
+import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service.js';
 
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());

@@ -1,14 +1,14 @@
 import React, { Component, ComponentClass } from 'react';
 import { NavDropdown, Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
+import { ApplicationState } from '../../store/application-state.js';
 import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
-import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
-import { ExportRepository } from '../../../services/export/export-repository';
-import { Diagram } from '../../../services/diagram/diagram-types';
-import { ModalRepository } from '../../../services/modal/modal-repository';
-import { ModalContentType } from '../../modals/application-modal-types';
+import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor.js';
+import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context.js';
+import { ExportRepository } from '../../../services/export/export-repository.js';
+import { Diagram } from '../../../services/diagram/diagram-types.js';
+import { ModalRepository } from '../../../services/modal/modal-repository.js';
+import { ModalContentType } from '../../modals/application-modal-types.js';
 
 type Props = {};
 

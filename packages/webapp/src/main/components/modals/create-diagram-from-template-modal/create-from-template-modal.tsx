@@ -1,15 +1,15 @@
 import React, { Component, ComponentClass } from 'react';
 import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
+import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor.js';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
+import { ApplicationState } from '../../store/application-state.js';
 import { Modal, Button, InputGroup, FormControl, Tab, Col, Row, Nav } from 'react-bootstrap';
-import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { Template, TemplateCategory } from './template-types';
-import { SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern/software-pattern-types';
-import { CreateFromSoftwarePatternModalTab } from './software-pattern/create-from-software-pattern-modal-tab';
-import { TemplateFactory } from './template-factory';
-import { ModalContentProps } from '../application-modal-types';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository.js';
+import { Template, TemplateCategory } from './template-types.js';
+import { SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern/software-pattern-types.js';
+import { CreateFromSoftwarePatternModalTab } from './software-pattern/create-from-software-pattern-modal-tab.js';
+import { TemplateFactory } from './template-factory.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

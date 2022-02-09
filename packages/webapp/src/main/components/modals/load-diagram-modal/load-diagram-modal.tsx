@@ -1,14 +1,14 @@
 import { Component, ComponentClass } from 'react';
 import React from 'react';
 import { Modal } from 'react-bootstrap';
-import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
+import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository.js';
 import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
+import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor.js';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
-import { LoadDiagramContent } from './load-diagram-content';
-import { ModalContentProps } from '../application-modal-types';
+import { ApplicationState } from '../../store/application-state.js';
+import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types.js';
+import { LoadDiagramContent } from './load-diagram-content.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

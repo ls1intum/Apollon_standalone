@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { DiagramResource } from './resources/diagram-resource';
-import { ConversionResource } from './resources/conversion-resource';
+import { DiagramResource } from './resources/diagram-resource.js';
+import { ConversionResource } from './resources/conversion-resource.js';
 
 // options for cors midddleware
 const options: cors.CorsOptions = {

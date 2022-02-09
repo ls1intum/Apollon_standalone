@@ -1,7 +1,7 @@
 import { UMLDiagramType } from '@ls1intum/apollon';
 import { Action } from 'redux';
 import { Moment } from 'moment';
-import { Diagram } from '../diagram/diagram-types';
+import { Diagram } from '../diagram/diagram-types.js';
 
 export type LocalStorageDiagramListItem = {
   id: string;

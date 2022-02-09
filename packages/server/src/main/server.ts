@@ -1,8 +1,8 @@
 import bodyParser from 'body-parser';
 import express, { Express, RequestHandler } from 'express';
-import { indexHtml, webappPath } from './constants';
-import { register } from './routes';
-import { CollaborationService } from './services/collaboration-service/collaboration-service';
+import { indexHtml, webappPath } from './constants.js';
+import { register } from './routes.js';
+import { CollaborationService } from './services/collaboration-service/collaboration-service.js';
 
 const port = 8080;
 

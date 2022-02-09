@@ -1,7 +1,7 @@
 //@ts-ignore
 import WebSocket from 'ws';
-import { randomString } from '../../utils';
-import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
+import { randomString } from '../../utils.js';
+import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service.js';
 
 type Client = { token: string; name: string };
 

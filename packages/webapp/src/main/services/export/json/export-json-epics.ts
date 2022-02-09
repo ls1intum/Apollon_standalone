@@ -1,11 +1,11 @@
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
-import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types';
-import { ApplicationState } from '../../../components/store/application-state';
+import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types.js';
+import { ApplicationState } from '../../../components/store/application-state.js';
 import { filter, map } from 'rxjs/operators';
-import { ExportActionTypes, ExportJSONAction } from '../export-types';
+import { ExportActionTypes, ExportJSONAction } from '../export-types.js';
 import { ApollonEditor } from '@ls1intum/apollon';
-import { Diagram } from '../../diagram/diagram-types';
+import { Diagram } from '../../diagram/diagram-types.js';
 
 export const exportJSONEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {
   return action$.pipe(

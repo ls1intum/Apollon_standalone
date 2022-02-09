@@ -1,6 +1,6 @@
-import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
-import { Diagram } from '../diagram/diagram-types';
-import { localStorageCollaborationName, localStorageDiagramsList } from '../../constant';
+import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types.js';
+import { Diagram } from '../diagram/diagram-types.js';
+import { localStorageCollaborationName, localStorageDiagramsList } from '../../constant.js';
 import moment from 'moment';
 
 export const LocalStorageRepository = {

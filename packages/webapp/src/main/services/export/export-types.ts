@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { ApollonEditor } from '@ls1intum/apollon';
-import { Diagram } from '../diagram/diagram-types';
+import { Diagram } from '../diagram/diagram-types.js';
 
 export const enum ExportActionTypes {
   EXPORT_SVG = '@@export/svg',

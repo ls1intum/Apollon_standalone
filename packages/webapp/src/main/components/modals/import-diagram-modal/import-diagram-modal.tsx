@@ -1,9 +1,9 @@
 import React, { ChangeEvent, Component } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { ImportRepository } from '../../../services/import/import-repository';
-import { ModalContentProps } from '../application-modal-types';
+import { ApplicationState } from '../../store/application-state.js';
+import { ImportRepository } from '../../../services/import/import-repository.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

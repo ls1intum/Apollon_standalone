@@ -1,4 +1,4 @@
-import { Template, TemplateCategory, TemplateType } from '../template-types';
+import { Template, TemplateCategory, TemplateType } from '../template-types.js';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 
 export enum SoftwarePatternCategory {

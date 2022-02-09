@@ -1,16 +1,16 @@
 import { combineEpics, Epic } from 'redux-observable';
 import { Action } from 'redux';
-import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
-import { ApplicationState } from '../../components/store/application-state';
+import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types.js';
+import { ApplicationState } from '../../components/store/application-state.js';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
-import { uuid } from '../../utils/uuid';
+import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types.js';
+import { uuid } from '../../utils/uuid.js';
 import moment from 'moment';
-import { DiagramRepository } from './diagram-repository';
-import { StoreAction } from '../local-storage/local-storage-types';
-import { LocalStorageRepository } from '../local-storage/local-storage-repository';
+import { DiagramRepository } from './diagram-repository.js';
+import { StoreAction } from '../local-storage/local-storage-types.js';
+import { LocalStorageRepository } from '../local-storage/local-storage-repository.js';
 import { of } from 'rxjs';
-import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
+import { EditorOptionsRepository } from '../editor-options/editor-options-repository.js';
 
 export const createDiagramEpic: Epic<Action, UpdateDiagramAction | ChangeDiagramTypeAction, ApplicationState> = (
   action$,

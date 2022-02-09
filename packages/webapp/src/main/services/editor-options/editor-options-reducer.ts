@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { Actions } from '../actions';
-import { EditorOptions, EditorOptionsActionTypes } from './editor-options-types';
+import { Actions } from '../actions.js';
+import { EditorOptions, EditorOptionsActionTypes } from './editor-options-types.js';
 import { UMLDiagramType } from '@ls1intum/apollon';
 import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
 

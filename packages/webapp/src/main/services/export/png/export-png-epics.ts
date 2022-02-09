@@ -1,10 +1,10 @@
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
-import { ApplicationState } from '../../../components/store/application-state';
+import { ApplicationState } from '../../../components/store/application-state.js';
 import { concatAll, filter, map } from 'rxjs/operators';
-import { ExportActionTypes, ExportPNGAction } from '../export-types';
+import { ExportActionTypes, ExportPNGAction } from '../export-types.js';
 import { ApollonEditor, SVG } from '@ls1intum/apollon';
-import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types';
+import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types.js';
 import { from } from 'rxjs';
 
 export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {

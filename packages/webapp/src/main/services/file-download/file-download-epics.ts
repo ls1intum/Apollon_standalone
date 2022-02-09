@@ -1,9 +1,9 @@
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { filter, map } from 'rxjs/operators';
-import { FileDownloadAction, FileDownloadActionTypes } from './file-download-types';
-import { ApplicationState } from '../../components/store/application-state';
-import { StopAction, StopActionType } from '../actions';
+import { FileDownloadAction, FileDownloadActionTypes } from './file-download-types.js';
+import { ApplicationState } from '../../components/store/application-state.js';
+import { StopAction, StopActionType } from '../actions.js';
 
 export const fileDownloadEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
   return action$.pipe(

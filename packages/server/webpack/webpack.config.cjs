@@ -1,5 +1,7 @@
 var path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+const ResolveTypeScriptPlugin = require("resolve-typescript-plugin");
+
 
 module.exports = {
   entry: './src/main/server.ts',
@@ -15,12 +17,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'], //resolve all the modules other than index.ts
+    plugins: [new ResolveTypeScriptPlugin()],
   },
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
         use: 'ts-loader',
-        test: /\.ts?$/,
       },
     ],
   },

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { NavDropdown } from 'react-bootstrap';
 import { ApollonMode } from '@ls1intum/apollon';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { EditorOptionsRepository } from '../../../services/editor-options/editor-options-repository';
+import { ApplicationState } from '../../store/application-state.js';
+import { EditorOptionsRepository } from '../../../services/editor-options/editor-options-repository.js';
 
 type OwnProps = {};
 

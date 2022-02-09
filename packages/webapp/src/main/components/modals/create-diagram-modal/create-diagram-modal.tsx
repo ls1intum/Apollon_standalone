@@ -2,11 +2,11 @@ import { UMLDiagramType } from '@ls1intum/apollon';
 import React, { Component, ComponentClass } from 'react';
 import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
+import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor.js';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { ModalContentProps } from '../application-modal-types';
+import { ApplicationState } from '../../store/application-state.js';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

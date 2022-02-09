@@ -1,9 +1,8 @@
-import { TemplateCategory } from './template-types';
 import {
   SoftwarePatternCategory,
   SoftwarePatternTemplate,
   SoftwarePatternType,
-} from './software-pattern/software-pattern-types';
+} from './software-pattern/software-pattern-types.js';
 import { UMLDiagramType } from '@ls1intum/apollon';
 import adapterModel from '../../../templates/pattern/structural/adapter.json';
 import bridgeModel from '../../../templates/pattern/structural/bridge.json';

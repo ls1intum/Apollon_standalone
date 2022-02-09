@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
-import { SoftwarePatternTemplate, SoftwarePatternCategory, SoftwarePatternType } from './software-pattern-types';
-import { Template } from '../template-types';
-import { TemplateFactory } from '../template-factory';
+import { SoftwarePatternTemplate, SoftwarePatternCategory, SoftwarePatternType } from './software-pattern-types.js';
+import { Template } from '../template-types.js';
+import { TemplateFactory } from '../template-factory.js';
 
 type Props = {
   selectedTemplate: SoftwarePatternTemplate;

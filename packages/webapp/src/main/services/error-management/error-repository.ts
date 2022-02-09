@@ -1,5 +1,5 @@
-import { ErrorActionType } from './error-types';
-import { uuid } from '../../utils/uuid';
+import { ErrorActionType } from './error-types.js';
+import { uuid } from '../../utils/uuid.js';
 
 export const ErrorRepository = {
   createError: (type: ErrorActionType, headerText: string, bodyText: string) => ({

@@ -1,7 +1,7 @@
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
+import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types.js';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
-import { BASE_URL } from '../../constant';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { BASE_URL } from '../../constant.js';
+import { DiagramDTO } from 'shared/src/main/diagram-dto.js';
 
 export const DiagramRepository = {
   createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({

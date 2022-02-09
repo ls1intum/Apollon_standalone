@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { Actions } from '../actions';
-import { ApollonError, ErrorActionType } from './error-types';
+import { Actions } from '../actions.js';
+import { ApollonError, ErrorActionType } from './error-types.js';
 
 export const ErrorReducer: Reducer<ApollonError[], Actions> = (state = [], action) => {
   switch (action.type) {

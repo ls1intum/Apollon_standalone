@@ -1,6 +1,6 @@
 import { ApollonEditor } from '@ls1intum/apollon';
-import { ExportActionTypes, ExportJSONAction, ExportPDFAction, ExportPNGAction, ExportSVGAction } from './export-types';
-import { Diagram } from '../diagram/diagram-types';
+import { ExportActionTypes, ExportJSONAction, ExportPDFAction, ExportPNGAction, ExportSVGAction } from './export-types.js';
+import { Diagram } from '../diagram/diagram-types.js';
 
 export const ExportRepository = {
   exportAsSVG: (editor: ApollonEditor, diagramTitle: string): ExportSVGAction => ({

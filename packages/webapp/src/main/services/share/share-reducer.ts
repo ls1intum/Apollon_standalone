@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { Actions } from '../actions';
-import { ShareActionTypes, ShareState } from './share-types';
+import { Actions } from '../actions.js';
+import { ShareActionTypes, ShareState } from './share-types.js';
 
 export const ShareReducer: Reducer<ShareState, Actions> = (
   state = { collaborationName: '', collaborators: [], fromServer: false },

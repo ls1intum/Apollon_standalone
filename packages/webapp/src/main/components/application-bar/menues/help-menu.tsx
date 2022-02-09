@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { NavDropdown } from 'react-bootstrap';
-import { bugReportURL } from '../../../constant';
-import { ModalRepository } from '../../../services/modal/modal-repository';
+import { bugReportURL } from '../../../constant.js';
+import { ModalRepository } from '../../../services/modal/modal-repository.js';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { ModalContentType } from '../../modals/application-modal-types';
+import { ApplicationState } from '../../store/application-state.js';
+import { ModalContentType } from '../../modals/application-modal-types.js';
 
 type OwnProps = {};
 

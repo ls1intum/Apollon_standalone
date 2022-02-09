@@ -1,5 +1,5 @@
-import { HideModalAction, ModalActionType, ShowModalAction } from './modal-types';
-import { ModalContentType, ModalSize } from '../../components/modals/application-modal-types';
+import { HideModalAction, ModalActionType, ShowModalAction } from './modal-types.js';
+import { ModalContentType, ModalSize } from '../../components/modals/application-modal-types.js';
 
 export const ModalRepository = {
   showModal: (type: ModalContentType, size: ModalSize = undefined): ShowModalAction => ({

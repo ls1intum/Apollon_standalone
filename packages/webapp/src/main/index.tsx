@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { RoutedApplication } from './application';
+import { RoutedApplication } from './application.js';
 
 import './styles.css';
 

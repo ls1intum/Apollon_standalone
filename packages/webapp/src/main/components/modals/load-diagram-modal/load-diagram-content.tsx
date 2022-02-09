@@ -1,7 +1,7 @@
 import { ListGroup } from 'react-bootstrap';
 import React from 'react';
-import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
-import { LoadDiagramItem } from './load-diagram-item';
+import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types.js';
+import { LoadDiagramItem } from './load-diagram-item.js';
 
 type Props = {
   diagrams: LocalStorageDiagramListItem[];

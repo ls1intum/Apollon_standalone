@@ -3,7 +3,7 @@ import {
   ShareActionTypes,
   UpdateCollaborationNameAction,
   UpdateCollaboratorsAction,
-} from './share-types';
+} from './share-types.js';
 
 export const ShareRepository = {
   updateCollaborationName: (name: string): UpdateCollaborationNameAction => ({

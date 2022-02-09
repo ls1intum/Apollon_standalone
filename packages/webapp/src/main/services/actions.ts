@@ -1,11 +1,11 @@
-import { LocalStorageActions } from './local-storage/local-storage-types';
+import { LocalStorageActions } from './local-storage/local-storage-types.js';
 import { Action } from 'redux';
-import { EditorOptionsActions } from './editor-options/editor-options-types';
-import { ImportActions } from './import/import-types';
-import { DiagramActions } from './diagram/diagram-types';
-import { ErrorActions } from './error-management/error-types';
-import { ModalActions } from './modal/modal-types';
-import { ShareActions } from './share/share-types';
+import { EditorOptionsActions } from './editor-options/editor-options-types.js';
+import { ImportActions } from './import/import-types.js';
+import { DiagramActions } from './diagram/diagram-types.js';
+import { ErrorActions } from './error-management/error-types.js';
+import { ModalActions } from './modal/modal-types.js';
+import { ShareActions } from './share/share-types.js';
 export type Actions =
   | LocalStorageActions
   | StopAction

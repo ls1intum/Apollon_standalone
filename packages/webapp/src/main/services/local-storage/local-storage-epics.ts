@@ -1,18 +1,18 @@
-import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
-import { ApplicationState } from '../../components/store/application-state';
+import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types.js';
+import { ApplicationState } from '../../components/store/application-state.js';
 import { combineEpics, Epic, ofType } from 'redux-observable';
 import { Action } from 'redux';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant';
-import { StopAction, StopActionType } from '../actions';
+import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant.js';
+import { StopAction, StopActionType } from '../actions.js';
 import moment from 'moment';
-import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
-import { DiagramRepository } from '../diagram/diagram-repository';
-import { ErrorActionType, DisplayErrorAction } from '../error-management/error-types';
-import { ErrorRepository } from '../error-management/error-repository';
+import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types.js';
+import { DiagramRepository } from '../diagram/diagram-repository.js';
+import { ErrorActionType, DisplayErrorAction } from '../error-management/error-types.js';
+import { ErrorRepository } from '../error-management/error-repository.js';
 import { of } from 'rxjs';
-import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
-import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
+import { EditorOptionsRepository } from '../editor-options/editor-options-repository.js';
+import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types.js';
 
 export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
   return action$.pipe(

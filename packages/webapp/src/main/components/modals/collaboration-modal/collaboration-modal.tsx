@@ -1,11 +1,11 @@
 import React, { ChangeEvent, Component, MouseEvent } from 'react';
 import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { ErrorRepository } from '../../../services/error-management/error-repository';
-import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
-import { ShareRepository } from '../../../services/share/share-repository';
-import { ApplicationState } from '../../store/application-state';
-import { ModalContentProps } from '../application-modal-types';
+import { ErrorRepository } from '../../../services/error-management/error-repository.js';
+import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository.js';
+import { ShareRepository } from '../../../services/share/share-repository.js';
+import { ApplicationState } from '../../store/application-state.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

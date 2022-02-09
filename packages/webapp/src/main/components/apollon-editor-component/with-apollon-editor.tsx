@@ -1,4 +1,4 @@
-import { ApollonEditorContext, ApollonEditorConsumer } from './apollon-editor-context';
+import { ApollonEditorContext, ApollonEditorConsumer } from './apollon-editor-context.js';
 import React, { Component, ComponentType, forwardRef } from 'react';
 
 export const withApollonEditor = <P extends ApollonEditorContext, C extends Component>(

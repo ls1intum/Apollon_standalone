@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from 'react-bootstrap';
-import { Diagram } from '../../../services/diagram/diagram-types';
+import { Diagram } from '../../../services/diagram/diagram-types.js';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { DEPLOYMENT_URL } from '../../../constant';
-import { DiagramView } from 'shared/src/main/diagram-view';
-import { ErrorRepository } from '../../../services/error-management/error-repository';
-import { ErrorActionType } from '../../../services/error-management/error-types';
-import { ModalContentProps } from '../application-modal-types';
+import { ApplicationState } from '../../store/application-state.js';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository.js';
+import { DEPLOYMENT_URL } from '../../../constant.js';
+import { DiagramView } from 'shared/src/main/diagram-view.js';
+import { ErrorRepository } from '../../../services/error-management/error-repository.js';
+import { ErrorActionType } from '../../../services/error-management/error-types.js';
+import { ModalContentProps } from '../application-modal-types.js';
 
 type OwnProps = {} & ModalContentProps;
 

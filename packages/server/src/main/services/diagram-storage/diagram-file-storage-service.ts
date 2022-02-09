@@ -1,7 +1,7 @@
-import { FileStorageService } from '../storage-service/file-storage-service';
-import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
-import { diagramStoragePath } from '../../constants';
-import { DiagramStorageService } from './diagram-storage-service';
+import { FileStorageService } from '../storage-service/file-storage-service.js';
+import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto.js';
+import { diagramStoragePath } from '../../constants.js';
+import { DiagramStorageService } from './diagram-storage-service.js';
 
 export class DiagramFileStorageService implements DiagramStorageService {
   private fileStorageService: FileStorageService = new FileStorageService();

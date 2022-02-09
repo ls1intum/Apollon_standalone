@@ -1,4 +1,4 @@
-import 'jsdom-global/register';
+import 'jsdom-global/register.js';
 import { ApollonEditor, SVG, UMLModel } from '@ls1intum/apollon';
 
 export class ConversionService {

@@ -1,5 +1,5 @@
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
-import { SoftwarePatternType } from './software-pattern/software-pattern-types';
+import { SoftwarePatternType } from './software-pattern/software-pattern-types.js';
 
 export enum TemplateCategory {
   SOFTWARE_PATTERN = 'Software Pattern',

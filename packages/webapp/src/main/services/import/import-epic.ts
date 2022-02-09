@@ -2,16 +2,16 @@ import { Action } from 'redux';
 import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ApplicationState } from '../../components/store/application-state';
-import { uuid } from '../../utils/uuid';
-import { StopAction } from '../actions';
-import { DiagramRepository } from '../diagram/diagram-repository';
-import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
-import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
-import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
-import { ErrorRepository } from '../error-management/error-repository';
-import { DisplayErrorAction, ErrorActionType } from '../error-management/error-types';
-import { ImportActionTypes, ImportJSONAction } from './import-types';
+import { ApplicationState } from '../../components/store/application-state.js';
+import { uuid } from '../../utils/uuid.js';
+import { StopAction } from '../actions.js';
+import { DiagramRepository } from '../diagram/diagram-repository.js';
+import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types.js';
+import { EditorOptionsRepository } from '../editor-options/editor-options-repository.js';
+import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types.js';
+import { ErrorRepository } from '../error-management/error-repository.js';
+import { DisplayErrorAction, ErrorActionType } from '../error-management/error-types.js';
+import { ImportActionTypes, ImportJSONAction } from './import-types.js';
 
 export const importEpic: Epic<
   Action,
