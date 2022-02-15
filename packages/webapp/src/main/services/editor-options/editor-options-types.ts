@@ -1,7 +1,7 @@
 import { Action, DeepPartial } from 'redux';
 import { UMLDiagramType } from '@ls1intum/apollon';
-import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
-import { Styles } from '@ls1intum/apollon/lib/components/theme/styles';
+import { ApollonMode, Locale } from '@ls1intum/apollon/lib/es6/services/editor/editor-types';
+import { Styles } from '@ls1intum/apollon/lib/es6/components/theme/styles';
 
 export type EditorOptions = {
   type: UMLDiagramType;

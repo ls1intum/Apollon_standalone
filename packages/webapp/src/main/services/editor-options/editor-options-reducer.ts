@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { Actions } from '../actions';
 import { EditorOptions, EditorOptionsActionTypes } from './editor-options-types';
 import { UMLDiagramType } from '@ls1intum/apollon';
-import { ApollonMode, Locale } from '@ls1intum/apollon/lib/services/editor/editor-types';
+import { ApollonMode, Locale } from '@ls1intum/apollon/lib/es6/services/editor/editor-types';
 
 export const defaultEditorOptions: EditorOptions = {
   type: UMLDiagramType.ClassDiagram,
