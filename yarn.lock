@@ -210,10 +210,10 @@
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
   integrity sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
 
-"@ls1intum/apollon@2.8.5":
-  version "2.8.5"
-  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.8.5.tgz#147c91b96d9c4757ce72a4a69b62ef5fb97b189c"
-  integrity sha512-SDxA41yocUyQ+5zNJWcvNI02YJtngWyrdr9qLEgu6k9UETTvZ8/agIAaEcg1QSjbcE2mcSCpTTFqBog5QtpmZA==
+"@ls1intum/apollon@2.9.2":
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.9.2.tgz#b3c89bdebe3e39ad929221df5f061618340a5a50"
+  integrity sha512-qar1NjEn0kATiFOOuxUAUUkuRvAumCyKJZR7slvoKL3opShEf+uh3bW/sTFmb2sc0YJP4lWWQiraYjwW3LI3WQ==
   dependencies:
     is-mobile "3.0.0"
     pepjs "0.5.3"
