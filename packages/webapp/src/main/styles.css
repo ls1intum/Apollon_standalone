@@ -15,8 +15,13 @@ body {
 
 .apollon-editor {
   flex-grow: 1;
+  background-color: var(--apollon-background);
 }
 
 #application-modal #permission-selection-dropdown {
   width: 100%;
+}
+
+#modeling-editor-sidebar {
+  background-color: var(--apollon-background);
 }
