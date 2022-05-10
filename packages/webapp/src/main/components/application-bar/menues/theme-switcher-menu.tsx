@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { NavDropdown } from 'react-bootstrap';
 import { ModalRepository } from '../../../services/modal/modal-repository';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import { switchTheme } from '../../../utils/theme-switcher';
+import { toggletheme } from '../../../utils/theme-switcher';
 
 type OwnProps = {};
 
@@ -26,40 +25,37 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
         super(props);
     }
 
-    componentDidMount() {
-        document.addEventListener('click', this.hideMenu);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('click', this.hideMenu);
-    }
 
     showMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        this.setState({ show: true });
         event.stopPropagation();
     };
 
     hideMenu = (event: MouseEvent) => {
-        this.setState({ show: false });
         event.stopPropagation();
     };
 
     render() {
         return (
             <>
-                <NavDropdown
-                    id="file-menu-item"
-                    title="Theme Switcher"
-                    style={{ paddingTop: 0, paddingBottom: 0 }}
-                    onClick={this.showMenu}
-                >
-                    <span className="dropdown-item" onClick={() => { switchTheme('light'); }}>
-                        Light Mode
-                    </span>
-                    <span className="dropdown-item" onClick={() => { switchTheme('dark'); }}>
-                        Dark Mode
-                    </span>
-                </NavDropdown>
+                <div id="theme-toggle" onClick={() => {toggletheme();}}>
+                    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="white" />
+                        <g stroke="white">
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </g>
+                        <mask id="moon-mask">
+                            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                            <circle cx="24" cy="10" r="6" fill="black" />
+                        </mask>
+                    </svg>
+                </div>
             </>
         );
     }

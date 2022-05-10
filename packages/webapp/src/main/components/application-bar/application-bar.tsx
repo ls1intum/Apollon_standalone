@@ -110,7 +110,6 @@ class ApplicationBarComponent extends Component<Props, State> {
                 </Nav.Item>
               )}
               <HelpMenu />
-              <ThemeSwitcherMenu />
               <DiagramTitle
                 type="text"
                 value={this.state.diagramTitle}
@@ -120,6 +119,7 @@ class ApplicationBarComponent extends Component<Props, State> {
             </Nav>
             <ConnectClientsComponent collaborators={this.props.collaborators} />
           </Navbar.Collapse>
+          <ThemeSwitcherMenu />
         </Navbar>
       </>
     );
