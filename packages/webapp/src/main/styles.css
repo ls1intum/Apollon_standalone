@@ -59,3 +59,21 @@ body {
   background-color:var(--apollon-alert-danger-background);;
   border-color: var(--apollon-alert-danger-border);;
 }
+
+.theme-toggle {
+  cursor: pointer;
+}
+
+.theme-toggle.dark .sun-and-moon > .sun-beams {
+  transform: rotateZ(-90deg);
+}
+
+.theme-toggle.dark .sun-and-moon > .moon > circle {
+  transform: translateX(-7px);
+  transition-duration: 0.1s;
+}
+
+.theme-toggle.dark .sun-and-moon > .sun {
+  transition-timing-function: cubic-bezier(0.25, 0, 0.3, 1);
+  transition-duration: 0.25s;
+}

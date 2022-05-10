@@ -10,7 +10,7 @@ export const setTheme = (theming: string) => {
     }
 };
 
-export const toggletheme = () => {
+export const toggleTheme = () => {
     const themePreference = window.localStorage.getItem(localStorageThemePreference);
 
     switch (themePreference) {
