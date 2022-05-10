@@ -5,6 +5,7 @@
         "--apollon-secondary": "#6c757d",
         "--apollon-warning-yellow": "#ffc800",
         "--apollon-background": "#ffffff",
+        "--apollon-background-inverse": "#000000",
         "--apollon-background-variant": "#e5e5e5",
         "--apollon-gray": "#e9ecef",
         "--apollon-gray-variant": "#343a40"
@@ -15,6 +16,7 @@
         "--apollon-secondary": "#6f85c2",
         "--apollon-warning-yellow": "#ffc800",
         "--apollon-background": "#1B2121",
+        "--apollon-background-inverse": "#ffffff",
         "--apollon-background-variant": "#3e4c4c",
         "--apollon-gray": "#343a40",
         "--apollon-gray-variant": "#6c757d"

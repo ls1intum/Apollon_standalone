@@ -25,3 +25,25 @@ body {
 #modeling-editor-sidebar {
   background-color: var(--apollon-background);
 }
+
+.dropdown-menu {
+  background-color: var(--apollon-background);
+}
+
+.dropdown-item {
+  color: var(--apollon-background-inverse);
+}
+
+#dropdown-basic {
+  color: var(--apollon-background-inverse);
+  border: 0;
+}
+
+.modal-content {
+  background-color: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+}
+
+.modal-body .table {
+  color: var(--apollon-background-inverse);
+}

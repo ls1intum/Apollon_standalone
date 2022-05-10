@@ -3,7 +3,7 @@ import { NavDropdown } from 'react-bootstrap';
 import { ModalRepository } from '../../../services/modal/modal-repository';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import * as themings from '../../../themings.json';
+import { switchTheme } from '../../../utils/theme-switcher';
 
 type OwnProps = {};
 
@@ -44,15 +44,6 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
         event.stopPropagation();
     };
 
-    switchTheme = (theming: string) => {
-        const root = document.documentElement;
-        // @ts-ignore
-        for (const themingVar of Object.keys(themings[theming])) {
-            // @ts-ignore
-            root.style.setProperty(themingVar, themings[theming][themingVar]);
-        }
-    };
-
     render() {
         return (
             <>
@@ -62,10 +53,10 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                     onClick={this.showMenu}
                 >
-                    <a target="_blank" style={{ color: '#212529' }} className="dropdown-item" onClick={() => { this.switchTheme('light'); }}>
+                    <a className="dropdown-item" onClick={() => { switchTheme('light'); }}>
                         Light Mode
                     </a>
-                    <a target="_blank" style={{ color: '#212529' }} className="dropdown-item" onClick={() => { this.switchTheme('dark'); }}>
+                    <a className="dropdown-item" onClick={() => { switchTheme('dark'); }}>
                         Dark Mode
                     </a>
                 </NavDropdown>
