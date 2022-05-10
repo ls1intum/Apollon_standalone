@@ -53,12 +53,12 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                     style={{ paddingTop: 0, paddingBottom: 0 }}
                     onClick={this.showMenu}
                 >
-                    <a className="dropdown-item" onClick={() => { switchTheme('light'); }}>
+                    <span className="dropdown-item" onClick={() => { switchTheme('light'); }}>
                         Light Mode
-                    </a>
-                    <a className="dropdown-item" onClick={() => { switchTheme('dark'); }}>
+                    </span>
+                    <span className="dropdown-item" onClick={() => { switchTheme('dark'); }}>
                         Dark Mode
-                    </a>
+                    </span>
                 </NavDropdown>
             </>
         );
