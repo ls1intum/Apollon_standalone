@@ -11,6 +11,7 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: var(--apollon-background);
 }
 
 .apollon-editor {
@@ -46,4 +47,15 @@ body {
 
 .modal-body .table {
   color: var(--apollon-background-inverse);
+}
+
+.modal-header .close {
+  color: var(--apollon-background-inverse);
+  opacity: 1;
+}
+
+.alert-danger {
+  color: var(--apollon-alert-danger-color);
+  background-color:var(--apollon-alert-danger-background);;
+  border-color: var(--apollon-alert-danger-border);;
 }
