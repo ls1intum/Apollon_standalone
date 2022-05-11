@@ -78,9 +78,18 @@ body {
   transition-duration: 0.25s;
 }
 
+.arrow::before {
+  border-bottom-color: var(--apollon-background) !important;
+}
+.tooltip.show {
+  opacity: 1;
+}
 .tooltip-inner {
   width: 270px;
   max-width: unset;
+  background-color: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+  border: solid 1px var(--apollon-switch-box-border-color);
 }
 
 
@@ -101,7 +110,7 @@ body {
   margin-top: 10px;
 }
 .popover-content .switch-box {
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--apollon-switch-box-border-color);
   margin: 1em 0.5em 0.5em;
   padding: 0.3em 0.5em;
   min-width: fit-content;
@@ -110,17 +119,14 @@ body {
   align-items: center;
   white-space: nowrap;
 }
-.popover-content .switch-box .form-switch {
-  /* font-size: 16px; */
-  /* margin: 0; */
-}
+
 .popover-content .switch-box .form-switch > * {
   cursor: pointer;
 }
 
 .popover-wrapper {
-  width: 250px;
-  height: 500px;
+  /* width: 250px; */
+  /* height: 500px; */
 }
 
 
