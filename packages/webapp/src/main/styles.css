@@ -85,7 +85,8 @@ body {
   opacity: 1;
 }
 .tooltip-inner {
-  width: 270px;
+  width: 310px;
+  padding: 1rem;
   max-width: unset;
   background-color: var(--apollon-background);
   color: var(--apollon-background-inverse);
@@ -122,11 +123,6 @@ body {
 
 .popover-content .switch-box .form-switch > * {
   cursor: pointer;
-}
-
-.popover-wrapper {
-  /* width: 250px; */
-  /* height: 500px; */
 }
 
 

@@ -88,7 +88,7 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
             setTheme(this.getSystemTheme().toLowerCase());
             this.updateState();
         } else {
-            this.setState({overrideUserThemePreference: false});
+            this.setState({ overrideUserThemePreference: false });
             window.localStorage.setItem(localStorageThemePreference, this.getSystemTheme());
         }
     }
@@ -97,11 +97,10 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
     render() {
         return (
             <>
-                <OverlayTrigger
+                <OverlayTrigger 
                     key="bottom"
                     placement="bottom-start"
-                    delay={{ show: 250, hide: 200000000 }}
-                    rootCloseEvent="click"
+                    delay={{ show: 0, hide: 1500 }}
                     overlay={
                         <Tooltip id="tooltip-bottom">
                             <div className="popover-content" id="theme-switch-popover-content">
@@ -116,9 +115,12 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                                         onChange={this.handleInputChange} />
                                 </div>
 
-                                <div className="description">
+                                {this.isDarkMode() && <div className="description">
                                     <span>You can click this icon at any time to disable the dark mode if you experience problems.</span>
-                                </div>
+                                </div>}
+                                {!this.isDarkMode() && <div className="description">
+                                    <span>Try the dark mode and relieve your eyes.</span>
+                                </div>}
                             </div >
                         </Tooltip>
 
