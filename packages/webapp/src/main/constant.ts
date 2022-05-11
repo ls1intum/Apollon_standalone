@@ -12,6 +12,7 @@ export const localStorageDiagramsList = localStoragePrefix + 'diagrams';
 export const localStorageLatest = localStoragePrefix + 'latest';
 export const localStorageCollaborationName = localStoragePrefix + 'collaborationName';
 export const localStorageThemePreference = localStoragePrefix + 'themePreference';
+export const localStorageSystemTheme = localStoragePrefix + 'systemTheme';
 // date formats
 export const longDate = 'MMMM Do YYYY, h:mm:ss a';
 

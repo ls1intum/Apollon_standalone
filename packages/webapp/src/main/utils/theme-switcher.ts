@@ -1,4 +1,4 @@
-import { localStorageThemePreference } from '../constant';
+import { localStorageSystemTheme, localStorageThemePreference } from '../constant';
 import * as themings from '../themings.json';
 
 export const setTheme = (theming: string) => {
@@ -11,7 +11,9 @@ export const setTheme = (theming: string) => {
 };
 
 export const toggleTheme = () => {
-    const themePreference = window.localStorage.getItem(localStorageThemePreference);
+    let themePreference = window.localStorage.getItem(localStorageThemePreference);
+    if(!themePreference) themePreference = window.localStorage.getItem(localStorageSystemTheme);
+
 
     switch (themePreference) {
         case 'DARK':

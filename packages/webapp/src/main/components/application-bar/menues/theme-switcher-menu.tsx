@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import { toggleTheme } from '../../../utils/theme-switcher';
-import { localStorageThemePreference } from '../../../constant';
+import { setTheme, toggleTheme } from '../../../utils/theme-switcher';
+import { localStorageSystemTheme, localStorageThemePreference } from '../../../constant';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 type OwnProps = {};
 
-type State = { isDarkMode: boolean, showTooltip: boolean, overrideDarkMode: boolean };
+type State = { isDarkMode: boolean, showTooltip: boolean, overrideUserThemePreference: boolean };
 
 type StateProps = {};
 
@@ -16,25 +16,6 @@ type DispatchProps = {};
 type Props = OwnProps & StateProps & DispatchProps;
 
 const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {});
-
-
-const overlayContent = (
-    <Tooltip id="tooltip-bottom">
-        <div className="popover-content" id="theme-switch-popover-content">
-            <div className="head">☾ <span>Dark Mode</span> ☾</div>
-            <div className="experimental">EXPERIMENTAL</div>
-            <div className="switch-box">
-                {/* <div><fa-icon [icon]="faSync"></fa-icon> {{ 'artemisApp.theme.sync' | artemisTranslate }}</div> */}
-                Sync with Operating System
-                {/* <input className="form-check-input" type="checkbox" /> */}
-            </div>
-
-            <div className="description">
-                <span>You can click this icon at any time to disable the dark mode if you experience problems.</span>
-            </div>
-        </div >
-    </Tooltip>
-);
 
 const themeSwitcherIcon = (
     <svg className="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
@@ -73,9 +54,43 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
         this.updateState();
     };
 
+    isDarkMode = () => {
+        const systemTheme = window.localStorage.getItem(localStorageSystemTheme);
+        const preferredTheme = window.localStorage.getItem(localStorageThemePreference);
+        if (preferredTheme) {
+            if (preferredTheme === 'DARK') return true;
+        } else {
+            if (systemTheme === 'DARK') return true;
+        }
+        return false;
+    }
+
     updateState = () => {
-        this.setState({ isDarkMode: window.localStorage.getItem(localStorageThemePreference) === 'DARK' ? true : false, showTooltip: false, overrideDarkMode: false });
+        this.setState({
+            isDarkMode: this.isDarkMode(),
+            showTooltip: false,
+            overrideUserThemePreference: window.localStorage.getItem(localStorageThemePreference) ? false : true
+        });
     };
+
+    getSystemTheme = (): string => {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'DARK';
+        } else {
+            return 'LIGHT';
+        }
+    }
+
+    handleInputChange = () => {
+        if (!this.state.overrideUserThemePreference) {
+            window.localStorage.setItem(localStorageSystemTheme, this.getSystemTheme());
+            window.localStorage.removeItem(localStorageThemePreference);
+            setTheme(this.getSystemTheme().toLowerCase());
+            this.updateState();
+        } else {
+            this.updateState();
+        }
+    }
 
 
     render() {
@@ -86,7 +101,36 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                     placement="bottom-start"
                     delay={{ show: 250, hide: 200000000 }}
                     rootCloseEvent="click"
-                    overlay={overlayContent}>
+                    overlay={
+                        <Tooltip id="tooltip-bottom">
+                            <div className="popover-content" id="theme-switch-popover-content">
+                                <div className="head">☾ <span>Dark Mode</span> ☾</div>
+                                <div className="experimental">EXPERIMENTAL</div>
+                                <div className="switch-box">
+                                    {/* <div><fa-icon [icon]="faSync"></fa-icon> {{ 'artemisApp.theme.sync' | artemisTranslate }}</div> */}
+                                    Sync with Operating System
+                                    <input
+                                        type="checkbox"
+                                        checked={this.state && this.state.overrideUserThemePreference}
+                                        onChange={this.handleInputChange} />
+                                </div>
+
+                                <div className="description">
+                                    <span>You can click this icon at any time to disable the dark mode if you experience problems.</span>
+                                </div>
+                            </div >
+                        </Tooltip>
+
+
+                    }
+
+
+
+
+
+
+
+                >
 
                     <div onClick={() => { this.updateTheme(); }}>
                         <div className={'theme-toggle' + (this.state && this.state.isDarkMode ? ' dark' : '')} id="theme-toggle">
