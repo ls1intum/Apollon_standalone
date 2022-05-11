@@ -8,19 +8,19 @@ import './styles.css';
 
 const themePreference: string | null = window.localStorage.getItem(localStorageThemePreference);
 
-if(!themePreference) {
-    // Get from System Dark/Mode theme preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // Dark mode
-        window.localStorage.setItem(localStorageSystemTheme, 'DARK');
-        setTheme('dark');
-    } else {
-        // Light Mode
-        window.localStorage.setItem(localStorageSystemTheme, 'LIGHT');
-        setTheme('light');
-    }
+if (!themePreference) {
+  // Get from System Dark/Mode theme preference
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // Dark mode
+    window.localStorage.setItem(localStorageSystemTheme, 'DARK');
+    setTheme('dark');
+  } else {
+    // Light Mode
+    window.localStorage.setItem(localStorageSystemTheme, 'LIGHT');
+    setTheme('light');
+  }
 } else {
-    setTheme(themePreference.toLowerCase());
+  setTheme(themePreference.toLowerCase());
 }
 
 ReactDOM.render(<RoutedApplication />, document.getElementById('root') as HTMLElement);

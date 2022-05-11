@@ -1,32 +1,32 @@
 {
-    "light": {
-        "--apollon-primary": "#2a8fbd",
-        "--apollon-primary-contrast": "#212529",
-        "--apollon-secondary": "#6c757d",
-        "--apollon-warning-yellow": "#ffc800",
-        "--apollon-background": "#ffffff",
-        "--apollon-background-inverse": "#000000",
-        "--apollon-background-variant": "#e5e5e5",
-        "--apollon-gray": "#e9ecef",
-        "--apollon-gray-variant": "#343a40",
-        "--apollon-alert-danger-color": "#721c24",
-        "--apollon-alert-danger-background": "#f8d7da",
-        "--apollon-alert-danger-border": "#f5c6cb",
-        "--apollon-switch-box-border-color": "#dee2e6"
-    },
-    "dark": {
-        "--apollon-primary": "#51a2a2",
-        "--apollon-primary-contrast": "#eae1e1",
-        "--apollon-secondary": "#6f85c2",
-        "--apollon-warning-yellow": "#ffc800",
-        "--apollon-background": "#1B2121",
-        "--apollon-background-inverse": "#ffffff",
-        "--apollon-background-variant": "#3e4c4c",
-        "--apollon-gray": "#343a40",
-        "--apollon-gray-variant": "#6c757d",
-        "--apollon-alert-danger-color": "#ef8b80",
-        "--apollon-alert-danger-background": "#370b07",
-        "--apollon-alert-danger-border": "#e43725",
-        "--apollon-switch-box-border-color": "#3d423d"
-    }
+  "light": {
+    "--apollon-primary": "#2a8fbd",
+    "--apollon-primary-contrast": "#212529",
+    "--apollon-secondary": "#6c757d",
+    "--apollon-warning-yellow": "#ffc800",
+    "--apollon-background": "#ffffff",
+    "--apollon-background-inverse": "#000000",
+    "--apollon-background-variant": "#e5e5e5",
+    "--apollon-gray": "#e9ecef",
+    "--apollon-gray-variant": "#343a40",
+    "--apollon-alert-danger-color": "#721c24",
+    "--apollon-alert-danger-background": "#f8d7da",
+    "--apollon-alert-danger-border": "#f5c6cb",
+    "--apollon-switch-box-border-color": "#dee2e6"
+  },
+  "dark": {
+    "--apollon-primary": "#51a2a2",
+    "--apollon-primary-contrast": "#eae1e1",
+    "--apollon-secondary": "#6f85c2",
+    "--apollon-warning-yellow": "#ffc800",
+    "--apollon-background": "#1B2121",
+    "--apollon-background-inverse": "#ffffff",
+    "--apollon-background-variant": "#3e4c4c",
+    "--apollon-gray": "#343a40",
+    "--apollon-gray-variant": "#6c757d",
+    "--apollon-alert-danger-color": "#ef8b80",
+    "--apollon-alert-danger-background": "#370b07",
+    "--apollon-alert-danger-border": "#e43725",
+    "--apollon-switch-box-border-color": "#3d423d"
+  }
 }

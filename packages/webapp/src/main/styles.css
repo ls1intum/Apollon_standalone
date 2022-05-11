@@ -56,8 +56,8 @@ body {
 
 .alert-danger {
   color: var(--apollon-alert-danger-color);
-  background-color:var(--apollon-alert-danger-background);;
-  border-color: var(--apollon-alert-danger-border);;
+  background-color: var(--apollon-alert-danger-background);
+  border-color: var(--apollon-alert-danger-border);
 }
 
 .theme-toggle {
@@ -93,7 +93,6 @@ body {
   border: solid 1px var(--apollon-switch-box-border-color);
 }
 
-
 .popover-content .head {
   font-size: 20px;
   font-weight: bold;
@@ -124,5 +123,3 @@ body {
 .popover-content .switch-box .form-switch > * {
   cursor: pointer;
 }
-
-
