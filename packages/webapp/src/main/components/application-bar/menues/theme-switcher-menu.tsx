@@ -88,7 +88,8 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
             setTheme(this.getSystemTheme().toLowerCase());
             this.updateState();
         } else {
-            this.updateState();
+            this.setState({overrideUserThemePreference: false});
+            window.localStorage.setItem(localStorageThemePreference, this.getSystemTheme());
         }
     }
 
