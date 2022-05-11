@@ -77,3 +77,50 @@ body {
   transition-timing-function: cubic-bezier(0.25, 0, 0.3, 1);
   transition-duration: 0.25s;
 }
+
+.tooltip-inner {
+  width: 270px;
+  max-width: unset;
+}
+
+
+.popover-content .head {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--warning);
+}
+.popover-content .head span {
+  padding: 0 5px;
+  color: var(--apollon-background-inverse);
+}
+.popover-content .experimental {
+  color: var(--warning);
+  font-weight: bold;
+}
+.popover-content .description {
+  margin-top: 10px;
+}
+.popover-content .switch-box {
+  border: 1px solid #dee2e6;
+  margin: 1em 0.5em 0.5em;
+  padding: 0.3em 0.5em;
+  min-width: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+}
+.popover-content .switch-box .form-switch {
+  /* font-size: 16px; */
+  /* margin: 0; */
+}
+.popover-content .switch-box .form-switch > * {
+  cursor: pointer;
+}
+
+.popover-wrapper {
+  width: 250px;
+  height: 500px;
+}
+
+
