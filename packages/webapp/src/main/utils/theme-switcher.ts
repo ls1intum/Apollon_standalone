@@ -1,4 +1,4 @@
-import { localStorageSystemTheme, localStorageThemePreference } from '../constant';
+import { LocalStorageRepository } from '../../main/services/local-storage/local-storage-repository'; 
 import * as themings from '../themings.json';
 
 export const setTheme = (theming: string) => {
@@ -11,18 +11,18 @@ export const setTheme = (theming: string) => {
 };
 
 export const toggleTheme = () => {
-  let themePreference = window.localStorage.getItem(localStorageThemePreference);
-  if (!themePreference) themePreference = window.localStorage.getItem(localStorageSystemTheme);
+  let themePreference = LocalStorageRepository.getUserThemePreference();
+  if (!themePreference) themePreference = LocalStorageRepository.getSystemThemePreference();
 
   switch (themePreference) {
-    case 'DARK':
+    case 'dark':
       setTheme('light');
-      window.localStorage.setItem(localStorageThemePreference, 'LIGHT');
+      LocalStorageRepository.setUserThemePreference('light');
       break;
 
     default:
       setTheme('dark');
-      window.localStorage.setItem(localStorageThemePreference, 'DARK');
+      LocalStorageRepository.setUserThemePreference('dark');
       break;
   }
 };

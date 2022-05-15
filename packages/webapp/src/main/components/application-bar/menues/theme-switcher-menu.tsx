@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { setTheme, toggleTheme } from '../../../utils/theme-switcher';
-import { localStorageSystemTheme, localStorageThemePreference } from '../../../constant';
+import { LocalStorageRepository } from '../../../../main/services/local-storage/local-storage-repository'; 
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 type OwnProps = {};
@@ -52,12 +52,12 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
   };
 
   isDarkMode = () => {
-    const systemTheme = window.localStorage.getItem(localStorageSystemTheme);
-    const preferredTheme = window.localStorage.getItem(localStorageThemePreference);
+    const systemTheme = LocalStorageRepository.getSystemThemePreference();
+    const preferredTheme = LocalStorageRepository.getUserThemePreference();
     if (preferredTheme) {
-      if (preferredTheme === 'DARK') return true;
+      if (preferredTheme === 'dark') return true;
     } else {
-      if (systemTheme === 'DARK') return true;
+      if (systemTheme === 'dark') return true;
     }
     return false;
   };
@@ -66,27 +66,27 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
     this.setState({
       isDarkMode: this.isDarkMode(),
       showTooltip: false,
-      overrideUserThemePreference: window.localStorage.getItem(localStorageThemePreference) ? false : true,
+      overrideUserThemePreference: LocalStorageRepository.getUserThemePreference() ? false : true,
     });
   };
 
   getSystemTheme = (): string => {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'DARK';
+      return 'dark';
     } else {
-      return 'LIGHT';
+      return 'light';
     }
   };
 
   handleInputChange = () => {
     if (!this.state.overrideUserThemePreference) {
-      window.localStorage.setItem(localStorageSystemTheme, this.getSystemTheme());
-      window.localStorage.removeItem(localStorageThemePreference);
-      setTheme(this.getSystemTheme().toLowerCase());
+      LocalStorageRepository.setSystemThemePreference(this.getSystemTheme());
+      LocalStorageRepository.removeUserThemePreference();
+      setTheme(this.getSystemTheme());
       this.updateState();
     } else {
       this.setState({ overrideUserThemePreference: false });
-      window.localStorage.setItem(localStorageThemePreference, this.getSystemTheme());
+      LocalStorageRepository.setUserThemePreference(this.getSystemTheme());
     }
   };
 
