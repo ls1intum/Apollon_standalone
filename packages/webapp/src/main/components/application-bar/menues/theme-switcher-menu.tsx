@@ -108,11 +108,11 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                   {/* <div><fa-icon [icon]="faSync"></fa-icon> {{ 'artemisApp.theme.sync' | artemisTranslate }}</div> */}
                   Sync with Operating System
                   <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={this.state && this.state.overrideUserThemePreference}
-                    onChange={this.handleInputChange}
-                  />
+                    <input
+                      type="checkbox"
+                      checked={this.state && this.state.overrideUserThemePreference}
+                      onChange={this.handleInputChange}
+                    />
                     <span className="slider round" />
                   </label>
                 </div>
