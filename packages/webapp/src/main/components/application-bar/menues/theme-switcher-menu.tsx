@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { setTheme, toggleTheme } from '../../../utils/theme-switcher';
-import { LocalStorageRepository } from '../../../../main/services/local-storage/local-storage-repository'; 
+import { LocalStorageRepository } from '../../../../main/services/local-storage/local-storage-repository';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 type OwnProps = {};
