@@ -78,8 +78,8 @@ body {
   transition-duration: 0.25s;
 }
 
-.arrow::before {
-  border-bottom-color: var(--apollon-background) !important;
+#tooltip-bottom .arrow::before {
+  border-bottom-color: var(--apollon-background);
 }
 .tooltip.show {
   opacity: 1;
