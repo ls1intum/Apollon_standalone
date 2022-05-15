@@ -123,3 +123,30 @@ body {
 .popover-content .switch-box .form-switch > * {
   cursor: pointer;
 }
+
+#diagram-type-list .list-group-item {
+  background-color: var(--apollon-list-group-color);
+  color: var(--apollon-background-inverse);
+}
+
+#diagram-type-list .list-group-item:hover {
+  background-color: #f8f9fa;
+  color: #000000;
+}
+
+#diagram-type-list .list-group-item.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+#diagram-title {
+  background-color: var(--apollon-list-group-color);
+  color: var(--apollon-background-inverse);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--apollon-gray);
+}
+.modal-footer {
+  border-top: 1px solid var(--apollon-gray);
+}
