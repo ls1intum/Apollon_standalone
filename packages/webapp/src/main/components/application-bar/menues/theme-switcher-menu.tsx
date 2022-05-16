@@ -54,12 +54,7 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
   isDarkMode = () => {
     const systemTheme = LocalStorageRepository.getSystemThemePreference();
     const preferredTheme = LocalStorageRepository.getUserThemePreference();
-    if (preferredTheme) {
-      if (preferredTheme === 'dark') return true;
-    } else {
-      if (systemTheme === 'dark') return true;
-    }
-    return false;
+    return (preferredTheme || systemTheme) === 'dark';
   };
 
   updateState = () => {
