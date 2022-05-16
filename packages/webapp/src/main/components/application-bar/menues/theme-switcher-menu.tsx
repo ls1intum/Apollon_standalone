@@ -65,7 +65,6 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
   updateState = () => {
     this.setState({
       isDarkMode: this.isDarkMode(),
-      showTooltip: false,
       overrideUserThemePreference: LocalStorageRepository.getUserThemePreference() ? false : true,
     });
   };
@@ -90,12 +89,39 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
     }
   };
 
+  onToggle = () => {
+    if (!this.state.showTooltip) {
+      this.setState({ showTooltip: true });
+    } else {
+      if (this.isPopoverHovered()) {
+        this.setState({ showTooltip: true });
+        setTimeout(() => {
+          this.onToggle();
+        }, 500);
+      } else {
+        this.setState({ showTooltip: false });
+      }
+    }
+  };
+
+  isPopoverHovered = () => {
+    const elem = document.getElementById('tooltip-bottom');
+    if (elem?.parentElement?.querySelector(':hover') === elem) {
+      return true;
+    }
+    return false;
+  };
+
   render() {
     return (
       <>
         <OverlayTrigger
           key="bottom"
           placement="bottom-start"
+          show={this.state && this.state.showTooltip}
+          onToggle={() => {
+            this.onToggle();
+          }}
           delay={{ show: 0, hide: 1500 }}
           overlay={
             <Tooltip id="tooltip-bottom">

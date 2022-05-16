@@ -63,7 +63,7 @@ body {
 .alert-warning {
   color: var(--apollon-alert-warning-yellow);
   background-color: var(--apollon-alert-warning-background);
-  border-color: var(--apollon-alert-warning-border); 
+  border-color: var(--apollon-alert-warning-border);
 }
 
 .theme-toggle {
