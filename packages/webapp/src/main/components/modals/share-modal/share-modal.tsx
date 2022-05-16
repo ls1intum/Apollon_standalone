@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Dropdown, DropdownButton, FormControl, InputGroup, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { Diagram } from '../../../services/diagram/diagram-types';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
@@ -80,8 +80,11 @@ class ShareModalComponent extends Component<Props, State> {
     return `Everyone with this link receives a copy of this diagram to ${innerMessage}`;
   };
 
-  changePermission = (view: DiagramView) => {
-    this.setState({ view });
+  shareDiagram = (view: DiagramView) => {
+    this.setState({ view }, () => {
+      this.publishDiagram();
+      this.copyLink();
+    });
   };
 
   copyLink = () => {
@@ -125,11 +128,17 @@ class ShareModalComponent extends Component<Props, State> {
         <Modal.Body>
           <>
             <p>
-              If you want to share the current version of your diagram with other users, click on the publish button. A
-              copy of your current diagram version is then stored on the server so that other users can access it. It
-              will be accessible for 12 weeks with the correct link. The links are shown after you clicked on the
-              publish button.
+              If you want to share the current version of your diagram with other users, click on the available sharing options.
+              A copy of your current diagram version is then stored on the server so that other users can access it. 
+              It will be accessible for 12 weeks with the correct link.
             </p>
+
+
+            <button type="button" onClick={() => {this.shareDiagram(DiagramView.EDIT);}} className="btn btn-outline-dark m-1 share-btn">Edit</button>
+            <button type="button" onClick={() => {this.shareDiagram(DiagramView.GIVE_FEEDBACK);}} className="btn btn-outline-dark m-1 share-btn">Give Feedback</button>
+            <button type="button" onClick={() => {this.shareDiagram(DiagramView.SEE_FEEDBACK);}} className="btn btn-outline-dark m-1 share-btn">See Feedback</button>
+            <button type="button" onClick={() => {this.shareDiagram(DiagramView.COLLABORATE);}} className="btn btn-outline-dark m-1 share-btn">Collaborate</button>
+{/* 
             <InputGroup className="mb-3">
               <FormControl readOnly value={this.getMessageForView()} bsCustomPrefix="w-100" />
               <DropdownButton
@@ -163,7 +172,7 @@ class ShareModalComponent extends Component<Props, State> {
                   Copy Link
                 </Button>
               </InputGroup.Append>
-            </InputGroup>
+            </InputGroup> */}
           </>
         </Modal.Body>
       </>

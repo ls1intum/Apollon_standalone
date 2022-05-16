@@ -20,3 +20,7 @@ body {
 #application-modal #permission-selection-dropdown {
   width: 100%;
 }
+
+.share-btn {
+  width: 23%;
+}
