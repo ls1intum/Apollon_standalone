@@ -126,7 +126,6 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                 </div>
                 <div className="experimental">EXPERIMENTAL</div>
                 <div className="switch-box">
-                  {/* <div><fa-icon [icon]="faSync"></fa-icon> {{ 'artemisApp.theme.sync' | artemisTranslate }}</div> */}
                   Sync with Operating System
                   <label className="switch">
                     <input
