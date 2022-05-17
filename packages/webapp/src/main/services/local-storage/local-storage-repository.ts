@@ -1,6 +1,11 @@
 import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
 import { Diagram } from '../diagram/diagram-types';
-import { localStorageCollaborationName, localStorageDiagramsList } from '../../constant';
+import {
+  localStorageCollaborationName,
+  localStorageDiagramsList,
+  localStorageSystemThemePreference,
+  localStorageUserThemePreference,
+} from '../../constant';
 import moment from 'moment';
 
 export const LocalStorageRepository = {
@@ -57,5 +62,25 @@ export const LocalStorageRepository = {
 
   getLastPublishedType: () => {
     return window.localStorage.getItem('last_published_type');
+  },
+
+  setSystemThemePreference: (value: string) => {
+    window.localStorage.setItem(localStorageSystemThemePreference, value);
+  },
+
+  setUserThemePreference: (value: string) => {
+    window.localStorage.setItem(localStorageUserThemePreference, value);
+  },
+
+  getSystemThemePreference: () => {
+    return window.localStorage.getItem(localStorageSystemThemePreference);
+  },
+
+  getUserThemePreference: () => {
+    return window.localStorage.getItem(localStorageUserThemePreference);
+  },
+
+  removeUserThemePreference: () => {
+    window.localStorage.removeItem(localStorageUserThemePreference);
   },
 };

@@ -11,10 +11,12 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: var(--apollon-background);
 }
 
 .apollon-editor {
   flex-grow: 1;
+  background-color: var(--apollon-background);
 }
 
 #application-modal #permission-selection-dropdown {
@@ -44,4 +46,198 @@ legend.scheduler-border {
   text-align: left;
   width: auto;
   padding: 0 10px;
+}
+
+#modeling-editor-sidebar {
+  background-color: var(--apollon-background);
+}
+
+.dropdown-menu {
+  background-color: var(--apollon-background);
+}
+
+.dropdown-item {
+  color: var(--apollon-background-inverse);
+}
+
+#dropdown-basic {
+  color: var(--apollon-background-inverse);
+  border: 0;
+}
+
+.modal-content {
+  background-color: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+}
+
+.modal-body .table {
+  color: var(--apollon-background-inverse);
+}
+
+.modal-header .close {
+  color: var(--apollon-background-inverse);
+  opacity: 1;
+}
+
+.alert-danger {
+  color: var(--apollon-alert-danger-color);
+  background-color: var(--apollon-alert-danger-background);
+  border-color: var(--apollon-alert-danger-border);
+}
+
+.alert-warning {
+  color: var(--apollon-alert-warning-yellow);
+  background-color: var(--apollon-alert-warning-background);
+  border-color: var(--apollon-alert-warning-border);
+}
+
+.theme-toggle {
+  cursor: pointer;
+}
+
+.theme-toggle.dark .sun-and-moon > .sun-beams {
+  transform: rotateZ(-90deg);
+}
+
+.theme-toggle.dark .sun-and-moon > .moon > circle {
+  transform: translateX(-7px);
+  transition-duration: 0.1s;
+}
+
+.theme-toggle.dark .sun-and-moon > .sun {
+  transition-timing-function: cubic-bezier(0.25, 0, 0.3, 1);
+  transition-duration: 0.25s;
+}
+
+#tooltip-bottom .arrow::before {
+  border-bottom-color: var(--apollon-background);
+}
+.tooltip.show {
+  opacity: 1;
+}
+.tooltip-inner {
+  width: 310px;
+  padding: 1rem;
+  max-width: unset;
+  background-color: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+  border: solid 1px var(--apollon-switch-box-border-color);
+}
+
+.popover-content .head {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--warning);
+}
+.popover-content .head span {
+  padding: 0 5px;
+  color: var(--apollon-background-inverse);
+}
+.popover-content .experimental {
+  color: var(--warning);
+  font-weight: bold;
+}
+.popover-content .description {
+  margin-top: 10px;
+}
+.popover-content .switch-box {
+  border: 1px solid var(--apollon-switch-box-border-color);
+  margin: 1em 0.5em 0.5em;
+  padding: 0.3em 0.5em;
+  min-width: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.popover-content .switch-box .form-switch > * {
+  cursor: pointer;
+}
+
+#diagram-type-list .list-group-item {
+  background-color: var(--apollon-list-group-color);
+  color: var(--apollon-background-inverse);
+}
+
+#diagram-type-list .list-group-item:hover {
+  background-color: #f8f9fa;
+  color: #000000;
+}
+
+#diagram-type-list .list-group-item.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+#diagram-title {
+  background-color: var(--apollon-list-group-color);
+  color: var(--apollon-background-inverse);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--apollon-gray);
+}
+.modal-footer {
+  border-top: 1px solid var(--apollon-gray);
+}
+
+.switch {
+  position: relative;
+  display: inline;
+  width: 30px;
+  margin-bottom: unset;
+  margin-top: 0.5rem;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  top: 1px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #3e8acc;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+  width: 30px;
+  height: 15px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+  background-color: var(--apollon-background);
 }

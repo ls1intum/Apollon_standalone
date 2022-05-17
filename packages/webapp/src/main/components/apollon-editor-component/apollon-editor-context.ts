@@ -6,7 +6,5 @@ export type ApollonEditorContext = {
   setEditor: (editor: ApollonEditor) => void;
 };
 
-export const {
-  Consumer: ApollonEditorConsumer,
-  Provider: ApollonEditorProvider,
-} = createContext<ApollonEditorContext | null>(null);
+export const { Consumer: ApollonEditorConsumer, Provider: ApollonEditorProvider } =
+  createContext<ApollonEditorContext | null>(null);

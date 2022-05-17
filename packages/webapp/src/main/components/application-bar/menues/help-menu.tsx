@@ -60,7 +60,7 @@ class HelpMenuComponent extends Component<Props, State> {
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.InformationModal)}>
             About Apollon
           </NavDropdown.Item>
-          <a href={bugReportURL} target="_blank" style={{ color: '#212529' }} className="dropdown-item">
+          <a href={bugReportURL} target="_blank" className="dropdown-item">
             Report a Problem
           </a>
         </NavDropdown>

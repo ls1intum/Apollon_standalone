@@ -2,6 +2,7 @@ import React, { ChangeEvent, Component, ComponentType } from 'react';
 import { Nav, Navbar } from 'react-bootstrap';
 import { FileMenu } from './menues/file-menu';
 import { HelpMenu } from './menues/help-menu';
+import { ThemeSwitcherMenu } from './menues/theme-switcher-menu';
 import { connect, ConnectedComponent } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import styled from 'styled-components';
@@ -118,6 +119,7 @@ class ApplicationBarComponent extends Component<Props, State> {
             </Nav>
             <ConnectClientsComponent collaborators={this.props.collaborators} />
           </Navbar.Collapse>
+          <ThemeSwitcherMenu />
         </Navbar>
       </>
     );
