@@ -242,3 +242,8 @@ input:checked + .slider:before {
   background: var(--apollon-background);
   color: var(--apollon-background-inverse);
 }
+
+.btn-outline-secondary {
+  color: var(--apollon-btn-outline-secondary-color);
+  border-color: var(--apollon-btn-outline-secondary-color);
+}
