@@ -47,7 +47,7 @@ export const LocalStorageRepository = {
     window.localStorage.setItem('last_published_token', token);
   },
 
-  getLastPublishedToken : () => {
+  getLastPublishedToken: () => {
     return window.localStorage.getItem('last_published_token');
   },
 
@@ -55,7 +55,7 @@ export const LocalStorageRepository = {
     window.localStorage.setItem('last_published_type', type);
   },
 
-  getLastPublishedType : () => {
+  getLastPublishedType: () => {
     return window.localStorage.getItem('last_published_type');
-  }
+  },
 };

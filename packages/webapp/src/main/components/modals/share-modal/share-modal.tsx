@@ -43,7 +43,6 @@ const getInitialState = () => {
 
 type State = typeof getInitialState;
 
-
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
@@ -115,10 +114,8 @@ class ShareModalComponent extends Component<Props, State> {
   displayToasts = () => {
     toast.success('Link is now copied to your clipboard.');
     toast.info(this.getMessageForView());
-    toast.info('You can access the link again by going to share menu', {delay: 6500 });
-  }
-
-
+    toast.info('You can access the link again by going to share menu', { delay: 6500 });
+  };
 
   render() {
     return (
@@ -129,20 +126,52 @@ class ShareModalComponent extends Component<Props, State> {
         <Modal.Body>
           <>
             <p>
-              If you want to share the current version of your diagram with other users, click on the available sharing options.
-              A copy of your current diagram version is then stored on the server so that other users can access it.
-              It will be accessible for 12 weeks with the correct link.
+              If you want to share the current version of your diagram with other users, click on the available sharing
+              options. A copy of your current diagram version is then stored on the server so that other users can
+              access it. It will be accessible for 12 weeks with the correct link.
             </p>
 
             <fieldset className="scheduler-border">
               <legend className="scheduler-border">New Diagram:</legend>
-              <button type="button" onClick={() => { this.shareDiagram(DiagramView.EDIT); }} className="btn btn-outline-dark m-1 share-btn">Edit</button>
-              <button type="button" onClick={() => { this.shareDiagram(DiagramView.GIVE_FEEDBACK); }} className="btn btn-outline-dark m-1 share-btn">Give Feedback</button>
-              <button type="button" onClick={() => { this.shareDiagram(DiagramView.SEE_FEEDBACK); }} className="btn btn-outline-dark m-1 share-btn">See Feedback</button>
-              <button type="button" onClick={() => { this.shareDiagram(DiagramView.COLLABORATE); }} className="btn btn-outline-dark m-1 share-btn">Collaborate</button>
+              <button
+                type="button"
+                onClick={() => {
+                  this.shareDiagram(DiagramView.EDIT);
+                }}
+                className="btn btn-outline-dark m-1 share-btn"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  this.shareDiagram(DiagramView.GIVE_FEEDBACK);
+                }}
+                className="btn btn-outline-dark m-1 share-btn"
+              >
+                Give Feedback
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  this.shareDiagram(DiagramView.SEE_FEEDBACK);
+                }}
+                className="btn btn-outline-dark m-1 share-btn"
+              >
+                See Feedback
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  this.shareDiagram(DiagramView.COLLABORATE);
+                }}
+                className="btn btn-outline-dark m-1 share-btn"
+              >
+                Collaborate
+              </button>
             </fieldset>
 
-            {this.hasRecentlyPublished() &&
+            {this.hasRecentlyPublished() && (
               <fieldset className="scheduler-border">
                 <legend className="scheduler-border">Recently shared Diagram:</legend>
                 <InputGroup>
@@ -164,9 +193,7 @@ class ShareModalComponent extends Component<Props, State> {
                   </InputGroup.Append>
                 </InputGroup>
               </fieldset>
-
-
-            }
+            )}
           </>
         </Modal.Body>
       </>
