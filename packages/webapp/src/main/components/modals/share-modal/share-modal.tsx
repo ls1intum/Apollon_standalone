@@ -131,43 +131,53 @@ class ShareModalComponent extends Component<Props, State> {
               access it. It will be accessible for 12 weeks with the correct link.
             </p>
 
-            <div className="buttons-container">
-              <button
-                type="button"
-                onClick={() => {
-                  this.shareDiagram(DiagramView.EDIT);
-                }}
-                className="btn btn-outline-secondary m-1 share-btn"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  this.shareDiagram(DiagramView.GIVE_FEEDBACK);
-                }}
-                className="btn btn-outline-secondary m-1 share-btn"
-              >
-                Give Feedback
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  this.shareDiagram(DiagramView.SEE_FEEDBACK);
-                }}
-                className="btn btn-outline-secondary m-1 share-btn"
-              >
-                See Feedback
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  this.shareDiagram(DiagramView.COLLABORATE);
-                }}
-                className="btn btn-outline-secondary m-1 share-btn"
-              >
-                Collaborate
-              </button>
+            <div className="container">
+              <div className="row">
+                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.EDIT);
+                    }}
+                    className="btn btn-outline-secondary w-100"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.GIVE_FEEDBACK);
+                    }}
+                    className="btn btn-outline-secondary  w-100"
+                  >
+                    Give Feedback
+                  </button>
+                </div>
+                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.SEE_FEEDBACK);
+                    }}
+                    className="btn btn-outline-secondary  w-100"
+                  >
+                    See Feedback
+                  </button>
+                </div>
+                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.COLLABORATE);
+                    }}
+                    className="btn btn-outline-secondary w-100"
+                  >
+                    Collaborate
+                  </button>
+                </div>
+              </div>
             </div>
 
             {this.hasRecentlyPublished() && (
@@ -185,7 +195,7 @@ class ShareModalComponent extends Component<Props, State> {
                       />
                     </a>
                   )}
-                  <InputGroup.Append className="w-25">
+                  <InputGroup.Append>
                     <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink()}>
                       Copy Link
                     </Button>

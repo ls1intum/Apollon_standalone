@@ -23,10 +23,6 @@ body {
   width: 100%;
 }
 
-.share-btn {
-  width: 23%;
-}
-
 legend {
   width: 205px;
   margin-left: 10px;
@@ -240,10 +236,6 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
   background-color: var(--apollon-background);
-}
-
-.buttons-container {
-  margin-bottom: 1em;
 }
 
 .Toastify__toast-theme--light {
