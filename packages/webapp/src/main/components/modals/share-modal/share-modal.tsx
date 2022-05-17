@@ -126,12 +126,10 @@ class ShareModalComponent extends Component<Props, State> {
         <Modal.Body>
           <>
             <p>
-              If you want to share the current version of your diagram with other users, click on the available sharing
-              options. A copy of your current diagram version is then stored on the server so that other users can
-              access it. It will be accessible for 12 weeks with the correct link.
+              After sharing, this diagram will be accessible to everyone with access to the link for at least 12 weeks{' '}
             </p>
 
-            <div className="container">
+            <div className="container mb-3">
               <div className="row">
                 <div className="col-sm-12 col-md-6 col-lg-3 p-1">
                   <button
