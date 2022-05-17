@@ -10,6 +10,8 @@ import { ErrorRepository } from '../../../services/error-management/error-reposi
 import { ErrorActionType } from '../../../services/error-management/error-types';
 import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type OwnProps = {} & ModalContentProps;
 
@@ -62,12 +64,14 @@ class ShareModalComponent extends Component<Props, State> {
         innerMessage = 'collaborate';
         break;
     }
-    return `Everyone with this link receives a copy of this diagram to ${innerMessage}`;
+    return `You can now share simply by pasting the link, to ${innerMessage} the current diagram`;
   };
 
   shareDiagram = (view: DiagramView) => {
     this.setState({ view }, () => {
       this.publishDiagram();
+      this.displayToast('Link is now copied to your clipboard.');
+      this.displayToast(this.getMessageForView());
     });
   };
 
@@ -107,6 +111,10 @@ class ShareModalComponent extends Component<Props, State> {
   hasRecentlyPublished = () => {
     const lastPublishedToken = LocalStorageRepository.getLastPublishedToken();
     if (lastPublishedToken) return true;
+  };
+
+  displayToast = (toastMessage: string) => {
+    toast(toastMessage);
   }
 
 
