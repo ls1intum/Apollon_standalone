@@ -131,8 +131,7 @@ class ShareModalComponent extends Component<Props, State> {
               access it. It will be accessible for 12 weeks with the correct link.
             </p>
 
-            <fieldset className="scheduler-border">
-              <legend className="scheduler-border">New Diagram:</legend>
+            <div className="buttons-container">
               <button
                 type="button"
                 onClick={() => {
@@ -169,7 +168,7 @@ class ShareModalComponent extends Component<Props, State> {
               >
                 Collaborate
               </button>
-            </fieldset>
+            </div>
 
             {this.hasRecentlyPublished() && (
               <fieldset className="scheduler-border">

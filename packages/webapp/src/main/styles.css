@@ -241,3 +241,7 @@ input:checked + .slider:before {
   border-radius: 50%;
   background-color: var(--apollon-background);
 }
+
+.buttons-container {
+  margin-bottom: 1em;
+}
