@@ -155,17 +155,17 @@ legend.scheduler-border {
   cursor: pointer;
 }
 
- .list-group-item {
+.list-group-item {
   background-color: var(--apollon-list-group-color);
   color: var(--apollon-background-inverse);
 }
 
- .list-group-item:hover {
+.list-group-item:hover {
   background-color: #f8f9fa;
   color: #000000;
 }
 
- .list-group-item.active {
+.list-group-item.active {
   background-color: #007bff;
   color: #ffffff;
 }
