@@ -158,41 +158,6 @@ class ShareModalComponent extends Component<Props, State> {
 
 
             }
-            {/* 
-            <InputGroup className="mb-3">
-              <FormControl readOnly value={this.getMessageForView()} bsCustomPrefix="w-100" />
-              <DropdownButton
-                id="permission-selection-dropdown"
-                title={getDisplayValueForView(this.state.view)}
-                as={InputGroup.Append}
-                variant="outline-secondary"
-                className="w-25"
-              >
-                {Object.values(DiagramView).map((value) => (
-                  <Dropdown.Item key={value} onSelect={(eventKey) => this.changePermission(value)}>
-                    {getDisplayValueForView(value)}
-                  </Dropdown.Item>
-                ))}
-              </DropdownButton>
-            </InputGroup>
-            <InputGroup className="mb-3">
-              {!this.state.token ? (
-                <FormControl readOnly value={this.getLinkForView(this.state.view)} />
-              ) : (
-                <a className="w-75" target="blank" href={this.getLinkForView(this.state.view)}>
-                  <FormControl
-                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                    readOnly
-                    value={this.getLinkForView(this.state.view)}
-                  />
-                </a>
-              )}
-              <InputGroup.Append className="w-25">
-                <Button variant="outline-secondary" className="w-100" onClick={(event) => this.publishDiagram()}>
-                  Copy Link
-                </Button>
-              </InputGroup.Append>
-            </InputGroup> */}
           </>
         </Modal.Body>
       </>
