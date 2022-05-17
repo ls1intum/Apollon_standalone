@@ -137,7 +137,7 @@ class ShareModalComponent extends Component<Props, State> {
                 onClick={() => {
                   this.shareDiagram(DiagramView.EDIT);
                 }}
-                className="btn btn-outline-dark m-1 share-btn"
+                className="btn btn-outline-secondary m-1 share-btn"
               >
                 Edit
               </button>
@@ -146,7 +146,7 @@ class ShareModalComponent extends Component<Props, State> {
                 onClick={() => {
                   this.shareDiagram(DiagramView.GIVE_FEEDBACK);
                 }}
-                className="btn btn-outline-dark m-1 share-btn"
+                className="btn btn-outline-secondary m-1 share-btn"
               >
                 Give Feedback
               </button>
@@ -155,7 +155,7 @@ class ShareModalComponent extends Component<Props, State> {
                 onClick={() => {
                   this.shareDiagram(DiagramView.SEE_FEEDBACK);
                 }}
-                className="btn btn-outline-dark m-1 share-btn"
+                className="btn btn-outline-secondary m-1 share-btn"
               >
                 See Feedback
               </button>
@@ -164,7 +164,7 @@ class ShareModalComponent extends Component<Props, State> {
                 onClick={() => {
                   this.shareDiagram(DiagramView.COLLABORATE);
                 }}
-                className="btn btn-outline-dark m-1 share-btn"
+                className="btn btn-outline-secondary m-1 share-btn"
               >
                 Collaborate
               </button>

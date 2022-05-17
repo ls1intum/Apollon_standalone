@@ -245,3 +245,8 @@ input:checked + .slider:before {
 .buttons-container {
   margin-bottom: 1em;
 }
+
+.Toastify__toast-theme--light {
+  background: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+}
