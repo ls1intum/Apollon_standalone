@@ -24,3 +24,25 @@ body {
 .share-btn {
   width: 23%;
 }
+
+legend {
+  width: 205px;
+  margin-left: 10px;
+}
+
+fieldset.scheduler-border {
+  border: 1px groove #ddd;
+  padding: 0 1.4em 1.4em 1.4em;
+  margin: 0 0 1.5em 0;
+  -webkit-box-shadow:  0px 0px 0px 0px #000;
+          box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+  font-size: 0.85em;
+  font-weight: bold;
+  text-align: left;
+  width: auto;
+  padding:0 10px;
+
+}

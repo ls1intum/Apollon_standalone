@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap';
 import { Diagram } from '../../../services/diagram/diagram-types';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
@@ -9,6 +9,7 @@ import { DiagramView } from 'shared/src/main/diagram-view';
 import { ErrorRepository } from '../../../services/error-management/error-repository';
 import { ErrorActionType } from '../../../services/error-management/error-types';
 import { ModalContentProps } from '../application-modal-types';
+import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 
 type OwnProps = {} & ModalContentProps;
 
@@ -40,28 +41,12 @@ const getInitialState = () => {
 
 type State = typeof getInitialState;
 
-const getDisplayValueForView = (view: DiagramView) => {
-  switch (view) {
-    case DiagramView.EDIT:
-      return 'Edit';
-    case DiagramView.GIVE_FEEDBACK:
-      return 'Give Feedback';
-    case DiagramView.SEE_FEEDBACK:
-      return 'See Feedback';
-    case DiagramView.COLLABORATE:
-      return 'Collaborate';
-  }
-};
 
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
   getLinkForView = (view: DiagramView) => {
-    if (!this.state.token) {
-      return 'The diagram must be published';
-    } else {
-      return `${DEPLOYMENT_URL}/${this.state.token}?view=${view}`;
-    }
+    return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
   getMessageForView = () => {
@@ -83,7 +68,6 @@ class ShareModalComponent extends Component<Props, State> {
   shareDiagram = (view: DiagramView) => {
     this.setState({ view }, () => {
       this.publishDiagram();
-      this.copyLink();
     });
   };
 
@@ -94,17 +78,18 @@ class ShareModalComponent extends Component<Props, State> {
 
   handleClose = () => {
     this.props.close();
-    this.setState(getInitialState());
   };
 
   publishDiagram = () => {
-    if (this.state.token) {
-      this.copyLink();
-    } else if (this.props.diagram) {
+    if (this.props.diagram) {
       DiagramRepository.publishDiagramOnServer(this.props.diagram)
         .then((token: string) => {
-          this.setState({ token });
-          this.copyLink();
+          this.setState({ token }, () => {
+            LocalStorageRepository.setLastPublishedToken(token);
+            LocalStorageRepository.setLastPublishedType(this.state.view);
+            this.copyLink();
+            this.handleClose();
+          });
         })
         .catch((error) => {
           this.props.createError(
@@ -119,6 +104,13 @@ class ShareModalComponent extends Component<Props, State> {
     }
   };
 
+  hasRecentlyPublished = () => {
+    const lastPublishedToken = LocalStorageRepository.getLastPublishedToken();
+    if (lastPublishedToken) return true;
+  }
+
+
+
   render() {
     return (
       <>
@@ -129,16 +121,44 @@ class ShareModalComponent extends Component<Props, State> {
           <>
             <p>
               If you want to share the current version of your diagram with other users, click on the available sharing options.
-              A copy of your current diagram version is then stored on the server so that other users can access it. 
+              A copy of your current diagram version is then stored on the server so that other users can access it.
               It will be accessible for 12 weeks with the correct link.
             </p>
 
+            <fieldset className="scheduler-border">
+              <legend className="scheduler-border">New Diagram:</legend>
+              <button type="button" onClick={() => { this.shareDiagram(DiagramView.EDIT); }} className="btn btn-outline-dark m-1 share-btn">Edit</button>
+              <button type="button" onClick={() => { this.shareDiagram(DiagramView.GIVE_FEEDBACK); }} className="btn btn-outline-dark m-1 share-btn">Give Feedback</button>
+              <button type="button" onClick={() => { this.shareDiagram(DiagramView.SEE_FEEDBACK); }} className="btn btn-outline-dark m-1 share-btn">See Feedback</button>
+              <button type="button" onClick={() => { this.shareDiagram(DiagramView.COLLABORATE); }} className="btn btn-outline-dark m-1 share-btn">Collaborate</button>
+            </fieldset>
 
-            <button type="button" onClick={() => {this.shareDiagram(DiagramView.EDIT);}} className="btn btn-outline-dark m-1 share-btn">Edit</button>
-            <button type="button" onClick={() => {this.shareDiagram(DiagramView.GIVE_FEEDBACK);}} className="btn btn-outline-dark m-1 share-btn">Give Feedback</button>
-            <button type="button" onClick={() => {this.shareDiagram(DiagramView.SEE_FEEDBACK);}} className="btn btn-outline-dark m-1 share-btn">See Feedback</button>
-            <button type="button" onClick={() => {this.shareDiagram(DiagramView.COLLABORATE);}} className="btn btn-outline-dark m-1 share-btn">Collaborate</button>
-{/* 
+            {this.hasRecentlyPublished() &&
+              <fieldset className="scheduler-border">
+                <legend className="scheduler-border">Recently shared Diagram:</legend>
+                <InputGroup>
+                  {!this.state.token ? (
+                    <FormControl readOnly value={this.getLinkForView(this.state.view)} />
+                  ) : (
+                    <a className="w-75" target="blank" href={this.getLinkForView(this.state.view)}>
+                      <FormControl
+                        style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                        readOnly
+                        value={this.getLinkForView(this.state.view)}
+                      />
+                    </a>
+                  )}
+                  <InputGroup.Append className="w-25">
+                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink()}>
+                      Copy Link
+                    </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              </fieldset>
+
+
+            }
+            {/* 
             <InputGroup className="mb-3">
               <FormControl readOnly value={this.getMessageForView()} bsCustomPrefix="w-100" />
               <DropdownButton
