@@ -46,7 +46,7 @@ type State = typeof getInitialState;
 class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
-  getLinkForView = (view: DiagramView) => {
+  getLinkForView = () => {
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
@@ -73,7 +73,7 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   copyLink = () => {
-    const link = this.getLinkForView(this.state.view);
+    const link = this.getLinkForView();
     navigator.clipboard.writeText(link);
     this.displayToasts();
   };
@@ -176,13 +176,13 @@ class ShareModalComponent extends Component<Props, State> {
                 <legend className="scheduler-border">Recently shared Diagram:</legend>
                 <InputGroup>
                   {!this.state.token ? (
-                    <FormControl readOnly value={this.getLinkForView(this.state.view)} />
+                    <FormControl readOnly value={this.getLinkForView()} />
                   ) : (
-                    <a className="w-75" target="blank" href={this.getLinkForView(this.state.view)}>
+                    <a className="w-75" target="blank" href={this.getLinkForView()}>
                       <FormControl
                         style={{ cursor: 'pointer', textDecoration: 'underline' }}
                         readOnly
-                        value={this.getLinkForView(this.state.view)}
+                        value={this.getLinkForView()}
                       />
                     </a>
                   )}
