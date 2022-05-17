@@ -70,14 +70,13 @@ class ShareModalComponent extends Component<Props, State> {
   shareDiagram = (view: DiagramView) => {
     this.setState({ view }, () => {
       this.publishDiagram();
-      this.displayToast('Link is now copied to your clipboard.');
-      this.displayToast(this.getMessageForView());
     });
   };
 
   copyLink = () => {
     const link = this.getLinkForView(this.state.view);
     navigator.clipboard.writeText(link);
+    this.displayToasts();
   };
 
   handleClose = () => {
@@ -113,8 +112,10 @@ class ShareModalComponent extends Component<Props, State> {
     if (lastPublishedToken) return true;
   };
 
-  displayToast = (toastMessage: string) => {
-    toast(toastMessage);
+  displayToasts = () => {
+    toast.success('Link is now copied to your clipboard.');
+    toast.info(this.getMessageForView());
+    toast.info('You can access the link again by going to share menu', {delay: 6500 });
   }
 
 
