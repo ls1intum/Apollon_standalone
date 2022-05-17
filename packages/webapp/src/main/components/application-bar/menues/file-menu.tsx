@@ -112,7 +112,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
             <Dropdown.Toggle
               id="dropdown-basic"
               split
-              className="bg-transparent w-100 text-dark text-left pl-4 border-white d-flex align-items-center"
+              className="bg-transparent w-100 text-left pl-4 d-flex align-items-center"
             >
               <span className="flex-grow-1">Export</span>
             </Dropdown.Toggle>
