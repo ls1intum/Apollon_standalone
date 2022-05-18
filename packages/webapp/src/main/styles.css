@@ -247,3 +247,8 @@ input:checked + .slider:before {
   color: var(--apollon-btn-outline-secondary-color);
   border-color: var(--apollon-btn-outline-secondary-color);
 }
+
+.tooltip-icon {
+  fill: var(--apollon-background-inverse);
+  cursor: pointer;
+}

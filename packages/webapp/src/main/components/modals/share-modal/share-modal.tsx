@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap';
+import { Button, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Diagram } from '../../../services/diagram/diagram-types';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
@@ -40,6 +40,13 @@ const getInitialState = () => {
     token: '',
   };
 };
+
+const toolTipIcon = ( 
+  <svg width="16" height="16" fill="currentColor" className="bi bi-info-circle tooltip-icon" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+  </svg>
+);
 
 type State = typeof getInitialState;
 
@@ -126,7 +133,13 @@ class ShareModalComponent extends Component<Props, State> {
         <Modal.Body>
           <>
             <p>
-              After sharing, this diagram will be accessible to everyone with access to the link for at least 12 weeks{' '}
+              After sharing, this diagram will be accessible to everyone with access to the link for at least 12 weeks.&nbsp; 
+              <OverlayTrigger
+                placement="bottom"
+                overlay={<Tooltip id="share-tooltip">Changing the diagram will extend the time period.</Tooltip>}
+              >
+                {toolTipIcon}
+              </OverlayTrigger>
             </p>
 
             <div className="container mb-3">

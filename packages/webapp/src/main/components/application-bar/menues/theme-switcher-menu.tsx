@@ -117,7 +117,7 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
           onToggle={() => {
             this.onToggle();
           }}
-          delay={{ show: 0, hide: 1500 }}
+          delay={{ show: 0, hide: 0 }}
           overlay={
             <Tooltip id="tooltip-bottom">
               <div className="popover-content" id="theme-switch-popover-content">
