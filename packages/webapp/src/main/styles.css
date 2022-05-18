@@ -91,16 +91,16 @@ legend.scheduler-border {
   cursor: pointer;
 }
 
-.theme-toggle.dark .sun-and-moon > .sun-beams {
+.theme-toggle.dark [class$='sun-and-moon'] > [class$='sun-beams'] {
   transform: rotateZ(-90deg);
 }
 
-.theme-toggle.dark .sun-and-moon > .moon > circle {
+.theme-toggle.dark [class$='sun-and-moon'] > [class$='moon'] > circle {
   transform: translateX(-7px);
   transition-duration: 0.1s;
 }
 
-.theme-toggle.dark .sun-and-moon > .sun {
+.theme-toggle.dark [class$='sun-and-moon'] > [class$='sun'] {
   transition-timing-function: cubic-bezier(0.25, 0, 0.3, 1);
   transition-duration: 0.25s;
 }
@@ -248,7 +248,6 @@ input:checked + .slider:before {
   border-color: var(--apollon-btn-outline-secondary-color);
 }
 
-.tooltip-icon {
-  fill: var(--apollon-background-inverse);
+[class$='tooltip-icon'] {
   cursor: pointer;
 }
