@@ -12,7 +12,6 @@ import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// @ts-ignore
 import TooltipIcon from '../../../../../assets/tooltip.svg';
 
 type OwnProps = {} & ModalContentProps;
