@@ -126,7 +126,7 @@ class ShareModalComponent extends Component<Props, State> {
         </Modal.Header>
         <Modal.Body>
           <>
-            <p className="share-modal-description">
+            <p>
               After sharing, this diagram will be accessible to everyone with access to the link for at least 12
               weeks.&nbsp;
               <OverlayTrigger
