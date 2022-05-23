@@ -109,7 +109,7 @@ class ShareModalComponent extends Component<Props, State> {
 
   hasRecentlyPublished = () => {
     const lastPublishedToken = LocalStorageRepository.getLastPublishedToken();
-    if (lastPublishedToken) return true;
+    return !!lastPublishedToken;
   };
 
   displayToasts = () => {
