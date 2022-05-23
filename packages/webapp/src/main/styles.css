@@ -250,3 +250,8 @@ input:checked + .slider:before {
 [class$='tooltip-icon'] {
   cursor: pointer;
 }
+
+.share-modal-description {
+  display: inline-flex;
+  align-items: center;
+}
