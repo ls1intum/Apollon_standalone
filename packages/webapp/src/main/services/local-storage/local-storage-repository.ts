@@ -48,6 +48,22 @@ export const LocalStorageRepository = {
     window.localStorage.setItem(localStorageCollaborationName, name);
   },
 
+  setLastPublishedToken: (token: string) => {
+    window.localStorage.setItem('last_published_token', token);
+  },
+
+  getLastPublishedToken: () => {
+    return window.localStorage.getItem('last_published_token');
+  },
+
+  setLastPublishedType: (type: string) => {
+    window.localStorage.setItem('last_published_type', type);
+  },
+
+  getLastPublishedType: () => {
+    return window.localStorage.getItem('last_published_type');
+  },
+
   setSystemThemePreference: (value: string) => {
     window.localStorage.setItem(localStorageSystemThemePreference, value);
   },

@@ -18,6 +18,7 @@ import { ErrorPanel } from './components/error-handling/error-panel';
 import { Diagram } from './services/diagram/diagram-types';
 import { BrowserRouter, RouteComponentProps, Route, Switch } from 'react-router-dom';
 import { ApplicationModal } from './components/modals/application-modal';
+import { ToastContainer } from 'react-toastify';
 
 type OwnProps = {};
 
@@ -86,6 +87,7 @@ export class Application extends React.Component<Props, State> {
           <ErrorPanel />
           <ApollonEditorWrapper />
         </ApplicationStore>
+        <ToastContainer />
       </ApollonEditorProvider>
     );
   }

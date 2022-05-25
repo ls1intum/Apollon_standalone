@@ -15,7 +15,8 @@
     "--apollon-alert-danger-background": "#f8d7da",
     "--apollon-alert-danger-border": "#f5c6cb",
     "--apollon-switch-box-border-color": "#dee2e6",
-    "--apollon-list-group-color": "#ffffff"
+    "--apollon-list-group-color": "#ffffff",
+    "--apollon-btn-outline-secondary-color": "#6c757d"
   },
   "dark": {
     "--apollon-primary": "#51a2a2",
@@ -33,6 +34,7 @@
     "--apollon-alert-danger-background": "#370b07",
     "--apollon-alert-danger-border": "#e43725",
     "--apollon-switch-box-border-color": "#3d423d",
-    "--apollon-list-group-color": "#303130"
+    "--apollon-list-group-color": "#303130",
+    "--apollon-btn-outline-secondary-color": "#b8c0c5"
   }
 }
