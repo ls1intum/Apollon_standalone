@@ -4,7 +4,7 @@ import { ApollonEditorWrapper } from './components/apollon-editor-component/apol
 import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
-import { localStorageCollaborationName, localStorageDiagramPrefix, localStorageLatest } from './constant';
+import { localStorageCollaborationColor, localStorageCollaborationName, localStorageDiagramPrefix, localStorageLatest } from './constant';
 import {
   ApollonEditorContext,
   ApollonEditorProvider,
@@ -59,6 +59,7 @@ const getInitialStore = (): ApplicationState => {
     },
     share: {
       collaborationName: window.localStorage.getItem(localStorageCollaborationName) || '',
+      collaborationColor: window.localStorage.getItem(localStorageCollaborationColor) || '',
       collaborators: [],
       fromServer: false,
     },

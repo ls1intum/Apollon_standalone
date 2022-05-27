@@ -3,7 +3,7 @@ import { Actions } from '../actions';
 import { ShareActionTypes, ShareState } from './share-types';
 
 export const ShareReducer: Reducer<ShareState, Actions> = (
-  state = { collaborationName: '', collaborators: [], fromServer: false },
+  state = { collaborationName: '', collaborationColor: '', collaborators: [], fromServer: false },
   action,
 ) => {
   switch (action.type) {
@@ -12,6 +12,13 @@ export const ShareReducer: Reducer<ShareState, Actions> = (
       return {
         ...state,
         collaborationName: payload.name,
+      } as ShareState;
+    }
+    case ShareActionTypes.UPDATE_COLLABORATION_COLOR: {
+      const { payload } = action;
+      return {
+        ...state,
+        collaborationColor: payload.color,
       } as ShareState;
     }
     case ShareActionTypes.UPDATE_COLLABORATORS: {
