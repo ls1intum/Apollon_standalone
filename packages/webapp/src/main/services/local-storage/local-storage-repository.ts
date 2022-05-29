@@ -50,7 +50,7 @@ export const LocalStorageRepository = {
   },
 
   setCollaborationColor: (color: string) => {
-    window.localStorage.setItem(localStorageCollaborationColor, '#'+color);
+    window.localStorage.setItem(localStorageCollaborationColor, '#' + color);
   },
 
   setLastPublishedToken: (token: string) => {

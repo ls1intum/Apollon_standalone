@@ -39,6 +39,7 @@ type StateProps = {
   options: ApollonOptions;
   fromServer: boolean;
   collaborationName: string;
+  collaborationColor: string;
 };
 
 type DispatchProps = {
@@ -73,6 +74,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
       },
       fromServer: state.share.fromServer,
       collaborationName: state.share.collaborationName,
+      collaborationColor: state.share.collaborationColor,
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
@@ -109,8 +111,15 @@ class ApollonEditorComponent extends Component<Props, State> {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           if (this.client) {
             const { token } = this.props.match.params;
-            const { collaborationName } = this.props;
-            this.client.send(JSON.stringify({ token, name: collaborationName, diagram }));
+            const { collaborationName, collaborationColor } = this.props;
+
+            this.client.send(
+              JSON.stringify({
+                token,
+                collaboratorObj: { name: collaborationName, color: collaborationColor },
+                diagram,
+              }),
+            );
           }
         });
         editor.subscribeToModelChange((model: UMLModel) => {
@@ -144,10 +153,11 @@ class ApollonEditorComponent extends Component<Props, State> {
             case DiagramView.COLLABORATE:
               this.props.changeEditorMode(ApollonMode.Modelling);
               this.props.changeReadonlyMode(false);
-              if (!this.props.collaborationName) {
+              if (!this.props.collaborationName && !this.props.collaborationColor) {
+                // TODO: fix this
                 this.props.openModal(ModalContentType.CollaborationModal, 'lg');
               }
-              this.establishCollaborationConnection(token, this.props.collaborationName);
+              this.establishCollaborationConnection(token, this.props.collaborationName, this.props.collaborationColor);
               break;
           }
         }
@@ -184,10 +194,11 @@ class ApollonEditorComponent extends Component<Props, State> {
     }
   }
 
-  establishCollaborationConnection(token: string, name: string) {
-    this.client = new W3CWebSocket(`wss://${NO_HTTP_URL}`);
+  establishCollaborationConnection(token: string, name: string, color: string) {
+    this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);
     this.client.onopen = () => {
-      this.client.send(JSON.stringify({ token, name }));
+      const collaboratorObj = { name, color };
+      this.client.send(JSON.stringify({ token, collaboratorObj }));
     };
     this.client.onmessage = (message: any) => {
       const { collaborators, diagram } = JSON.parse(message.data);
@@ -201,8 +212,8 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   setCollaborationConnectionName() {
-    const { collaborationName } = this.props;
-    this.client.send(JSON.stringify({ name: collaborationName }));
+    const { collaborationName, collaborationColor } = this.props;
+    this.client.send(JSON.stringify({ collaboratorObj: { name: collaborationName, color: collaborationColor } }));
   }
 
   render() {

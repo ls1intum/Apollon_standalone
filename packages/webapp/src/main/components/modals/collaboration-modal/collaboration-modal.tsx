@@ -28,15 +28,17 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
       collaborationColor: state.share.collaborationColor,
     };
   },
-  { createError: ErrorRepository.createError, 
-    updateCollaborationName: ShareRepository.updateCollaborationName, 
-    updateCollaborationColor: ShareRepository.updateCollaborationColor },
+  {
+    createError: ErrorRepository.createError,
+    updateCollaborationName: ShareRepository.updateCollaborationName,
+    updateCollaborationColor: ShareRepository.updateCollaborationColor,
+  },
 );
 
 const getInitialState = () => {
   return {
     name: '',
-    color: Math.floor(Math.random()*16777215).toString(16),
+    color: Math.floor(Math.random() * 16777215).toString(16),
   };
 };
 

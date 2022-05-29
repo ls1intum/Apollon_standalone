@@ -1,8 +1,18 @@
 import { Action } from 'redux';
+import { Collaborator } from 'shared/src/main/collaborator-dto';
 
-export type ShareActions = UpdateCollaborationNameAction | UpdateCollaboratorsAction | GotFromServerAction | UpdateCollaborationColorAction;
+export type ShareActions =
+  | UpdateCollaborationNameAction
+  | UpdateCollaboratorsAction
+  | GotFromServerAction
+  | UpdateCollaborationColorAction;
 
-export type ShareState = { collaborationName: string; collaborationColor: string; collaborators: string[]; fromServer: boolean };
+export type ShareState = {
+  collaborationName: string;
+  collaborationColor: string;
+  collaborators: Collaborator[];
+  fromServer: boolean;
+};
 
 export const enum ShareActionTypes {
   UPDATE_COLLABORATION_NAME = '@@share/update_collaboration_name',
@@ -25,7 +35,7 @@ export type UpdateCollaborationColorAction = Action<ShareActionTypes.UPDATE_COLL
 
 export type UpdateCollaboratorsAction = Action<ShareActionTypes.UPDATE_COLLABORATORS> & {
   payload: {
-    collaborators: string[];
+    collaborators: Collaborator[];
   };
 };
 

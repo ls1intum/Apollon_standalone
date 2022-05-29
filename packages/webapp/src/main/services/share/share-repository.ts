@@ -5,6 +5,7 @@ import {
   UpdateCollaborationNameAction,
   UpdateCollaboratorsAction,
 } from './share-types';
+import { Collaborator } from 'shared/src/main/collaborator-dto';
 
 export const ShareRepository = {
   updateCollaborationName: (name: string): UpdateCollaborationNameAction => ({
@@ -15,7 +16,7 @@ export const ShareRepository = {
     type: ShareActionTypes.UPDATE_COLLABORATION_COLOR,
     payload: { color },
   }),
-  updateCollaborators: (collaborators: string[]): UpdateCollaboratorsAction => ({
+  updateCollaborators: (collaborators: Collaborator[]): UpdateCollaboratorsAction => ({
     type: ShareActionTypes.UPDATE_COLLABORATORS,
     payload: { collaborators },
   }),

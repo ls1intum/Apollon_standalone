@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Collaborator } from 'shared/src/main/collaborator-dto';
 
 type Props = {
-  collaborators: string[];
+  collaborators: Collaborator[];
 };
 
 export const NameContainer = styled.div`
@@ -29,8 +30,8 @@ export const Container = styled.div`
 export function ConnectClientsComponent(props: Props) {
   const { collaborators } = props;
   const elements = collaborators.map((collaborator) => (
-    <NameContainer key={collaborator} title={collaborator || 'Anonymous'}>
-      {collaborator ? collaborator.substring(0, 1) : 'A'}
+    <NameContainer key={collaborator?.name} title={collaborator?.name || 'Anonymous'}>
+      {collaborator ? collaborator.name?.substring(0, 1) : 'A'}
     </NameContainer>
   ));
 
