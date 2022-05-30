@@ -116,7 +116,7 @@ class ApollonEditorComponent extends Component<Props, State> {
             this.client.send(
               JSON.stringify({
                 token,
-                collaboratorObj: { name: collaborationName, color: collaborationColor },
+                collaborators: { name: collaborationName, color: collaborationColor },
                 diagram,
               }),
             );
@@ -197,8 +197,8 @@ class ApollonEditorComponent extends Component<Props, State> {
   establishCollaborationConnection(token: string, name: string, color: string) {
     this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);
     this.client.onopen = () => {
-      const collaboratorObj = { name, color };
-      this.client.send(JSON.stringify({ token, collaboratorObj }));
+      const collaborators = { name, color };
+      this.client.send(JSON.stringify({ token, collaborators }));
     };
     this.client.onmessage = (message: any) => {
       const { collaborators, diagram } = JSON.parse(message.data);
@@ -213,7 +213,7 @@ class ApollonEditorComponent extends Component<Props, State> {
 
   setCollaborationConnectionName() {
     const { collaborationName, collaborationColor } = this.props;
-    this.client.send(JSON.stringify({ collaboratorObj: { name: collaborationName, color: collaborationColor } }));
+    this.client.send(JSON.stringify({ collaborators: { name: collaborationName, color: collaborationColor } }));
   }
 
   render() {

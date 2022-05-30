@@ -4,7 +4,7 @@ import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
 
-type Client = { token: string; collaboratorObj: Collaborator };
+type Client = { token: string; collaborators: Collaborator };
 
 export class CollaborationService {
   private wsServer: any;
@@ -31,17 +31,17 @@ export class CollaborationService {
         socket.isAlive = true;
       });
       socket.on('message', (message: any) => {
-        const { token, collaboratorObj, diagram } = JSON.parse(message);
+        const { token, collaborators, diagram } = JSON.parse(message);
         if (token) {
           if (diagram) {
-            this.onDiagramUpdate(socket, token, collaboratorObj, diagram);
+            this.onDiagramUpdate(socket, token, collaborators, diagram);
           } else {
-            this.onConnection(socket, token, collaboratorObj);
+            this.onConnection(socket, token, collaborators);
           }
         } else {
           // Case where only collaborator object is updated
-          if (collaboratorObj?.name !== '') {
-            this.onCollaboratorUpdate(socket, collaboratorObj);
+          if (collaborators?.name !== '') {
+            this.onCollaboratorUpdate(socket, collaborators);
           }
         }
       });
@@ -76,44 +76,44 @@ export class CollaborationService {
         clientSocket.readyState === WebSocket.OPEN &&
         this.clients[clientSocket.apollonId]?.token === token
       ) {
-        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaboratorObj) }));
+        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators) }));
       }
     });
   };
 
-  onCollaboratorUpdate = (socket: any, collaboratorObj: Collaborator) => {
-    this.clients[socket.apollonId] = { ...this.clients[socket.apollonId], collaboratorObj };
+  onCollaboratorUpdate = (socket: any, collaborators: Collaborator) => {
+    this.clients[socket.apollonId] = { ...this.clients[socket.apollonId], collaborators };
     const token = this.clients[socket.apollonId]?.token;
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.wsServer.clients.forEach((clientSocket: any) => {
       if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId].token === token) {
-        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaboratorObj) }));
+        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators) }));
       }
     });
   };
 
-  onConnection = (socket: any, token: string, collaboratorObj: Collaborator) => {
-    this.clients[socket.apollonId] = { token, collaboratorObj };
+  onConnection = (socket: any, token: string, collaborators: Collaborator) => {
+    this.clients[socket.apollonId] = { token, collaborators };
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.wsServer.clients.forEach((clientSocket: any) => {
       if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId]?.token === token) {
         if (clientSocket === socket) {
           this.diagramService.getDiagramByLink(token).then((diagram) => {
             clientSocket.send(
-              JSON.stringify({ collaboratorObj: tokenClients.map((client) => client.collaboratorObj), diagram }),
+              JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators), diagram }),
             );
           });
         } else {
-          clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaboratorObj) }));
+          clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators) }));
         }
       }
     });
   };
 
-  onDiagramUpdate = (socket: any, token: string, collaboratorObj: Collaborator, diagram: any) => {
+  onDiagramUpdate = (socket: any, token: string, collaborators: Collaborator, diagram: any) => {
     const diagramService = new DiagramFileStorageService();
     diagramService.saveDiagram(diagram, token, true);
-    this.clients[socket.apollonId] = { token, collaboratorObj };
+    this.clients[socket.apollonId] = { token, collaborators };
     const tokenClients = this.getTokenClients(socket.apollonId, false);
 
     this.wsServer.clients.forEach((clientSocket: any) => {
@@ -123,7 +123,7 @@ export class CollaborationService {
         this.clients[clientSocket.apollonId]?.token === token
       ) {
         clientSocket.send(
-          JSON.stringify({ collaborators: tokenClients.map((client) => client.collaboratorObj), diagram }),
+          JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators), diagram }),
         );
       }
     });
