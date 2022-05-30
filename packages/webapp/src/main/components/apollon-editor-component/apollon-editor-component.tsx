@@ -95,7 +95,10 @@ class ApollonEditorComponent extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.client) {
-      if (this.props.collaborationName !== prevProps.collaborationName) {
+      if (
+        this.props.collaborationName !== prevProps.collaborationName ||
+        this.props.collaborationColor !== prevProps.collaborationColor
+      ) {
         this.setCollaborationConnectionName();
       }
     }
@@ -153,8 +156,8 @@ class ApollonEditorComponent extends Component<Props, State> {
             case DiagramView.COLLABORATE:
               this.props.changeEditorMode(ApollonMode.Modelling);
               this.props.changeReadonlyMode(false);
-              if (!this.props.collaborationName && !this.props.collaborationColor) {
-                // TODO: fix this
+              // Enforces users to have color assigned to them
+              if (!this.props.collaborationName || !this.props.collaborationColor) {
                 this.props.openModal(ModalContentType.CollaborationModal, 'lg');
               }
               this.establishCollaborationConnection(token, this.props.collaborationName, this.props.collaborationColor);
