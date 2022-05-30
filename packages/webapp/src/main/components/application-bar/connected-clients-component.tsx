@@ -30,7 +30,11 @@ export const Container = styled.div`
 export function ConnectClientsComponent(props: Props) {
   const { collaborators } = props;
   const elements = collaborators.map((collaborator) => (
-    <NameContainer key={collaborator?.name} title={collaborator?.name || 'Anonymous'}>
+    <NameContainer
+      style={{ backgroundColor: collaborator.color }}
+      key={collaborator?.name}
+      title={collaborator?.name || 'Anonymous'}
+    >
       {collaborator ? collaborator.name?.substring(0, 1) : 'A'}
     </NameContainer>
   ));
