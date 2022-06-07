@@ -115,12 +115,12 @@ class ApollonEditorComponent extends Component<Props, State> {
           if (this.client) {
             const { token } = this.props.match.params;
             const { collaborationName, collaborationColor } = this.props;
-
             this.client.send(
               JSON.stringify({
                 token,
                 collaborators: { name: collaborationName, color: collaborationColor },
                 diagram,
+                selectedElements: this.props.editor?.selection.elements,
               }),
             );
           }
@@ -137,7 +137,7 @@ class ApollonEditorComponent extends Component<Props, State> {
 
             const selElemIds = selection.elements;
 
-            const elements = this.props.diagram?.model?.elements.map(({ selectedBy, ...elem }) => elem);
+            const elements = this.props.diagram?.model?.elements.map(({ selectedBy, ...elem }: any) => elem);
 
             const updatedElem = elements?.map((x: UMLElement) =>
               selElemIds.includes(x.id)

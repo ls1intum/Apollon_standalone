@@ -3,6 +3,7 @@ import WebSocket from 'ws';
 import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
+import { UMLElement } from '@ls1intum/apollon';
 
 type Client = { token: string; collaborators: Collaborator };
 
@@ -31,10 +32,10 @@ export class CollaborationService {
         socket.isAlive = true;
       });
       socket.on('message', (message: any) => {
-        const { token, collaborators, diagram } = JSON.parse(message);
+        const { token, collaborators, diagram, selectedElements } = JSON.parse(message);
         if (token) {
           if (diagram) {
-            this.onDiagramUpdate(socket, token, collaborators, diagram);
+            this.onDiagramUpdate(socket, token, collaborators, diagram, selectedElements);
           } else {
             this.onConnection(socket, token, collaborators);
           }
@@ -110,7 +111,7 @@ export class CollaborationService {
     });
   };
 
-  onDiagramUpdate = (socket: any, token: string, collaborators: Collaborator, diagram: any) => {
+  onDiagramUpdate = (socket: any, token: string, collaborators: Collaborator, diagram: any, selectedElements: any) => {
     const diagramService = new DiagramFileStorageService();
     diagramService.saveDiagram(diagram, token, true);
     this.clients[socket.apollonId] = { token, collaborators };
@@ -122,6 +123,20 @@ export class CollaborationService {
         clientSocket.readyState === WebSocket.OPEN &&
         this.clients[clientSocket.apollonId]?.token === token
       ) {
+        if (selectedElements) {
+          const selElemIds = selectedElements;
+          const elements = diagram.model.elements.map(({ selectedBy, ...elem }: any) => elem);
+          const updatedElem = elements?.map((x: UMLElement) =>
+            selElemIds.includes(x.id)
+              ? { ...x, selectedBy: { elementId: x.id, name: collaborators.name, color: collaborators.color } }
+              : { ...x },
+          );
+
+          if (diagram && diagram.model && diagram.model.elements) {
+            diagram.model.elements = updatedElem!;
+          }
+        }
+
         clientSocket.send(
           JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators), diagram }),
         );
