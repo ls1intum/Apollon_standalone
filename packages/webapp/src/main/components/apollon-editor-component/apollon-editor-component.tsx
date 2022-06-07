@@ -131,31 +131,33 @@ class ApollonEditorComponent extends Component<Props, State> {
         });
 
         editor.subscribeToSelectionChange((selection: Selection) => {
-          const { collaborationName, collaborationColor } = this.props;
-          const { token } = this.props.match.params;
+          if (this.client) {
+            const { collaborationName, collaborationColor } = this.props;
+            const { token } = this.props.match.params;
 
-          const selElemIds = selection.elements;
+            const selElemIds = selection.elements;
 
-          let elements = this.props.diagram?.model?.elements.map(({selectedBy, ...element}) => element);
+            const elements = this.props.diagram?.model?.elements.map(({ selectedBy, ...elem }) => elem);
 
-          const updatedElem = elements?.map((x: UMLElement) =>
-            selElemIds.includes(x.id)
-              ? { ...x, selectedBy: {elementId: x.id, name: collaborationName, color: collaborationColor} }
-              : {...x}
-          );
+            const updatedElem = elements?.map((x: UMLElement) =>
+              selElemIds.includes(x.id)
+                ? { ...x, selectedBy: { elementId: x.id, name: collaborationName, color: collaborationColor } }
+                : { ...x },
+            );
 
-          let diagram = this.props.diagram;
-          if (diagram && diagram.model && diagram.model.elements) {
-            diagram.model.elements = updatedElem!;
+            const diagram = this.props.diagram;
+            if (diagram && diagram.model && diagram.model.elements) {
+              diagram.model.elements = updatedElem!;
+            }
+
+            this.client.send(
+              JSON.stringify({
+                token,
+                collaborators: { name: collaborationName, color: collaborationColor },
+                diagram,
+              }),
+            );
           }
-
-          this.client.send(
-            JSON.stringify({
-              token,
-              collaborators: { name: collaborationName, color: collaborationColor },
-              diagram,
-            }),
-          );
         });
 
         this.props.setEditor(editor);
