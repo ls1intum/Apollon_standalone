@@ -1,4 +1,4 @@
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection, UMLElement } from '@ls1intum/apollon';
 import React, { Component, ComponentClass } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -136,18 +136,18 @@ class ApollonEditorComponent extends Component<Props, State> {
 
           const selElemIds = selection.elements;
 
-          const updatedElem = this.props.diagram?.model?.elements.map((x) =>
+          let elements = this.props.diagram?.model?.elements.map(({selectedBy, ...element}) => element);
+
+          const updatedElem = elements?.map((x: UMLElement) =>
             selElemIds.includes(x.id)
-              ? { ...x, selectedBy: [{ name: collaborationName, color: collaborationColor }] }
-              : { ...x, selectedBy: [] },
+              ? { ...x, selectedBy: {elementId: x.id, name: collaborationName, color: collaborationColor} }
+              : {...x}
           );
 
           let diagram = this.props.diagram;
           if (diagram && diagram.model && diagram.model.elements) {
             diagram.model.elements = updatedElem!;
           }
-
-          this.props.updateDiagram(diagram!);
 
           this.client.send(
             JSON.stringify({
