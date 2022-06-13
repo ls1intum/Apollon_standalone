@@ -171,10 +171,10 @@ legend.scheduler-border {
 }
 
 .modal-header {
-  border-bottom: 1px solid var(--apollon-gray);
+  border-bottom: 1px solid var(--apollon-modal-bottom-border);
 }
 .modal-footer {
-  border-top: 1px solid var(--apollon-gray);
+  border-top: 1px solid var(--apollon-modal-bottom-border);
 }
 
 .switch {
@@ -249,4 +249,9 @@ input:checked + .slider:before {
 
 [class$='tooltip-icon'] {
   cursor: pointer;
+}
+
+.scheduler-border .form-control[readonly] {
+  background-color: var(--apollon-gray);
+  color: var(--apollon-btn-outline-secondary-color);
 }
