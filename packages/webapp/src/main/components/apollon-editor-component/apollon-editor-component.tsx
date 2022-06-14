@@ -137,13 +137,26 @@ class ApollonEditorComponent extends Component<Props, State> {
 
             const selElemIds = selection.elements;
 
-            const elements = this.props.diagram?.model?.elements.map(({ selectedBy, ...elem }: any) => elem);
+            const elements = this.props.diagram?.model?.elements;
 
-            const updatedElem = elements?.map((x: UMLElement) =>
-              selElemIds.includes(x.id)
-                ? { ...x, selectedBy: { elementId: x.id, name: collaborationName, color: collaborationColor } }
-                : { ...x },
-            );
+            const updatedElem = elements?.map((x: UMLElement) => {
+              const currObj = { elementId: x.id, name: collaborationName, color: collaborationColor };
+
+              let updatedSelectedBy = x.selectedBy;
+              if (selElemIds.includes(x.id)) {
+                // Case for Select
+                if (x.selectedBy && !this.isInSelectedByArray(x.selectedBy, currObj)) {
+                  updatedSelectedBy = this.appendCurrentObject(x.selectedBy!, currObj);
+                }
+              } else {
+                // Case for Deselect
+                if (x.selectedBy && this.isInSelectedByArray(x.selectedBy, currObj)) {
+                  updatedSelectedBy = this.removeCurrentObject(x.selectedBy!, currObj);
+                }
+              }
+
+              return { ...x, selectedBy: updatedSelectedBy };
+            });
 
             const diagram = this.props.diagram;
             if (diagram && diagram.model && diagram.model.elements) {
@@ -228,6 +241,37 @@ class ApollonEditorComponent extends Component<Props, State> {
       }
     }
   }
+
+  isInSelectedByArray = (selectedByList: any[], currObj: { elementId: any; name: any; color: any }) => {
+    const filteredSelectedByList = selectedByList.filter(
+      (e: { elementId: any; name: string; color: string }) =>
+        e.elementId === currObj.elementId && e.name === currObj.name && e.color === currObj.color,
+    );
+    return filteredSelectedByList.length > 0 ? true : false;
+  };
+
+  appendCurrentObject = (
+    prevSelectedBy: { elementId: string; name: string; color: string }[],
+    currentObj: { elementId: string; name: string; color: string },
+  ): { elementId: string; name: string; color: string }[] => {
+    if (prevSelectedBy) {
+      prevSelectedBy.push(currentObj);
+      return prevSelectedBy;
+    } else {
+      return [currentObj];
+    }
+  };
+
+  removeCurrentObject = (
+    prevSelectedBy: { elementId: string; name: string; color: string }[],
+    currentObj: { elementId: string; name: string; color: string },
+  ) => {
+    console.log(prevSelectedBy);
+    const updatedSelectedBy = prevSelectedBy.filter((e) => {
+      return e.elementId === currentObj.elementId && e.name !== currentObj.name && e.color !== currentObj.color;
+    });
+    return updatedSelectedBy;
+  };
 
   establishCollaborationConnection(token: string, name: string, color: string) {
     this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);
