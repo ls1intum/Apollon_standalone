@@ -145,7 +145,9 @@ class ApollonEditorComponent extends Component<Props, State> {
               let updatedSelectedBy = x.selectedBy;
               if (selElemIds.includes(x.id)) {
                 // Case for Select
-                if (x.selectedBy && !this.isInSelectedByArray(x.selectedBy, currObj)) {
+                if (!x.selectedBy) {
+                  updatedSelectedBy = [currObj];
+                } else if (x.selectedBy && !this.isInSelectedByArray(x.selectedBy, currObj)) {
                   updatedSelectedBy = this.appendCurrentObject(x.selectedBy!, currObj);
                 }
               } else {
@@ -266,7 +268,6 @@ class ApollonEditorComponent extends Component<Props, State> {
     prevSelectedBy: { elementId: string; name: string; color: string }[],
     currentObj: { elementId: string; name: string; color: string },
   ) => {
-    console.log(prevSelectedBy);
     const updatedSelectedBy = prevSelectedBy.filter((e) => {
       return e.elementId === currentObj.elementId && e.name !== currentObj.name && e.color !== currentObj.color;
     });
