@@ -1,9 +1,11 @@
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection, UMLElement } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection } from '@ls1intum/apollon';
 import React, { Component, ComponentClass } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
+import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
+
 import styled from 'styled-components';
 // @ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
@@ -134,35 +136,12 @@ class ApollonEditorComponent extends Component<Props, State> {
           if (this.client) {
             const { collaborationName, collaborationColor } = this.props;
             const { token } = this.props.match.params;
-
             const selElemIds = selection.elements;
-
             const elements = this.props.diagram?.model?.elements;
-
-            const updatedElem = elements?.map((x: UMLElement) => {
-              const currObj = { elementId: x.id, name: collaborationName, color: collaborationColor };
-
-              let updatedSelectedBy = x.selectedBy;
-              if (selElemIds.includes(x.id)) {
-                // Case for Select
-                if (!x.selectedBy) {
-                  updatedSelectedBy = [currObj];
-                } else if (x.selectedBy && !this.isInSelectedByArray(x.selectedBy, currObj)) {
-                  updatedSelectedBy = this.appendCurrentObject(x.selectedBy!, currObj);
-                }
-              } else {
-                // Case for Deselect
-                if (x.selectedBy && this.isInSelectedByArray(x.selectedBy, currObj)) {
-                  updatedSelectedBy = this.removeCurrentObject(x.selectedBy!, currObj);
-                }
-              }
-
-              return { ...x, selectedBy: updatedSelectedBy };
-            });
-
+            const updatedElement = updateSelectedByArray(selElemIds, elements!, collaborationName, collaborationColor);
             const diagram = this.props.diagram;
             if (diagram && diagram.model && diagram.model.elements) {
-              diagram.model.elements = updatedElem!;
+              diagram.model.elements = updatedElement!;
             }
 
             this.client.send(
@@ -243,36 +222,6 @@ class ApollonEditorComponent extends Component<Props, State> {
       }
     }
   }
-
-  isInSelectedByArray = (selectedByList: any[], currObj: { elementId: any; name: any; color: any }) => {
-    const filteredSelectedByList = selectedByList.filter(
-      (e: { elementId: any; name: string; color: string }) =>
-        e.elementId === currObj.elementId && e.name === currObj.name && e.color === currObj.color,
-    );
-    return filteredSelectedByList.length > 0 ? true : false;
-  };
-
-  appendCurrentObject = (
-    prevSelectedBy: { elementId: string; name: string; color: string }[],
-    currentObj: { elementId: string; name: string; color: string },
-  ): { elementId: string; name: string; color: string }[] => {
-    if (prevSelectedBy) {
-      prevSelectedBy.push(currentObj);
-      return prevSelectedBy;
-    } else {
-      return [currentObj];
-    }
-  };
-
-  removeCurrentObject = (
-    prevSelectedBy: { elementId: string; name: string; color: string }[],
-    currentObj: { elementId: string; name: string; color: string },
-  ) => {
-    const updatedSelectedBy = prevSelectedBy.filter((e) => {
-      return e.elementId === currentObj.elementId && e.name !== currentObj.name && e.color !== currentObj.color;
-    });
-    return updatedSelectedBy;
-  };
 
   establishCollaborationConnection(token: string, name: string, color: string) {
     this.client = new W3CWebSocket(`ws://${NO_HTTP_URL}`);

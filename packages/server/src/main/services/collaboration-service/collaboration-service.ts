@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
-import { UMLElement } from '@ls1intum/apollon';
+import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
 
 type Client = { token: string; collaborators: Collaborator };
 
@@ -125,15 +125,11 @@ export class CollaborationService {
       ) {
         if (selectedElements) {
           const selElemIds = selectedElements;
-          const elements = diagram.model.elements.map(({ selectedBy, ...elem }: any) => elem);
-          const updatedElem = elements?.map((x: UMLElement) =>
-            selElemIds.includes(x.id)
-              ? { ...x, selectedBy: { elementId: x.id, name: collaborators.name, color: collaborators.color } }
-              : { ...x },
-          );
+          const elements = diagram.model.elements;
+          const updatedElement = updateSelectedByArray(selElemIds, elements, collaborators.name, collaborators.color);
 
           if (diagram && diagram.model && diagram.model.elements) {
-            diagram.model.elements = updatedElem!;
+            diagram.model.elements = updatedElement!;
           }
         }
 
