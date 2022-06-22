@@ -103,6 +103,7 @@ class ApollonEditorComponent extends Component<Props, State> {
       ) {
         this.setCollaborationConnectionName();
       }
+      this.hideSelfFromSelectedList();
     }
   }
 
@@ -125,6 +126,7 @@ class ApollonEditorComponent extends Component<Props, State> {
                 selectedElements: this.props.editor?.selection.elements,
               }),
             );
+            this.hideSelfFromSelectedList();
           }
         });
         editor.subscribeToModelChange((model: UMLModel) => {
@@ -151,6 +153,7 @@ class ApollonEditorComponent extends Component<Props, State> {
                 diagram,
               }),
             );
+            this.hideSelfFromSelectedList();
           }
         });
 
@@ -244,6 +247,17 @@ class ApollonEditorComponent extends Component<Props, State> {
     const { collaborationName, collaborationColor } = this.props;
     this.client.send(JSON.stringify({ collaborators: { name: collaborationName, color: collaborationColor } }));
   }
+
+  hideSelfFromSelectedList = () => {
+    const classNameList = Array.from(
+      this.ref?.getElementsByClassName(
+        this.props.collaborationName + '_' + this.props.collaborationColor,
+      ) as HTMLCollectionOf<HTMLElement>,
+    );
+    for (const elem of Object.values(classNameList)) {
+      elem.style.visibility = 'hidden';
+    }
+  };
 
   render() {
     // if diagram id or editor mode changes -> redraw
