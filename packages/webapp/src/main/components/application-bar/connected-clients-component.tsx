@@ -32,7 +32,7 @@ export function ConnectClientsComponent(props: Props) {
   const elements = collaborators.map((collaborator) => (
     <NameContainer
       style={{ backgroundColor: collaborator?.color }}
-      key={collaborator?.name}
+      key={collaborator?.name + '_' + collaborator?.color}
       title={collaborator?.name || 'Anonymous'}
     >
       {collaborator ? collaborator.name?.substring(0, 1) : 'A'}
