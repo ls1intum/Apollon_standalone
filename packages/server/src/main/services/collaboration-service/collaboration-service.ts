@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
-import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
+import { updateSelectedByArray, removeDisconnectedCollaborator } from 'shared/src/main/services/collaborator-highlight';
 
 type Client = { token: string; collaborators: Collaborator };
 
@@ -66,9 +66,9 @@ export class CollaborationService {
     });
   };
 
-  // TODO: Test this.
   onConnectionLost = (socket: any) => {
     const token = this.clients[socket.apollonId]?.token;
+    const prevTokenClients = this.getTokenClients(socket.apollonId, false);
     const tokenClients = this.getTokenClients(socket.apollonId, true);
 
     this.wsServer.clients.forEach((clientSocket: any) => {
@@ -77,7 +77,26 @@ export class CollaborationService {
         clientSocket.readyState === WebSocket.OPEN &&
         this.clients[clientSocket.apollonId]?.token === token
       ) {
-        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborators) }));
+        // Remove disconnected collaborators from selectedBy Array
+        const disconnectedClient = prevTokenClients.filter((x) => !tokenClients.includes(x));
+        this.diagramService.getDiagramByLink(token).then((diagram) => {
+          const updatedElement = removeDisconnectedCollaborator(
+            disconnectedClient[0].collaborators,
+            diagram?.model.elements,
+          );
+          if (diagram && diagram.model && diagram.model.elements) {
+            diagram.model.elements = updatedElement!;
+            const diagramService = new DiagramFileStorageService();
+            diagramService.saveDiagram(diagram, token, true);
+          }
+          clientSocket.send(
+            JSON.stringify({
+              token,
+              collaborators: tokenClients.map((client) => client.collaborators),
+              diagram,
+            }),
+          );
+        });
       }
     });
   };

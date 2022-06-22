@@ -1,4 +1,5 @@
 import { UMLElement } from '@ls1intum/apollon';
+import { Collaborator } from '../collaborator-dto';
 
 export type UMLElementSelectorType = {
   elementId: string;
@@ -58,4 +59,16 @@ export const removeCurrentObject = (prevSelectedBy: UMLElementSelectorType[], cu
     return e.elementId === currentObj.elementId && e.name !== currentObj.name && e.color !== currentObj.color;
   });
   return updatedSelectedBy;
+};
+
+export const removeDisconnectedCollaborator = (collaborator: Collaborator, elements: any) => {
+  return elements?.map((x: UMLElement) => {
+    let updatedSelectedBy = x.selectedBy;
+    if (x.selectedBy) {
+      updatedSelectedBy = x.selectedBy.filter((e: { name: string; color: string }) => {
+        return e.name !== collaborator.name && e.color !== collaborator.color;
+      });
+    }
+    return { ...x, selectedBy: updatedSelectedBy };
+  });
 };
