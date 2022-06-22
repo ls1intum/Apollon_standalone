@@ -249,14 +249,8 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   hideSelfFromSelectedList = () => {
-    const classNameList = Array.from(
-      this.ref?.getElementsByClassName(
-        this.props.collaborationName + '_' + this.props.collaborationColor,
-      ) as HTMLCollectionOf<HTMLElement>,
-    );
-    for (const elem of Object.values(classNameList)) {
-      elem.style.visibility = 'hidden';
-    }
+    const selfElementId = document.getElementById(this.props.collaborationName + '_' + this.props.collaborationColor)!;
+    if (selfElementId) selfElementId.style.display = 'none';
   };
 
   render() {
