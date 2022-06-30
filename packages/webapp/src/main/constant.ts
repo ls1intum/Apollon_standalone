@@ -11,6 +11,7 @@ export const localStorageDiagramPrefix = localStoragePrefix + 'diagram_';
 export const localStorageDiagramsList = localStoragePrefix + 'diagrams';
 export const localStorageLatest = localStoragePrefix + 'latest';
 export const localStorageCollaborationName = localStoragePrefix + 'collaborationName';
+export const localStorageCollaborationColor = localStoragePrefix + 'collaborationColor';
 export const localStorageUserThemePreference = localStoragePrefix + 'userThemePreference';
 export const localStorageSystemThemePreference = localStoragePrefix + 'systemThemePreference';
 // date formats

@@ -1,6 +1,7 @@
 import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
 import { Diagram } from '../diagram/diagram-types';
 import {
+  localStorageCollaborationColor,
   localStorageCollaborationName,
   localStorageDiagramsList,
   localStorageSystemThemePreference,
@@ -46,6 +47,10 @@ export const LocalStorageRepository = {
 
   setCollaborationName: (name: string) => {
     window.localStorage.setItem(localStorageCollaborationName, name);
+  },
+
+  setCollaborationColor: (color: string) => {
+    window.localStorage.setItem(localStorageCollaborationColor, color);
   },
 
   setLastPublishedToken: (token: string) => {

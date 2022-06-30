@@ -16,6 +16,7 @@ type StateProps = {
 type DispatchProps = {
   createError: typeof ErrorRepository.createError;
   updateCollaborationName: typeof ShareRepository.updateCollaborationName;
+  updateCollaborationColor: typeof ShareRepository.updateCollaborationColor;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -24,14 +25,20 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => {
     return {
       collaborationName: state.share.collaborationName,
+      collaborationColor: state.share.collaborationColor,
     };
   },
-  { createError: ErrorRepository.createError, updateCollaborationName: ShareRepository.updateCollaborationName },
+  {
+    createError: ErrorRepository.createError,
+    updateCollaborationName: ShareRepository.updateCollaborationName,
+    updateCollaborationColor: ShareRepository.updateCollaborationColor,
+  },
 );
 
 const getInitialState = () => {
   return {
     name: '',
+    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
   };
 };
 
@@ -62,9 +69,11 @@ class CollaborationModalComponent extends Component<Props, State> {
     });
   };
 
-  setCollaborationName = (e: MouseEvent<HTMLButtonElement>) => {
+  setCollaborationNameAndColor = (e: MouseEvent<HTMLButtonElement>) => {
     LocalStorageRepository.setCollaborationName(this.state.name);
+    LocalStorageRepository.setCollaborationColor(this.state.color);
     this.props.updateCollaborationName(this.state.name);
+    this.props.updateCollaborationColor(this.state.color);
     this.props.close();
   };
 
@@ -79,7 +88,7 @@ class CollaborationModalComponent extends Component<Props, State> {
             <InputGroup className="mb-3">
               <FormControl isInvalid={!this.state.name} value={this.state.name} onChange={this.handleChange} />
               <InputGroup.Append className="w-25">
-                <Button variant="outline-secondary" className="w-100" onClick={this.setCollaborationName}>
+                <Button variant="outline-secondary" className="w-100" onClick={this.setCollaborationNameAndColor}>
                   Confirm
                 </Button>
               </InputGroup.Append>

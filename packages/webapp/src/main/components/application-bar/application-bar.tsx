@@ -13,11 +13,13 @@ import { APPLICATION_SERVER_VERSION } from '../../constant';
 import { ModalRepository } from '../../services/modal/modal-repository';
 import { ModalContentType } from '../modals/application-modal-types';
 import { ConnectClientsComponent } from './connected-clients-component';
+import { Collaborator } from 'shared/src/main/collaborator-dto';
+
 type OwnProps = {};
 
 type StateProps = {
   diagram: Diagram | null;
-  collaborators: string[];
+  collaborators: Collaborator[];
 };
 
 const DiagramTitle = styled.input`

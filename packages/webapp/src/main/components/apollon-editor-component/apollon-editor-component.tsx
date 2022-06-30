@@ -1,9 +1,11 @@
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection } from '@ls1intum/apollon';
 import React, { Component, ComponentClass } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
+import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
+
 import styled from 'styled-components';
 // @ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
@@ -39,6 +41,7 @@ type StateProps = {
   options: ApollonOptions;
   fromServer: boolean;
   collaborationName: string;
+  collaborationColor: string;
 };
 
 type DispatchProps = {
@@ -73,6 +76,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
       },
       fromServer: state.share.fromServer,
       collaborationName: state.share.collaborationName,
+      collaborationColor: state.share.collaborationColor,
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
@@ -93,9 +97,13 @@ class ApollonEditorComponent extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.client) {
-      if (this.props.collaborationName !== prevProps.collaborationName) {
+      if (
+        this.props.collaborationName !== prevProps.collaborationName ||
+        this.props.collaborationColor !== prevProps.collaborationColor
+      ) {
         this.setCollaborationConnectionName();
       }
+      this.hideSelfFromSelectedList();
     }
   }
 
@@ -109,17 +117,50 @@ class ApollonEditorComponent extends Component<Props, State> {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           if (this.client) {
             const { token } = this.props.match.params;
-            const { collaborationName } = this.props;
-            this.client.send(JSON.stringify({ token, name: collaborationName, diagram }));
+            const { collaborationName, collaborationColor } = this.props;
+            this.client.send(
+              JSON.stringify({
+                token,
+                collaborators: { name: collaborationName, color: collaborationColor },
+                diagram,
+                selectedElements: this.props.editor?.selection.elements,
+              }),
+            );
+            this.hideSelfFromSelectedList();
           }
         });
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           this.props.updateDiagram(diagram);
         });
+
+        editor.subscribeToSelectionChange((selection: Selection) => {
+          if (this.client) {
+            const { collaborationName, collaborationColor } = this.props;
+            const { token } = this.props.match.params;
+            const selElemIds = selection.elements;
+            const elements = this.props.diagram?.model?.elements;
+            const updatedElement = updateSelectedByArray(selElemIds, elements!, collaborationName, collaborationColor);
+            const diagram = this.props.diagram;
+            if (diagram && diagram.model && diagram.model.elements) {
+              diagram.model.elements = updatedElement!;
+            }
+
+            this.client.send(
+              JSON.stringify({
+                token,
+                collaborators: { name: collaborationName, color: collaborationColor },
+                diagram,
+              }),
+            );
+            this.hideSelfFromSelectedList();
+          }
+        });
+
         this.props.setEditor(editor);
       }
     };
+
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
       // hosted with backend
       const { token } = this.props.match.params;
@@ -144,10 +185,11 @@ class ApollonEditorComponent extends Component<Props, State> {
             case DiagramView.COLLABORATE:
               this.props.changeEditorMode(ApollonMode.Modelling);
               this.props.changeReadonlyMode(false);
-              if (!this.props.collaborationName) {
+              // Enforces users to have color assigned to them
+              if (!this.props.collaborationName || !this.props.collaborationColor) {
                 this.props.openModal(ModalContentType.CollaborationModal, 'lg');
               }
-              this.establishCollaborationConnection(token, this.props.collaborationName);
+              this.establishCollaborationConnection(token, this.props.collaborationName, this.props.collaborationColor);
               break;
           }
         }
@@ -184,10 +226,11 @@ class ApollonEditorComponent extends Component<Props, State> {
     }
   }
 
-  establishCollaborationConnection(token: string, name: string) {
+  establishCollaborationConnection(token: string, name: string, color: string) {
     this.client = new W3CWebSocket(`wss://${NO_HTTP_URL}`);
     this.client.onopen = () => {
-      this.client.send(JSON.stringify({ token, name }));
+      const collaborators = { name, color };
+      this.client.send(JSON.stringify({ token, collaborators }));
     };
     this.client.onmessage = (message: any) => {
       const { collaborators, diagram } = JSON.parse(message.data);
@@ -201,9 +244,14 @@ class ApollonEditorComponent extends Component<Props, State> {
   }
 
   setCollaborationConnectionName() {
-    const { collaborationName } = this.props;
-    this.client.send(JSON.stringify({ name: collaborationName }));
+    const { collaborationName, collaborationColor } = this.props;
+    this.client.send(JSON.stringify({ collaborators: { name: collaborationName, color: collaborationColor } }));
   }
+
+  hideSelfFromSelectedList = () => {
+    const selfElementId = document.getElementById(this.props.collaborationName + '_' + this.props.collaborationColor)!;
+    if (selfElementId) selfElementId.style.display = 'none';
+  };
 
   render() {
     // if diagram id or editor mode changes -> redraw
