@@ -92,6 +92,7 @@ class ShareModalComponent extends Component<Props, State> {
             LocalStorageRepository.setLastPublishedType(this.state.view);
             this.copyLink();
             this.handleClose();
+            window.location.href = this.getLinkForView() + '&notifyUser=true';
           });
         })
         .catch((error) => {
