@@ -25,6 +25,7 @@ export const Container = styled.div`
   display: flex;
   max-width: 25%;
   overflow-x: auto;
+  margin-right: 25px;
 `;
 
 export function ConnectClientsComponent(props: Props) {
