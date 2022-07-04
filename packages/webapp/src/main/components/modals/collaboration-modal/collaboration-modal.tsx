@@ -83,6 +83,9 @@ class CollaborationModalComponent extends Component<Props, State> {
         <Modal.Header closeButton>
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
+        <span className="pl-3">
+          This name is used to highlight elements you're interacting on, with other collaborators.
+        </span>
         <Modal.Body>
           <>
             <InputGroup className="mb-3">
