@@ -73,10 +73,10 @@ class ShareModalComponent extends Component<Props, State> {
     });
   };
 
-  copyLink = () => {
+  copyLink = (displayToast = false) => {
     const link = this.getLinkForView();
     navigator.clipboard.writeText(link);
-    this.displayToast();
+    if (displayToast) this.displayToast();
   };
 
   handleClose = () => {
@@ -90,11 +90,11 @@ class ShareModalComponent extends Component<Props, State> {
           this.setState({ token }, () => {
             LocalStorageRepository.setLastPublishedToken(token);
             LocalStorageRepository.setLastPublishedType(this.state.view);
-            this.copyLink();
-            this.handleClose();
             if (this.state.view === 'COLLABORATE') {
               window.location.href = this.getLinkForView() + '&notifyUser=true';
             }
+            this.copyLink(true);
+            this.handleClose();
           });
         })
         .catch((error) => {
@@ -210,7 +210,7 @@ class ShareModalComponent extends Component<Props, State> {
                     </a>
                   )}
                   <InputGroup.Append>
-                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink()}>
+                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink(true)}>
                       Copy Link
                     </Button>
                   </InputGroup.Append>
