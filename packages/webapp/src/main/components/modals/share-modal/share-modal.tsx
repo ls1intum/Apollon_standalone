@@ -64,7 +64,7 @@ class ShareModalComponent extends Component<Props, State> {
         innerMessage = 'collaborate';
         break;
     }
-    return `You can now share simply by pasting the link, to ${innerMessage} the current diagram`;
+    return `${innerMessage}`;
   };
 
   shareDiagram = (view: DiagramView) => {
@@ -76,7 +76,7 @@ class ShareModalComponent extends Component<Props, State> {
   copyLink = () => {
     const link = this.getLinkForView();
     navigator.clipboard.writeText(link);
-    this.displayToasts();
+    this.displayToast();
   };
 
   handleClose = () => {
@@ -115,10 +115,15 @@ class ShareModalComponent extends Component<Props, State> {
     return !!lastPublishedToken;
   };
 
-  displayToasts = () => {
-    toast.success('Link is now copied to your clipboard.');
-    toast.info(this.getMessageForView());
-    toast.info('You can access the link again by going to share menu', { delay: 6500 });
+  displayToast = () => {
+    toast.success(
+      'The link has been copied to your clipboard and can be shared to ' +
+        this.getMessageForView() +
+        ', simply by pasting the link. You can re-access the link by going to share menu.',
+      {
+        autoClose: 10000,
+      },
+    );
   };
 
   render() {

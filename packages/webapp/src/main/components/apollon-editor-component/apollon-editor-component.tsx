@@ -193,7 +193,7 @@ class ApollonEditorComponent extends Component<Props, State> {
               }
               this.establishCollaborationConnection(token, this.props.collaborationName, this.props.collaborationColor);
               if (notifyUser === 'true') {
-                this.displayToasts();
+                this.displayToast();
                 window.history.replaceState({}, document.title, window.location.pathname + '?view=' + view);
               }
               break;
@@ -232,10 +232,13 @@ class ApollonEditorComponent extends Component<Props, State> {
     }
   }
 
-  displayToasts = () => {
-    toast.success('Link is now copied to your clipboard.');
-    toast.info('You can now share simply by pasting the link, to Collaborate the current diagram');
-    toast.info('You can access the link again by going to share menu', { delay: 6500 });
+  displayToast = () => {
+    toast.success(
+      'The link has been copied to your clipboard and can be shared to Collaborate, simply by pasting the link. You can re-access the link by going to share menu.',
+      {
+        autoClose: 10000,
+      },
+    );
   };
 
   establishCollaborationConnection(token: string, name: string, color: string) {
