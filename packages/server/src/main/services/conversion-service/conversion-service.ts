@@ -16,7 +16,7 @@ export class ConversionService {
     });
 
     //@ts-ignore
-    const container = document.querySelector('div');
+    const container = document.querySelector('div')!;
 
     const editor = new ApollonEditor(container, {});
 
