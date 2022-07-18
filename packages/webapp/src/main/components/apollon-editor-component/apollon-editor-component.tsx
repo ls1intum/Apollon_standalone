@@ -21,6 +21,7 @@ import { ModalContentType } from '../modals/application-modal-types';
 import { ApplicationState } from '../store/application-state';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { withApollonEditor } from './with-apollon-editor';
+import { toast } from 'react-toastify';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -168,6 +169,7 @@ class ApollonEditorComponent extends Component<Props, State> {
         // get query param
         const query = new URLSearchParams(this.props.location.search);
         const view: DiagramView | null = query.get('view') as DiagramView;
+        const notifyUser: string | null = query.get('notifyUser');
         if (view) {
           switch (view) {
             case DiagramView.SEE_FEEDBACK:
@@ -190,6 +192,10 @@ class ApollonEditorComponent extends Component<Props, State> {
                 this.props.openModal(ModalContentType.CollaborationModal, 'lg');
               }
               this.establishCollaborationConnection(token, this.props.collaborationName, this.props.collaborationColor);
+              if (notifyUser === 'true') {
+                this.displayToast();
+                window.history.replaceState({}, document.title, window.location.pathname + '?view=' + view);
+              }
               break;
           }
         }
@@ -225,6 +231,15 @@ class ApollonEditorComponent extends Component<Props, State> {
       }
     }
   }
+
+  displayToast = () => {
+    toast.success(
+      'The link has been copied to your clipboard and can be shared to Collaborate, simply by pasting the link. You can re-access the link by going to share menu.',
+      {
+        autoClose: 10000,
+      },
+    );
+  };
 
   establishCollaborationConnection(token: string, name: string, color: string) {
     this.client = new W3CWebSocket(`wss://${NO_HTTP_URL}`);

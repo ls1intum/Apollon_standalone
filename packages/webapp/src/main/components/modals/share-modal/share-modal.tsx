@@ -64,7 +64,7 @@ class ShareModalComponent extends Component<Props, State> {
         innerMessage = 'collaborate';
         break;
     }
-    return `You can now share simply by pasting the link, to ${innerMessage} the current diagram`;
+    return `${innerMessage}`;
   };
 
   shareDiagram = (view: DiagramView) => {
@@ -73,10 +73,10 @@ class ShareModalComponent extends Component<Props, State> {
     });
   };
 
-  copyLink = () => {
+  copyLink = (displayToast = false) => {
     const link = this.getLinkForView();
     navigator.clipboard.writeText(link);
-    this.displayToasts();
+    if (displayToast) this.displayToast();
   };
 
   handleClose = () => {
@@ -90,7 +90,10 @@ class ShareModalComponent extends Component<Props, State> {
           this.setState({ token }, () => {
             LocalStorageRepository.setLastPublishedToken(token);
             LocalStorageRepository.setLastPublishedType(this.state.view);
-            this.copyLink();
+            if (this.state.view === 'COLLABORATE') {
+              window.location.href = this.getLinkForView() + '&notifyUser=true';
+            }
+            this.copyLink(true);
             this.handleClose();
           });
         })
@@ -112,10 +115,15 @@ class ShareModalComponent extends Component<Props, State> {
     return !!lastPublishedToken;
   };
 
-  displayToasts = () => {
-    toast.success('Link is now copied to your clipboard.');
-    toast.info(this.getMessageForView());
-    toast.info('You can access the link again by going to share menu', { delay: 6500 });
+  displayToast = () => {
+    toast.success(
+      'The link has been copied to your clipboard and can be shared to ' +
+        this.getMessageForView() +
+        ', simply by pasting the link. You can re-access the link by going to share menu.',
+      {
+        autoClose: 10000,
+      },
+    );
   };
 
   render() {
@@ -202,7 +210,7 @@ class ShareModalComponent extends Component<Props, State> {
                     </a>
                   )}
                   <InputGroup.Append>
-                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink()}>
+                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink(true)}>
                       Copy Link
                     </Button>
                   </InputGroup.Append>
