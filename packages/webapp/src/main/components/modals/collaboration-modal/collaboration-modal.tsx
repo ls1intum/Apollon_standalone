@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ErrorRepository } from '../../../services/error-management/error-repository';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { ShareRepository } from '../../../services/share/share-repository';
+import { generateRandomName } from '../../../utils/random-name-generator/random-name-generator';
 import { ApplicationState } from '../../store/application-state';
 import { ModalContentProps } from '../application-modal-types';
 
@@ -37,7 +38,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 
 const getInitialState = () => {
   return {
-    name: '',
+    name: generateRandomName(),
     color: '#' + Math.floor(Math.random() * 16777215).toString(16),
   };
 };
@@ -45,6 +46,11 @@ const getInitialState = () => {
 type State = typeof getInitialState;
 
 class CollaborationModalComponent extends Component<Props, State> {
+  innerRef: React.RefObject<HTMLInputElement>;
+  constructor(props: Props) {
+    super(props);
+    this.innerRef = React.createRef();
+  }
   state = getInitialState();
 
   componentDidMount() {
@@ -54,6 +60,9 @@ class CollaborationModalComponent extends Component<Props, State> {
     } else {
       this.setState({ name: collaborationName });
     }
+    setTimeout(() => {
+      this.innerRef.current?.focus();
+    }, 1);
   }
 
   handleClose = () => {
@@ -84,12 +93,17 @@ class CollaborationModalComponent extends Component<Props, State> {
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
         <span className="pl-3">
-          This name is used to highlight elements you're interacting on, with other collaborators.
+          Please enter your name to highlight elements you are interacting with for other collaborators.
         </span>
         <Modal.Body>
           <>
             <InputGroup className="mb-3">
-              <FormControl isInvalid={!this.state.name} value={this.state.name} onChange={this.handleChange} />
+              <FormControl
+                isInvalid={!this.state.name}
+                placeholder={this.state.name}
+                onChange={this.handleChange}
+                ref={this.innerRef}
+              />
               <InputGroup.Append className="w-25">
                 <Button variant="outline-secondary" className="w-100" onClick={this.setCollaborationNameAndColor}>
                   Confirm
