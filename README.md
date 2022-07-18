@@ -49,7 +49,7 @@ yarn install
 
 # set environment variable
 export APPLICATION_SERVER_VERSION=1
-export DEPLOYMENT_URL=https://apollon.ase.in.tum.de/
+export DEPLOYMENT_URL=https://apollon.ase.in.tum.de
 
 # build the web application and the application server
 yarn build
