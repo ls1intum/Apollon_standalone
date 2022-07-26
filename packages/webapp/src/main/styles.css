@@ -242,6 +242,10 @@ input:checked + .slider:before {
   color: var(--apollon-background-inverse);
 }
 
+.Toastify__close-button--light {
+  color: var(--apollon-background-inverse);
+}
+
 .btn-outline-secondary {
   color: var(--apollon-btn-outline-secondary-color);
   border-color: var(--apollon-btn-outline-secondary-color);

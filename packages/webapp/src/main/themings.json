@@ -23,7 +23,7 @@
     "--apollon-primary": "#3e8acc",
     "--apollon-primary-contrast": "white",
     "--apollon-secondary": "#888",
-    "--apollon-alert-warning-yellow": "#f39c12",
+    "--apollon-alert-warning-yellow": "#ffffff",
     "--apollon-alert-warning-background": "#f39c12",
     "--apollon-alert-warning-border": "#000000",
     "--apollon-background": "#181a18",
