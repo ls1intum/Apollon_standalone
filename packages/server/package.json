@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf ../../build/server",
@@ -16,7 +16,7 @@
     "jsdom": "20.0.0",
     "jsdom-global": "3.0.2",
     "pdfmake": "0.2.5",
-    "shared": "1.5.1"
+    "shared": "1.5.2"
   },
   "devDependencies": {
     "@types/cors": "2.8.12",
