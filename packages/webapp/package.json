@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "private": true,
   "scripts": {
     "clean": "rm -rf ../../build/webapp",
@@ -27,7 +27,7 @@
     "redux": "4.1.2",
     "redux-observable": "2.0.0",
     "rxjs": "7.3.0",
-    "shared": "1.5.3",
+    "shared": "1.5.4",
     "styled-components": "5.3.5",
     "tslib": "2.4.0",
     "typesafe-actions": "5.1.0",
