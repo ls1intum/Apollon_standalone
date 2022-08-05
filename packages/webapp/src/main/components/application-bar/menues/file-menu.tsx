@@ -72,14 +72,17 @@ class FileMenuComponent extends Component<OwnProps, State> {
     event.stopPropagation();
   };
 
-  exportDiagram(exportType: 'PNG' | 'SVG' | 'JSON' | 'PDF'): void {
+  exportDiagram(exportType: 'PNG' | 'PNG_WHITE' | 'SVG' | 'JSON' | 'PDF'): void {
     if (this.props.editor && this.props.diagram?.title) {
       switch (exportType) {
         case 'SVG':
           this.props.exportAsSVG(this.props.editor, this.props.diagram?.title);
           break;
+        case 'PNG_WHITE':
+          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title, true);
+          break;
         case 'PNG':
-          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title);
+          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title, false);
           break;
         case 'PDF':
           this.props.exportAsPDF(this.props.editor, this.props.diagram?.title);
@@ -118,7 +121,12 @@ class FileMenuComponent extends Component<OwnProps, State> {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('SVG')}>As SVG</Dropdown.Item>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>As PNG</Dropdown.Item>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG_WHITE')}>
+                As PNG (White Background)
+              </Dropdown.Item>
+              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>
+                As PNG (Transparent Background)
+              </Dropdown.Item>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('JSON')}>As JSON</Dropdown.Item>
               <Dropdown.Item onClick={(event: any) => this.exportDiagram('PDF')}>As PDF</Dropdown.Item>
             </Dropdown.Menu>

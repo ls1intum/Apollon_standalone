@@ -10,11 +10,12 @@ export const ExportRepository = {
       diagramTitle,
     },
   }),
-  exportAsPNG: (editor: ApollonEditor, diagramTitle: string): ExportPNGAction => ({
+  exportAsPNG: (editor: ApollonEditor, diagramTitle: string, setWhiteBackground: boolean): ExportPNGAction => ({
     type: ExportActionTypes.EXPORT_PNG,
     payload: {
       editor,
       diagramTitle,
+      setWhiteBackground,
     },
   }),
   exportAsJSON: (editor: ApollonEditor, diagram: Diagram): ExportJSONAction => ({

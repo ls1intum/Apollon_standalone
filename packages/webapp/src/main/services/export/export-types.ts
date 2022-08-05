@@ -22,6 +22,7 @@ export type ExportPNGAction = Action<ExportActionTypes.EXPORT_PNG> & {
     // needs reference to ApollonEditor to perform export
     editor: ApollonEditor;
     diagramTitle: string;
+    setWhiteBackground: boolean;
   };
 };
 
