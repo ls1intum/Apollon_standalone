@@ -15,8 +15,9 @@ export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> =
       const apollonEditor: ApollonEditor = action.payload.editor;
       const fileName: string = `${action.payload.diagramTitle}.png`;
       const apollonSVG: SVG = apollonEditor.exportAsSVG();
+      const setWhiteBackground: boolean = action.payload.setWhiteBackground;
       return from(
-        convertRenderedSVGToPNG(apollonSVG).then((png: Blob) => {
+        convertRenderedSVGToPNG(apollonSVG, setWhiteBackground).then((png: Blob) => {
           const fileToDownload = new File([png], fileName);
           return {
             type: FileDownloadActionTypes.FILE_DOWNLOAD,
@@ -31,7 +32,7 @@ export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> =
   );
 };
 
-export function convertRenderedSVGToPNG(renderedSVG: SVG): Promise<Blob> {
+export function convertRenderedSVGToPNG(renderedSVG: SVG, whiteBackground: boolean): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const { width, height } = renderedSVG.clip;
 
@@ -54,6 +55,12 @@ export function convertRenderedSVGToPNG(renderedSVG: SVG): Promise<Blob> {
       canvas.height = height * scale;
 
       const context = canvas.getContext('2d')!;
+
+      if (whiteBackground) {
+        context.fillStyle = 'white';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
       context.scale(scale, scale);
       context.drawImage(image, 0, 0);
 
