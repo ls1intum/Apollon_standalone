@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:ls1intum/Apollon_standalone.git",
