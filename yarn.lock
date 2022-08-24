@@ -1280,10 +1280,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@ls1intum/apollon@2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.12.0.tgz#a08aea4cc6bb15351b615252e9f81c14ab131d65"
-  integrity sha512-O0b2b1o37Fazeh0jc/i+tm7REbpHchWXIBJc/OQfk7KTFaZCmgmvZ3+zDm/0Kj3BoDhGIuX3gg2Lq7ViH5RePg==
+"@ls1intum/apollon@2.12.1":
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/@ls1intum/apollon/-/apollon-2.12.1.tgz#ed8f1bbe568566c3ed6efd5cec30fb6ae9d4ec8e"
+  integrity sha512-9XehgRuh+VrnyOD5EUHA1vBSs92ka6uiQornUNQvDbmMs0VeRGeN1Cqe2W9ul7oM0GhrDMoqIb4K1TWGNZTlEA==
   dependencies:
     is-mobile "3.1.1"
     pepjs "0.5.3"
