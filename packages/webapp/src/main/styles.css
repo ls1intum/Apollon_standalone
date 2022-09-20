@@ -128,10 +128,6 @@ legend.scheduler-border {
   padding: 0 5px;
   color: var(--apollon-background-inverse);
 }
-.popover-content .experimental {
-  color: var(--warning);
-  font-weight: bold;
-}
 .popover-content .description {
   margin-top: 10px;
 }

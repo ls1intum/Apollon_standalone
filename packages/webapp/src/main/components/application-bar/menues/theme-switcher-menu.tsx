@@ -105,7 +105,6 @@ class ThemeSwitcherMenuComponent extends Component<Props, State> {
                 <div className="head">
                   ☾ <span>Dark Mode</span> ☾
                 </div>
-                <div className="experimental">EXPERIMENTAL</div>
                 <div className="switch-box">
                   Sync with Operating System
                   <label className="switch">
