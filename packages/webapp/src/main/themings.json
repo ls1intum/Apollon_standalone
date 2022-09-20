@@ -8,7 +8,7 @@
     "--apollon-alert-warning-border": "#ffeeba",
     "--apollon-background": "white",
     "--apollon-background-inverse": "#000000",
-    "--apollon-background-variant": "#f8f9fa",
+    "--apollon-background-variant": "rgba(36, 39, 36, 0.1)",
     "--apollon-gray": "#e9ecef",
     "--apollon-gray-variant": "#495057",
     "--apollon-alert-danger-color": "#721c24",
