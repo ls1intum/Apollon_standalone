@@ -39,7 +39,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
   }),
 );
 
-const diagramsInBeta: string[] = [UMLDiagramType.Flowchart.valueOf()];
+const diagramsInBeta: string[] = [];
 
 class CreateDiagramModalComponent extends Component<Props, State> {
   state = getInitialState();
