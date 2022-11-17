@@ -77,18 +77,18 @@ class ImportDiagramModalComponent extends Component<Props, State> {
           <Modal.Title>Import Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Form.File
-              id="custom-file"
-              label={
-                this.state.selectedFile?.name
-                  ? this.state.selectedFile.name
-                  : 'Please select a Apollon-Diagram.json to import'
-              }
-              custom
-              onChange={this.fileUpload}
-            />
-          </Form>
+          <Form.Control
+            id="custom-file"
+            placeholder={
+              this.state.selectedFile?.name
+                ? this.state.selectedFile.name
+                : 'Please select a Apollon-Diagram.json to import'
+            }
+            type="file"
+            // custom
+            onChange={this.fileUpload}
+          />
+
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>

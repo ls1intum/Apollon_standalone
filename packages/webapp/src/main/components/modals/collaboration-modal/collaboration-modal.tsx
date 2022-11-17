@@ -89,7 +89,7 @@ class CollaborationModalComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
         <span className="pl-3">
@@ -99,16 +99,15 @@ class CollaborationModalComponent extends Component<Props, State> {
           <>
             <InputGroup className="mb-3">
               <FormControl
+                className="w-75"
                 isInvalid={!this.state.name}
                 placeholder={this.state.name}
                 onChange={this.handleChange}
                 ref={this.innerRef}
               />
-              <InputGroup.Append className="w-25">
-                <Button variant="outline-secondary" className="w-100" onClick={this.setCollaborationNameAndColor}>
-                  Confirm
-                </Button>
-              </InputGroup.Append>
+              <Button variant="outline-secondary" className="w-25" onClick={this.setCollaborationNameAndColor}>
+                Confirm
+              </Button>
             </InputGroup>
           </>
         </Modal.Body>

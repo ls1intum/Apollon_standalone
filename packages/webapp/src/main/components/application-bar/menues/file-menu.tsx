@@ -111,7 +111,7 @@ class FileMenuComponent extends Component<OwnProps, State> {
           <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.ImportDiagramModal)}>
             Import
           </NavDropdown.Item>
-          <Dropdown id="export-dropdown" drop="right">
+          <Dropdown id="export-dropdown" drop="end">
             <Dropdown.Toggle
               id="dropdown-basic"
               split

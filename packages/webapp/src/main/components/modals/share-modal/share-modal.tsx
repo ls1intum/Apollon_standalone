@@ -118,8 +118,8 @@ class ShareModalComponent extends Component<Props, State> {
   displayToast = () => {
     toast.success(
       'The link has been copied to your clipboard and can be shared to ' +
-        this.getMessageForView() +
-        ', simply by pasting the link. You can re-access the link by going to share menu.',
+      this.getMessageForView() +
+      ', simply by pasting the link. You can re-access the link by going to share menu.',
       {
         autoClose: 10000,
       },
@@ -209,11 +209,9 @@ class ShareModalComponent extends Component<Props, State> {
                       />
                     </a>
                   )}
-                  <InputGroup.Append>
-                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink(true)}>
-                      Copy Link
-                    </Button>
-                  </InputGroup.Append>
+                  <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink(true)}>
+                    Copy Link
+                  </Button>
                 </InputGroup>
               </fieldset>
             )}
