@@ -13,7 +13,7 @@
     "canvas": "2.10.2",
     "cors": "2.8.5",
     "express": "4.18.2",
-    "jsdom": "20.0.2",
+    "jsdom": "20.0.3",
     "jsdom-global": "3.0.2",
     "pdfmake": "0.2.6",
     "shared": "1.6.5"
