@@ -83,7 +83,9 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
                     <Nav.Link
                       className="text-nowrap"
                       eventKey={TemplateCategory.SOFTWARE_PATTERN}
-                      onSelect={(templateCategory) => this.selectTemplateCategory(templateCategory as unknown as TemplateCategory)}
+                      onSelect={(templateCategory) =>
+                        this.selectTemplateCategory(templateCategory as unknown as TemplateCategory)
+                      }
                     >
                       {TemplateCategory.SOFTWARE_PATTERN}
                     </Nav.Link>

@@ -88,7 +88,6 @@ class ImportDiagramModalComponent extends Component<Props, State> {
             // custom
             onChange={this.fileUpload}
           />
-
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.handleClose}>
