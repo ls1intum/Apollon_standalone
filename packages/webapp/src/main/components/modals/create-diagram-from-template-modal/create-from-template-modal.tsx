@@ -71,11 +71,8 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title>Start Diagram from Template</Modal.Title>
-          <button onClick={this.props.close} type="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </Modal.Header>
         <Modal.Body>
           <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.selectedTemplateCategory}>

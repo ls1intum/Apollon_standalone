@@ -89,7 +89,7 @@ class CollaborationModalComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
         <span className="pl-3">

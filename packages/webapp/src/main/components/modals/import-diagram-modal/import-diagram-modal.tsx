@@ -73,11 +73,8 @@ class ImportDiagramModalComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title>Import Diagram</Modal.Title>
-          <button onClick={this.props.close} type="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </Modal.Header>
         <Modal.Body>
           <Form.Control
