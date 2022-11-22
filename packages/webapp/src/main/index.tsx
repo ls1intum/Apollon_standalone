@@ -3,7 +3,7 @@ import { RoutedApplication } from './application';
 import { setTheme } from './utils/theme-switcher';
 import { LocalStorageRepository } from '../main/services/local-storage/local-storage-repository';
 import { createRoot } from 'react-dom/client';
-
+import 'bootstrap/dist/css/bootstrap.css';
 import './styles.css';
 
 const themePreference: string | null = LocalStorageRepository.getUserThemePreference();
