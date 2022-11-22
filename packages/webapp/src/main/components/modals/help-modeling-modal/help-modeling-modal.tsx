@@ -10,8 +10,11 @@ export class HelpModelingModal extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>How to use this editor?</Modal.Title>
+          <button onClick={this.props.close} type="button" className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </Modal.Header>
         <Modal.Body>
           <table className="table">

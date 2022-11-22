@@ -72,8 +72,11 @@ class LoadDiagramModalComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Load Diagram</Modal.Title>
+          <button onClick={this.props.close} type="button" className="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </Modal.Header>
         <Modal.Body>
           <LoadDiagramContent diagrams={this.getSavedDiagrams()} onSelect={this.loadDiagram} />
