@@ -12,6 +12,7 @@ import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { InfoCircle } from 'react-bootstrap-icons';
 
 type OwnProps = {} & ModalContentProps;
 
@@ -141,7 +142,7 @@ class ShareModalComponent extends Component<Props, State> {
                 overlay={<Tooltip id="share-tooltip">Changing the diagram will extend the time period.</Tooltip>}
               >
                 <span className="tooltip-icon">
-                  <i className="bi bi-info-circle" />
+                  <InfoCircle />
                 </span>
               </OverlayTrigger>
             </p>
