@@ -93,10 +93,10 @@ class ApplicationBarComponent extends Component<Props, State> {
   render() {
     return (
       <>
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar className="navbar" variant="dark" expand="lg">
           <Navbar.Brand>
             <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />{' '}
-            <span className="font-weight-bold ml-2">Apollon</span>
+            <span className="fw-bold ms-2">Apollon</span>
           </Navbar.Brand>
           <ApplicationVersion>{appVersion}</ApplicationVersion>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

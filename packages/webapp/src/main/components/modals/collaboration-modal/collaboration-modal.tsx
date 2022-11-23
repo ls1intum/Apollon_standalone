@@ -92,7 +92,7 @@ class CollaborationModalComponent extends Component<Props, State> {
         <Modal.Header closeButton>
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
-        <span className="pl-3">
+        <span className="ps-3">
           Please enter your name to highlight elements you are interacting with for other collaborators.
         </span>
         <Modal.Body>
