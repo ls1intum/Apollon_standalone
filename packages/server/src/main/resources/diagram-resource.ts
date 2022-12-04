@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-// @ts-ignore
 import pdfMake from 'pdfmake/build/pdfmake.min';
-// @ts-ignore
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
+import { dejavuSans } from '../fonts/dejavuSans';
 
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());
@@ -45,7 +43,15 @@ export class DiagramResource {
     if (width === undefined || height === undefined) {
       res.status(400).send('Both width and height must be defined');
     } else {
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      pdfMake.vfs = dejavuSans;
+      pdfMake.fonts = {
+        DejaVuSans: {
+          normal: 'DejaVuSans.ttf',
+          bold: 'DejaVuSans.ttf',
+          italics: 'DejaVuSans.ttf',
+          bolditalics: 'DejaVuSans.ttf'
+        },
+      }
       const svg = req.body.svg;
       var doc = pdfMake.createPdf({
         content: [
@@ -55,6 +61,9 @@ export class DiagramResource {
         ],
         pageSize: { width, height },
         pageMargins: 0,
+        defaultStyle: {
+          font: 'DejaVuSans'
+        }
       });
       const document = doc.getStream();
 
