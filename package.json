@@ -28,7 +28,7 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "7.2.2"
+    "concurrently": "7.6.0"
   },
   "dependencies": {}
 }

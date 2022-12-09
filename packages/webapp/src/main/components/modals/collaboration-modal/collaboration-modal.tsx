@@ -92,23 +92,22 @@ class CollaborationModalComponent extends Component<Props, State> {
         <Modal.Header closeButton>
           <Modal.Title>Collaboration Name</Modal.Title>
         </Modal.Header>
-        <span className="pl-3">
+        <span className="ps-3">
           Please enter your name to highlight elements you are interacting with for other collaborators.
         </span>
         <Modal.Body>
           <>
             <InputGroup className="mb-3">
               <FormControl
+                className="w-75"
                 isInvalid={!this.state.name}
                 placeholder={this.state.name}
                 onChange={this.handleChange}
                 ref={this.innerRef}
               />
-              <InputGroup.Append className="w-25">
-                <Button variant="outline-secondary" className="w-100" onClick={this.setCollaborationNameAndColor}>
-                  Confirm
-                </Button>
-              </InputGroup.Append>
+              <Button variant="outline-secondary" className="w-25" onClick={this.setCollaborationNameAndColor}>
+                Confirm
+              </Button>
             </InputGroup>
           </>
         </Modal.Body>
