@@ -29,7 +29,7 @@ function patternTabComponentForCategory(
     (patternTemplate) => patternTemplate.softwarePatternCategory === category,
   );
   return (
-    <Tab eventKey={category} title={category} tabClassName="pl-2 pr-2" className="mt-1">
+    <Tab eventKey={category} title={category} tabClassName="ps-2 pe-2" className="mt-1">
       <ListGroup id="diagram-type-list">
         {categoryPatterns.map((softwarePattern, index, array) => (
           <ListGroup.Item

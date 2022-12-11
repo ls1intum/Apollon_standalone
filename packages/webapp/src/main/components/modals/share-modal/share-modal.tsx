@@ -12,7 +12,7 @@ import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TooltipIcon from 'webapp/assets/tooltip.svg';
+import { InfoCircle } from 'react-bootstrap-icons';
 
 type OwnProps = {} & ModalContentProps;
 
@@ -141,7 +141,9 @@ class ShareModalComponent extends Component<Props, State> {
                 placement="bottom"
                 overlay={<Tooltip id="share-tooltip">Changing the diagram will extend the time period.</Tooltip>}
               >
-                <TooltipIcon />
+                <span className="tooltip-icon">
+                  <InfoCircle />
+                </span>
               </OverlayTrigger>
             </p>
 
@@ -196,12 +198,12 @@ class ShareModalComponent extends Component<Props, State> {
 
             {this.hasRecentlyPublished() && (
               <fieldset className="scheduler-border">
-                <legend className="scheduler-border">Recently shared Diagram:</legend>
+                <legend className="scheduler-border float-none w-auto">Recently shared Diagram:</legend>
                 <InputGroup>
                   {!this.state.token ? (
                     <FormControl readOnly value={this.getLinkForView()} />
                   ) : (
-                    <a className="w-75" target="blank" href={this.getLinkForView()}>
+                    <a target="blank" href={this.getLinkForView()}>
                       <FormControl
                         style={{ cursor: 'pointer', textDecoration: 'underline' }}
                         readOnly
@@ -209,11 +211,9 @@ class ShareModalComponent extends Component<Props, State> {
                       />
                     </a>
                   )}
-                  <InputGroup.Append>
-                    <Button variant="outline-secondary" className="w-100" onClick={() => this.copyLink(true)}>
-                      Copy Link
-                    </Button>
-                  </InputGroup.Append>
+                  <Button variant="outline-secondary" onClick={() => this.copyLink(true)}>
+                    Copy Link
+                  </Button>
                 </InputGroup>
               </fieldset>
             )}

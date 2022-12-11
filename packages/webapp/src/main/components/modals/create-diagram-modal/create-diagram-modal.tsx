@@ -92,7 +92,7 @@ class CreateDiagramModalComponent extends Component<Props, State> {
               >
                 {value}
                 {diagramsInBeta.includes(value) && (
-                  <Badge className="ml-1" variant="secondary">
+                  <Badge className="ml-1" bg="secondary">
                     Beta
                   </Badge>
                 )}

@@ -104,7 +104,7 @@ legend.scheduler-border {
   transition-duration: 0.25s;
 }
 
-#tooltip-bottom .arrow::before {
+#tooltip-bottom .tooltip-arrow::before {
   border-bottom-color: var(--apollon-background);
 }
 .tooltip.show {
@@ -122,7 +122,7 @@ legend.scheduler-border {
 .popover-content .head {
   font-size: 20px;
   font-weight: bold;
-  color: var(--warning);
+  color: var(--bs-warning);
 }
 .popover-content .head span {
   padding: 0 5px;
@@ -254,4 +254,9 @@ input:checked + .slider:before {
 .scheduler-border .form-control[readonly] {
   background-color: var(--apollon-gray);
   color: var(--apollon-btn-outline-secondary-color);
+}
+
+.navbar {
+  background-color: rgb(52, 58, 64);
+  padding: 0.5rem 1rem;
 }

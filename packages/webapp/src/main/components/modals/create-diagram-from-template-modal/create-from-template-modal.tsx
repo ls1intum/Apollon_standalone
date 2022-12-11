@@ -77,13 +77,15 @@ class DiagramFromTemplateModalComponent extends Component<Props, State> {
         <Modal.Body>
           <Tab.Container id="left-tabs-example" defaultActiveKey={this.state.selectedTemplateCategory}>
             <Row>
-              <Col sm={3} className="border-right border-secondary">
+              <Col sm={3} className="border-end border-secondary">
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
                     <Nav.Link
                       className="text-nowrap"
                       eventKey={TemplateCategory.SOFTWARE_PATTERN}
-                      onSelect={(templateCategory) => this.selectTemplateCategory(templateCategory as TemplateCategory)}
+                      onSelect={(templateCategory) =>
+                        this.selectTemplateCategory(templateCategory as unknown as TemplateCategory)
+                      }
                     >
                       {TemplateCategory.SOFTWARE_PATTERN}
                     </Nav.Link>

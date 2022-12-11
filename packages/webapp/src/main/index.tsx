@@ -4,6 +4,7 @@ import { RoutedApplication } from './application';
 import { setTheme } from './utils/theme-switcher';
 import { LocalStorageRepository } from '../main/services/local-storage/local-storage-repository';
 
+import 'bootstrap/dist/css/bootstrap.css';
 import './styles.css';
 
 const themePreference: string | null = LocalStorageRepository.getUserThemePreference();
