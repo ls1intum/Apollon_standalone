@@ -1,10 +1,63 @@
 # Apollon Standalone
 
-Standalone version of the [Apollon Editor](https://github.com/ls1intum/Apollon)
+Apollon Standalone is the Standalone version of the [Apollon Editor](https://github.com/ls1intum/Apollon)
 
 There are two variants how you can use this editor:
 1. As web application which only runs in the users environment (modeling functionality).
 2. With an application server which enables some extra features, like sharing of diagrams.
+
+It consists of following features:
+## Main Features
+### No account needed to use
+Users can use all the features of Standalone without the necessity of creating an account.
+All you have to do is goto the [URL](https://apollon.ase.in.tum.de/) and start drawing.
+
+### Easy to use editor
+The user interface of Apollon is simple to use.
+It works just like any other office and drawing tools that most of the users are familiar with.
+
+- Select the diagram type you want to draw by clicking on `File > New` menu. This selection determines the availability of elements that the user can use while drawing their diagram, making it easier for the users who are newly introduced to modeling.
+- Adding the element is as easy as dragging it from the elements menu and dropping it to the canvas. So is drawing connection between them, simply drag and connect two or multiple elements.
+- Layout of connection is drawn automatically by the editor. If you want to manually layout it, use the existing waypoints features.
+- Edit or style the text or change the colors of any elements by double clicking on it. An easy to use menu will allow you to do so.
+- Use keyboard shortcuts to copy, paste, delete and move the elements throughout the canvas.
+- Change the theme of the editor by clicking on dark/light mode switch.
+
+### Import and Export your diagrams
+Users can easily import the existing Apollon diagram to any editor that uses Apollon library and continue editing.
+
+![Import Diagram](/docs/images/Import.gif "Import Diagram")
+
+Exporting the diagrams is as easy as importing it. 
+Click on `File > Export` and select the format of the diagram to be exported as.
+Currently, Apollon standalone supports five different formats: `SVG`, `PNG (White Background)`, `PNG (Transparent Background)`, `JSON`, and `PDF`.
+
+![Export Diagram](/docs/images/Export.png "Export Diagram")
+
+### Create diagram from template
+Users in Apollon Standalone can also create diagram from template, if they do not want to draw a diagram from scratch. 
+To do that, all they have to do is click on `File > Start from Template` and select one of the template from list of available templates.
+
+![Start from Template](/docs/images/StartFromTemplate.gif "Start from Template")
+
+
+### Share your diagram with others
+Users can share the diagram in Apollon Standalone in four different types.
+- `Edit`: In this mode of sharing, user will be able to make changes to the shared diagram.
+- `Give Feedback`: In this mode of sharing, user will not be able to make changes to the shared diagram, but can only provide feedback to it.
+- `See Feedback`: In this mode of sharing, user can view feedback provided to the shared diagram.
+- `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
+
+![Real-time collaboration](/docs/images/ShareDialog.png "Real-time collaboration")
+
+
+### Collaborate in real-time
+Apollon Standalone can be used as a collaborative modeling canvas, where multiple users can work collaboratively.
+Any changes made by one user will be visible throughout the canvas of all other users that are in collaboration session in real time.
+Active elements that are interacted by users in a session, are highlighted in the canvas.
+
+![Real-time collaboration](/docs/images/RealTimeCollaboration.gif "Real-time collaboration")
+
 
 ## Build the application
 
