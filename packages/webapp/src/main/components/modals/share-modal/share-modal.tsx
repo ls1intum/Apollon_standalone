@@ -84,7 +84,7 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   publishDiagram = () => {
-    if (this.props.diagram) {
+    if (this.props.diagram && this.props.diagram.model && this.props.diagram.model.elements.length > 0) {
       DiagramRepository.publishDiagramOnServer(this.props.diagram)
         .then((token: string) => {
           this.setState({ token }, () => {
@@ -107,6 +107,13 @@ class ShareModalComponent extends Component<Props, State> {
           // tslint:disable-next-line:no-console
           console.error(error);
         });
+    } else {
+      this.props.createError(
+        ErrorActionType.DISPLAY_ERROR,
+        'Sharing diagram failed',
+        'You are trying to share an empty diagram. Please insert at least one element to the canvas before sharing.',
+      );
+      this.handleClose();
     }
   };
 
