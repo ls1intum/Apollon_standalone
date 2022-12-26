@@ -239,5 +239,5 @@ For more information please refer to the [documentation](https://classic.yarnpkg
 
 > ***Note***: While making changes in the *Apollon* project, for the changes to get reflected in *Standalone*, execute the following workflow:
 >
->   - Recompile the Apollon project by executing `yarn prepare`
->   - Rebuild the Standalone project by executing `yarn build`
+> -   Recompile the Apollon project by executing `yarn prepare`
+> -   Rebuild the Standalone project by executing `yarn build`
