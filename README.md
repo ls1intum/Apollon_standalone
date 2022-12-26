@@ -8,22 +8,26 @@ There are two variants how you can use this editor:
 
 It consists of following features:
 ## Main Features
+
 ### No account needed to use
+
 Users can use all the features of Standalone without the necessity of creating an account.
 All you have to do is go to the [URL](https://apollon.ase.in.tum.de/) and start drawing.
 
 ### Easy to use editor
+
 The user interface of Apollon is simple to use.
 It works just like any other office and drawing tool that most users are familiar with.
 
-- Select the diagram type you want to draw by clicking on the `File > New` menu. This selection determines the availability of elements that the user can use while drawing their diagram, making it easier for users who are newly introduced to modeling.
-- Adding the element is as easy as dragging it from the elements menu and dropping it to the canvas. So is drawing the connection between them, simply drag and connect two or multiple elements.
-- The layout of the connection is drawn automatically by the editor. If you want to manually layout it, use the existing waypoints features.
-- Edit or style the text or change the colors of any elements by double-clicking on them. An easy-to-use menu will allow you to do so.
-- Use keyboard shortcuts to copy, paste, delete and move the elements throughout the canvas.
-- Change the theme of the editor by clicking on the dark/light mode switch.
+-  Select the diagram type you want to draw by clicking on the `File > New` menu. This selection determines the availability of elements that the user can use while drawing their diagram, making it easier for users who are newly introduced to modeling.
+-  Adding the element is as easy as dragging it from the elements menu and dropping it to the canvas. So is drawing the connection between them, simply drag and connect two or multiple elements.
+-  The layout of the connection is drawn automatically by the editor. If you want to manually layout it, use the existing waypoints features.
+-  Edit or style the text or change the colors of any elements by double-clicking on them. An easy-to-use menu will allow you to do so.
+-  Use keyboard shortcuts to copy, paste, delete and move the elements throughout the canvas.
+-  Change the theme of the editor by clicking on the dark/light mode switch.
 
 ### Import and Export your diagrams
+
 Users can easily import the existing Apollon diagram to any editor that uses the Apollon library and continue editing.
 
 ![Import Diagram](/docs/images/Import.gif "Import Diagram")
@@ -35,23 +39,24 @@ Currently, Apollon standalone supports five different formats: `SVG`, `PNG (Whit
 ![Export Diagram](/docs/images/Export.png "Export Diagram")
 
 ### Create diagram from template
+
 Users in Apollon Standalone can also create a diagram from a template if they do not want to draw a diagram from scratch. 
 To do that, all they have to do is click on `File > Start from Template` and select one of the templates from the list of available templates.
 
 ![Start from Template](/docs/images/StartFromTemplate.gif "Start from Template")
 
-
 ### Share your diagram with others
+
 Users can share the diagram in Apollon Standalone in four different types.
-- `Edit`: In this mode of sharing, the user will be able to make changes to the shared diagram.
-- `Give Feedback`: In this mode of sharing, the user will not be able to make changes to the shared diagram, but can only provide feedback to it.
-- `See Feedback`: In this mode of sharing, the user can view feedback provided to the shared diagram.
-- `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
+-  `Edit`: In this mode of sharing, the user will be able to make changes to the shared diagram.
+-  `Give Feedback`: In this mode of sharing, the user will not be able to make changes to the shared diagram, but can only provide feedback to it.
+-  `See Feedback`: In this mode of sharing, the user can view feedback provided to the shared diagram.
+-  `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
 
 ![Real-time collaboration](/docs/images/ShareDialog.png "Real-time collaboration")
 
-
 ### Collaborate in real-time
+
 Apollon Standalone can be used as a collaborative modeling canvas, where multiple users can work collaboratively.
 Any changes made by one user will be visible throughout the canvas of all other users that are in collaboration sessions in real-time.
 Active elements that are interacted with by users in a session are highlighted in the canvas.
@@ -261,8 +266,8 @@ yarn start
 You will now have a Standalone project using the local version of Apollon. (Instead of the one from the npm repository).
 
 > NOTE: While making changes in the Apollon project, for the changes to get reflected in Standalone, execute the following workflow:
-> 1. Recompile the Apollon project by executing `yarn prepare`
-> 2. Rebuild the Standalone project by executing `yarn build`
+ > 1. Recompile the Apollon project by executing `yarn prepare`
+ > 2. Rebuild the Standalone project by executing `yarn build`
 
 ### To reverse this process 
 ```
@@ -273,10 +278,3 @@ yarn unlink
 yarn unlink "@ls1intum/apollon"
 ```
 For more information please refer to the [documentation](https://classic.yarnpkg.com/lang/en/docs/cli/link/) of yarn.
-
-
-
-
-
-
-
