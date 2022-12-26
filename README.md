@@ -232,12 +232,12 @@ yarn start
 While developing the Standalone project, it is often required to make changes in the Apollon project.
 This can be achieved by executing the following workflow.
 
-1. In the *Apollon* project: Generate a symlink by executing `yarn link` command.
-2. In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `yarn link "@ls1intum/apollon"` command.
+1.  In the *Apollon* project: Generate a symlink by executing `yarn link` command.
+2.  In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `yarn link "@ls1intum/apollon"` command.
 
 For more information please refer to the [documentation](https://classic.yarnpkg.com/lang/en/docs/cli/link/) of yarn.
 
 > ***Note***: While making changes in the *Apollon* project, for the changes to get reflected in *Standalone*, execute the following workflow:
 >
-> - Recompile the Apollon project by executing `yarn prepare`
-> - Rebuild the Standalone project by executing `yarn build`
+>   - Recompile the Apollon project by executing `yarn prepare`
+>   - Rebuild the Standalone project by executing `yarn build`
