@@ -232,52 +232,12 @@ yarn start
 While developing the Standalone project, it is often required to make changes in the Apollon project.
 This can be achieved by executing the following workflow.
 
-#### In the Apollon project (Generate a symlink)
-```
-# Clone the Apollon repository
-git clone https://github.com/ls1intum/Apollon
+1. In the *Apollon* project: Generate a symlink by executing `yarn link` command.
+2. In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `yarn link "@ls1intum/apollon"` command.
 
-# Install dependencies
-yarn install
-
-# Generate a link to the Apollon project
-yarn link (This command will generate a symlink of Apollon as "@ls1intum/apollon")
-
-# Recompile the project (Re-run this command whenever changes to Apollon are made)
-yarn prepare
-```
-Once the symlink of Apollon is generated, we will now link the generated symlink to the Standalone project.
-
-#### In standalone project (Link the symlink)
-
-```
-# Clone the Apollon repository
-git clone https://github.com/ls1intum/Apollon_standalone
-
-# Install dependencies
-yarn install
-
-# Link the local symlink of Apollon
-yarn link "@ls1intum/apollon"
-
-# Build the Standalone project (Re-run this command whenever `yarn prepare` command is executed in Apollon)
-yarn build
-
-# Start the project
-yarn start
-```
-You will now have a Standalone project using the local version of Apollon. (Instead of the one from the npm repository).
-
-> NOTE: While making changes in the Apollon project, for the changes to get reflected in Standalone, execute the following workflow:
->   - Recompile the Apollon project by executing `yarn prepare`
->   - Rebuild the Standalone project by executing `yarn build`
-
-### To reverse this process 
-```
-# In the Apollon project
-yarn unlink
-
-# In the Standalone project
-yarn unlink "@ls1intum/apollon"
-```
 For more information please refer to the [documentation](https://classic.yarnpkg.com/lang/en/docs/cli/link/) of yarn.
+
+> ***Note***: While making changes in the *Apollon* project, for the changes to get reflected in *Standalone*, execute the following workflow:
+>
+> - Recompile the Apollon project by executing `yarn prepare`
+> - Rebuild the Standalone project by executing `yarn build`
