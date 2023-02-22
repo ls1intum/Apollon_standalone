@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { RoutedApplication } from './application';
 import { setTheme } from './utils/theme-switcher';
 import { LocalStorageRepository } from '../main/services/local-storage/local-storage-repository';
+import { createRoot } from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles.css';
@@ -24,4 +24,6 @@ if (!themePreference) {
   setTheme(themePreference);
 }
 
-ReactDOM.render(<RoutedApplication />, document.getElementById('root') as HTMLElement);
+const container = document.getElementById('root') as HTMLElement;
+const root = createRoot(container);
+root.render(<RoutedApplication />);
