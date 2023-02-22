@@ -1,5 +1,9 @@
-processors:
-  - stylelint-processor-styled-components
-extends:
-  - stylelint-config-recommended
-  - stylelint-config-styled-components
+{
+  "extends": ["stylelint-config-recommended"],
+  "customSyntax": "@stylelint/postcss-css-in-js",
+  "rules": {
+    "no-empty-source": null,
+    "no-duplicate-selectors": null,
+    "function-no-unknown": null
+  }
+}
