@@ -1,79 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
-import { ModalContentType, ModalSize } from './application-modal-types';
 import { ApplicationModalContent } from './application-modal-content';
 import { ModalRepository } from '../../services/modal/modal-repository';
+import { useSelector } from 'react-redux';
 
-type OwnProps = {};
+export const ApplicationModal = () => {
+  const [isClosable, setIsClosable] = useState(true);
+  const displayModal = useSelector((state: ApplicationState) => state.modal.type);
+  const modalSize = useSelector((state: ApplicationState) => state.modal.size);
+  const dispatch = useDispatch();
 
-type StateProps = {
-  displayModal?: ModalContentType | null;
-  modalSize: ModalSize;
-};
-
-type DispatchProps = {
-  close: typeof ModalRepository.hideModal;
-};
-
-type Props = StateProps & DispatchProps & OwnProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => {
-    return { displayModal: state.modal.type, modalSize: state.modal.size };
-  },
-  {
-    close: ModalRepository.hideModal,
-  },
-);
-
-const getInitialState = () => {
-  return {
-    closable: true,
-  };
-};
-
-type State = typeof getInitialState;
-
-class ApplicationModalComponent extends Component<Props, State> {
-  state = getInitialState();
-
-  onClosableChange = (closable: boolean) => {
-    this.setState({ closable });
+  const onClosableChange = (closable: boolean) => {
+    setIsClosable(closable);
   };
 
-  handleClose = () => {
-    if (this.state.closable) {
-      this.props.close();
+  const handleClose = () => {
+    if (isClosable) {
+      dispatch(ModalRepository.hideModal());
     }
   };
 
-  render() {
-    if (!this.props.displayModal) {
-      // Problem: when returned null the listeners are still kept at the document level to close the modal -> they hinder dropdowns to open
-      // -> dropdowns: on show -> stopPropagation
-      // if this is resolved at some point, the visibility management in menus can be removed
-      return null;
-    }
-
-    const ModalContent = ApplicationModalContent[this.props.displayModal];
-
-    return createPortal(
-      <Modal
-        id="application-modal"
-        aria-labelledby="application-modal"
-        size={this.props.modalSize}
-        centered
-        show
-        onHide={this.handleClose}
-      >
-        <ModalContent close={this.props.close} onClosableChange={this.onClosableChange} />
-      </Modal>,
-      document.body,
-    );
+  if (!displayModal) {
+    // Problem: when returned null the listeners are still kept at the document level to close the modal -> they hinder dropdowns to open
+    // -> dropdowns: on show -> stopPropagation
+    // if this is resolved at some point, the visibility management in menus can be removed
+    return null;
   }
-}
 
-export const ApplicationModal = enhance(ApplicationModalComponent);
+  const ModalContent = ApplicationModalContent[displayModal];
+
+  return createPortal(
+    <Modal
+      id="application-modal"
+      aria-labelledby="application-modal"
+      size={modalSize}
+      centered
+      show
+      onHide={handleClose}
+    >
+      <ModalContent close={handleClose} onClosableChange={onClosableChange} />
+    </Modal>,
+    document.body,
+  );
+};
