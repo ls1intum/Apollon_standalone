@@ -1,7 +1,7 @@
 import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection } from '@ls1intum/apollon';
-import React, { Component, ComponentClass } from 'react';
+import React, { Component, FunctionComponent } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouterTypes, withRouter } from '../../hocs/withRouter';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
 import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
@@ -31,10 +31,6 @@ const ApollonContainer = styled.div`
 
 type OwnProps = {};
 
-type RouteProps = {
-  token: string | undefined;
-};
-
 type State = {};
 
 type StateProps = {
@@ -55,9 +51,9 @@ type DispatchProps = {
   openModal: typeof ModalRepository.showModal;
 };
 
-type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext & RouteComponentProps<RouteProps>;
+type Props = OwnProps & StateProps & DispatchProps & ApollonEditorContext & RouterTypes;
 
-const enhance = compose<ComponentClass<OwnProps>>(
+const enhance = compose<FunctionComponent<OwnProps>>(
   withRouter,
   withApollonEditor,
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
@@ -117,7 +113,7 @@ class ApollonEditorComponent extends Component<Props, State> {
         editor.subscribeToModelDiscreteChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           if (this.client) {
-            const { token } = this.props.match.params;
+            const { token } = this.props.params;
             const { collaborationName, collaborationColor } = this.props;
             this.client.send(
               JSON.stringify({
@@ -138,7 +134,7 @@ class ApollonEditorComponent extends Component<Props, State> {
         editor.subscribeToSelectionChange((selection: Selection) => {
           if (this.client) {
             const { collaborationName, collaborationColor } = this.props;
-            const { token } = this.props.match.params;
+            const { token } = this.props.params;
             const selElemIds = selection.elements;
             const elements = this.props.diagram?.model?.elements;
             const updatedElement = updateSelectedByArray(selElemIds, elements!, collaborationName, collaborationColor);
@@ -164,7 +160,7 @@ class ApollonEditorComponent extends Component<Props, State> {
 
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
       // hosted with backend
-      const { token } = this.props.match.params;
+      const { token } = this.props.params;
       if (token) {
         // get query param
         const query = new URLSearchParams(this.props.location.search);
