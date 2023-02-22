@@ -6,8 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { ExportActionTypes, ExportJSONAction } from '../export-types';
 import { ApollonEditor } from '@ls1intum/apollon';
 import { Diagram } from '../../diagram/diagram-types';
+import { Observable } from 'rxjs';
 
-export const exportJSONEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {
+export const exportJSONEpic: Epic<Action, FileDownloadAction, ApplicationState> = (
+  action$: Observable<Action<ExportActionTypes>>,
+) => {
   return action$.pipe(
     filter((action) => action.type === ExportActionTypes.EXPORT_JSON),
     map((action) => action as ExportJSONAction),
