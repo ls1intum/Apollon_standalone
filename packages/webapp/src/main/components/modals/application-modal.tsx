@@ -23,6 +23,10 @@ export const ApplicationModal = () => {
     }
   };
 
+  const closeModal = () => {
+    dispatch(ModalRepository.hideModal());
+  };
+
   if (!displayModal) {
     // Problem: when returned null the listeners are still kept at the document level to close the modal -> they hinder dropdowns to open
     // -> dropdowns: on show -> stopPropagation
@@ -41,7 +45,7 @@ export const ApplicationModal = () => {
       show
       onHide={handleClose}
     >
-      <ModalContent close={handleClose} onClosableChange={onClosableChange} />
+      <ModalContent close={closeModal} onClosableChange={onClosableChange} />
     </Modal>,
     document.body,
   );
