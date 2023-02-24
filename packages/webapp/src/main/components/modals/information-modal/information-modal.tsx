@@ -59,6 +59,10 @@ export class InformationModal extends Component<Props, State> {
                   {apollonLibraryVersion}
                 </td>
               </tr>
+              <tr>
+                <td>Branch:</td>
+                <td>enhancement/upgrade-react-version</td>
+              </tr>
             </tbody>
           </table>
         </Modal.Body>
