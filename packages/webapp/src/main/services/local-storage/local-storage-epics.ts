@@ -1,6 +1,6 @@
 import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
 import { ApplicationState } from '../../components/store/application-state';
-import { combineEpics, Epic, ofType } from 'redux-observable';
+import { combineEpics, Epic, ofType, StateObservable } from 'redux-observable';
 import { Action } from 'redux';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant';
@@ -10,11 +10,14 @@ import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
 import { ErrorActionType, DisplayErrorAction } from '../error-management/error-types';
 import { ErrorRepository } from '../error-management/error-repository';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
 import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
 
-export const storeEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
+export const storeEpic: Epic<Action, StopAction, ApplicationState> = (
+  action$: Observable<Action<LocalStorageActionTypes>>,
+  store: StateObservable<ApplicationState>,
+) => {
   return action$.pipe(
     filter((action) => action.type === LocalStorageActionTypes.STORE),
     map((action) => action as StoreAction),
@@ -56,7 +59,7 @@ export const loadDiagramEpic: Epic<
   Action,
   UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction | StopAction,
   ApplicationState
-> = (action$, store) => {
+> = (action$: Observable<Action<LocalStorageActionTypes>>) => {
   return action$.pipe(
     ofType(LocalStorageActionTypes.LOAD),
     map((action) => action as LoadAction),

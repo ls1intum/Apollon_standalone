@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 import { Epic, ofType } from 'redux-observable';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ApplicationState } from '../../components/store/application-state';
 import { uuid } from '../../utils/uuid';
@@ -17,7 +17,7 @@ export const importEpic: Epic<
   Action,
   UpdateDiagramAction | ChangeDiagramTypeAction | DisplayErrorAction | StopAction,
   ApplicationState
-> = (action$, store) => {
+> = (action$: Observable<Action<ImportActionTypes>>) => {
   return action$.pipe(
     ofType(ImportActionTypes.IMPORT_JSON),
     map((action) => action as ImportJSONAction),

@@ -4,8 +4,11 @@ import { filter, map } from 'rxjs/operators';
 import { FileDownloadAction, FileDownloadActionTypes } from './file-download-types';
 import { ApplicationState } from '../../components/store/application-state';
 import { StopAction, StopActionType } from '../actions';
+import { Observable } from 'rxjs';
 
-export const fileDownloadEpic: Epic<Action, StopAction, ApplicationState> = (action$, store) => {
+export const fileDownloadEpic: Epic<Action, StopAction, ApplicationState> = (
+  action$: Observable<Action<FileDownloadActionTypes>>,
+) => {
   return action$.pipe(
     filter((action) => action.type === FileDownloadActionTypes.FILE_DOWNLOAD),
     map((action) => action as FileDownloadAction),

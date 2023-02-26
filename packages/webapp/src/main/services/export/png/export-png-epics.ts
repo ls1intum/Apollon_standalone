@@ -5,9 +5,11 @@ import { concatAll, filter, map } from 'rxjs/operators';
 import { ExportActionTypes, ExportPNGAction } from '../export-types';
 import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 
-export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> = (action$, store) => {
+export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> = (
+  action$: Observable<Action<ExportActionTypes>>,
+) => {
   return action$.pipe(
     filter((action) => action.type === ExportActionTypes.EXPORT_PNG),
     map((action) => action as ExportPNGAction),

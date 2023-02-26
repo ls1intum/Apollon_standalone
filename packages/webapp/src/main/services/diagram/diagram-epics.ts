@@ -1,4 +1,4 @@
-import { combineEpics, Epic } from 'redux-observable';
+import { combineEpics, Epic, StateObservable } from 'redux-observable';
 import { Action } from 'redux';
 import { ChangeDiagramTypeAction } from '../editor-options/editor-options-types';
 import { ApplicationState } from '../../components/store/application-state';
@@ -9,12 +9,11 @@ import moment from 'moment';
 import { DiagramRepository } from './diagram-repository';
 import { StoreAction } from '../local-storage/local-storage-types';
 import { LocalStorageRepository } from '../local-storage/local-storage-repository';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EditorOptionsRepository } from '../editor-options/editor-options-repository';
 
 export const createDiagramEpic: Epic<Action, UpdateDiagramAction | ChangeDiagramTypeAction, ApplicationState> = (
-  action$,
-  store,
+  action$: Observable<Action<DiagramActionTypes>>,
 ) => {
   return action$.pipe(
     filter((action) => action.type === DiagramActionTypes.CREATE_DIAGRAM),
@@ -41,7 +40,7 @@ export const updateDiagramEpic: Epic<
   Action,
   StoreAction | UpdateDiagramAction | ChangeDiagramTypeAction,
   ApplicationState
-> = (action$, store) => {
+> = (action$: Observable<Action<DiagramActionTypes>>, store: StateObservable<ApplicationState>) => {
   return action$.pipe(
     filter((action) => action.type === DiagramActionTypes.UPDATE_DIAGRAM),
     map((action) => action as UpdateDiagramAction),
@@ -54,5 +53,4 @@ export const updateDiagramEpic: Epic<
   );
 };
 
-// TODO: Fix the types when library fixes it
 export const diagramEpics = combineEpics(createDiagramEpic, updateDiagramEpic) as any;
