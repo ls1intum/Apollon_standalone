@@ -1,11 +1,11 @@
 import { Epic } from 'redux-observable';
 import { Action } from 'redux';
 import { ApplicationState } from '../../../components/store/application-state';
-import { concatAll, filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { ExportActionTypes, ExportPNGAction } from '../export-types';
 import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { FileDownloadAction, FileDownloadActionTypes } from '../../file-download/file-download-types';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> = (
   action$: Observable<Action<ExportActionTypes>>,
@@ -13,24 +13,20 @@ export const exportPNGEpic: Epic<Action, FileDownloadAction, ApplicationState> =
   return action$.pipe(
     filter((action) => action.type === ExportActionTypes.EXPORT_PNG),
     map((action) => action as ExportPNGAction),
-    map((action: ExportPNGAction) => {
+    switchMap(async (action: ExportPNGAction) => {
       const apollonEditor: ApollonEditor = action.payload.editor;
       const fileName: string = `${action.payload.diagramTitle}.png`;
-      const apollonSVG: SVG = apollonEditor.exportAsSVG();
+      const apollonSVG: SVG = await apollonEditor.exportAsSVG();
       const setWhiteBackground: boolean = action.payload.setWhiteBackground;
-      return from(
-        convertRenderedSVGToPNG(apollonSVG, setWhiteBackground).then((png: Blob) => {
-          const fileToDownload = new File([png], fileName);
-          return {
-            type: FileDownloadActionTypes.FILE_DOWNLOAD,
-            payload: {
-              file: fileToDownload,
-            },
-          };
-        }),
-      );
+      const png: Blob = await convertRenderedSVGToPNG(apollonSVG, setWhiteBackground);
+      const fileToDownload = new File([png], fileName);
+      return {
+        type: FileDownloadActionTypes.FILE_DOWNLOAD,
+        payload: {
+          file: fileToDownload,
+        },
+      };
     }),
-    concatAll(),
   );
 };
 
