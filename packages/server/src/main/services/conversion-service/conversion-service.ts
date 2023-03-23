@@ -2,7 +2,7 @@ import 'jsdom-global/register';
 import { ApollonEditor, SVG, UMLModel } from '@ls1intum/apollon';
 
 export class ConversionService {
-  convertToSvg = (model: UMLModel): SVG => {
+  convertToSvg = async (model: UMLModel): Promise<SVG> => {
     //@ts-ignore
     document.body.innerHTML = '<!doctype html><html><body><div></div></body></html>';
 
@@ -22,7 +22,7 @@ export class ConversionService {
 
     editor.model = model;
 
-    const svg: SVG = editor.exportAsSVG();
+    const svg: SVG = await editor.exportAsSVG();
 
     return svg;
   };
