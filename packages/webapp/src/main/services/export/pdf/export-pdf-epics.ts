@@ -2,7 +2,7 @@ import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { Action } from 'redux';
 import { Epic, ofType } from 'redux-observable';
 import { Observable } from 'rxjs';
-import { concatAll, map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ApplicationState } from '../../../components/store/application-state';
 import { StopAction, StopActionType } from '../../actions';
 import { DiagramRepository } from '../../diagram/diagram-repository';
@@ -15,18 +15,19 @@ export const exportPDFEpic: Epic<Action, StopAction | FileDownloadAction, Applic
   return action$.pipe(
     ofType(ExportActionTypes.EXPORT_PDF),
     map((action) => action as ExportPDFAction),
-    map(async (action: ExportPDFAction) => {
+    switchMap(async (action: ExportPDFAction) => {
       const apollonEditor: ApollonEditor = action.payload.editor;
       const filename: string = `${action.payload.diagramTitle}.pdf`;
-      const apollonSVG: SVG = apollonEditor.exportAsSVG();
+      const apollonSVG: SVG = await apollonEditor.exportAsSVG();
       const { width, height } = apollonSVG.clip;
       const blob = await DiagramRepository.convertSvgToPdf(apollonSVG.svg, width, height);
 
       if (blob) {
+        const fileToDownload = new Blob([blob]);
         return {
           type: FileDownloadActionTypes.FILE_DOWNLOAD,
           payload: {
-            file: new Blob([blob]),
+            file: fileToDownload,
             filename,
           },
         };
@@ -36,6 +37,5 @@ export const exportPDFEpic: Epic<Action, StopAction | FileDownloadAction, Applic
         type: StopActionType.STOP_ACTION,
       };
     }),
-    concatAll(),
   );
 };

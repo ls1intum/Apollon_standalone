@@ -9,13 +9,13 @@ import { UMLModel } from '@ls1intum/apollon';
 export class ConversionResource {
   conversionService: ConversionService = new ConversionService();
 
-  convert = (req: Request, res: Response) => {
+  convert = async (req: Request, res: Response) => {
     if (req.body && req.body.model) {
       let model = req.body.model;
       if (typeof model === 'string') {
         model = JSON.parse(model);
       }
-      const { svg, clip } = this.conversionService.convertToSvg(<UMLModel>(<unknown>model));
+      const { svg, clip } = await this.conversionService.convertToSvg(<UMLModel>(<unknown>model));
       const { width, height } = clip;
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       var doc = pdfMake.createPdf({

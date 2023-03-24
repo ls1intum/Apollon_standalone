@@ -16,7 +16,7 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
-    "@ls1intum/apollon": "2.13.0",
+    "@ls1intum/apollon": "2.13.2",
     "bootstrap": "5.2.3",
     "moment": "2.29.4",
     "postcss-syntax": "0.36.2",
