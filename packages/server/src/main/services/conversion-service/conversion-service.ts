@@ -14,9 +14,7 @@ export class ConversionService {
       height: 10,
     });
 
-    // @ts-ignore
     const container = document.querySelector('div')!;
-
     const editor = new ApollonEditor(container, {});
 
     editor.model = model;
