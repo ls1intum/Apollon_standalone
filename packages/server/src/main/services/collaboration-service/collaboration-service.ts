@@ -11,7 +11,7 @@ export class CollaborationService {
   private wsServer: any;
   private clients: { [key: string]: Client } = {};
   private diagramService: DiagramFileStorageService;
-  private interval: NodeJS.Timeout;
+  private readonly interval: NodeJS.Timeout;
   constructor() {
     this.wsServer = new WebSocket.Server({ noServer: true });
     this.diagramService = new DiagramFileStorageService();

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import pdfMake from 'pdfmake/build/pdfmake.min';
 // @ts-ignore
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { DiagramDTO } from '../../../../shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
 
@@ -47,7 +47,7 @@ export class DiagramResource {
     } else {
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const svg = req.body.svg;
-      var doc = pdfMake.createPdf({
+      const doc = pdfMake.createPdf({
         content: [
           {
             svg,

@@ -4,8 +4,12 @@
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:ls1intum/Apollon_standalone.git",
-  "author": "Tobias Priesching <tobias.priesching@gmail.com>",
   "license": "MIT",
+  "author": {
+    "name": "Stephan Krusche",
+    "email": "krusche@tum.de",
+    "url": "https://ase.cit.tum.de/krusche"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
