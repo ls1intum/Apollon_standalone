@@ -32,7 +32,7 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "7.6.0"
+    "concurrently": "8.2.0"
   },
   "dependencies": {},
   "resolutions": {
