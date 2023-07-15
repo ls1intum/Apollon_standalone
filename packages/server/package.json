@@ -16,7 +16,7 @@
     "jsdom": "20.0.0",
     "jsdom-global": "3.0.2",
     "pdfmake": "0.2.7",
-    "shared": "1.7.0"
+    "shared": "1.7.1"
   },
   "devDependencies": {
     "@types/cors": "2.8.13",
