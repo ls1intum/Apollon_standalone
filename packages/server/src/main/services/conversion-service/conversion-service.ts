@@ -16,9 +16,9 @@ export class ConversionService {
 
     const container = document.querySelector('div')!;
     const editor = new ApollonEditor(container, {});
-
+    await editor.nextRender;
     editor.model = model;
-
+    await editor.nextRender;
     return editor.exportAsSVG();
   };
 }
