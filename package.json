@@ -32,12 +32,12 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "8.2.0"
+    "concurrently": "8.2.1"
   },
   "dependencies": {},
   "resolutions": {
     "semver": "7.5.4",
-    "word-wrap": "1.2.3",
+    "word-wrap": "1.2.5",
     "tough-cookie": "4.1.3"
   }
 }
