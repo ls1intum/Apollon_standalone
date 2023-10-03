@@ -1,4 +1,5 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
+
 const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export function randomString(length: number) {

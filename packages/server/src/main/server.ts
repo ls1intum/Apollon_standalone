@@ -27,6 +27,7 @@ app.get('/*', (req, res) => {
 const collaborationService = new CollaborationService();
 
 const server = app.listen(port, () => {
+    // tslint:disable-next-line:no-console
   console.log('Apollon Standalone Server listening at http://localhost:%s', port);
 });
 

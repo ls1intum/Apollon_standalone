@@ -32,7 +32,9 @@
     "update": "yarn upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "8.2.1"
+    "concurrently": "8.2.1",
+    "@stylelint/postcss-css-in-js": "0.38.0",
+    "postcss": "8.4.31"
   },
   "dependencies": {},
   "resolutions": {
