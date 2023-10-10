@@ -74,13 +74,13 @@ Active elements that are interacted with by users in a session are highlighted i
 git clone https://github.com/ls1intum/Apollon_standalone
 
 # install the dependencies
-yarn install
+npm install
 
 # set environment variable
 export APPLICATION_SERVER_VERSION=0
 
 # build the web application
-yarn build:webapp
+npm run build:webapp
 
 # the output can be found in build/webapp directory of the project root
 ```
@@ -104,14 +104,14 @@ There are two variants to set this up:
 git clone https://github.com/ls1intum/Apollon_standalone
 
 # install the dependencies
-yarn install
+npm install
 
 # set environment variable
 export APPLICATION_SERVER_VERSION=1
 export DEPLOYMENT_URL=https://apollon.ase.in.tum.de
 
 # build the web application and the application server
-yarn build
+npm run build
 
 # the output can be found in build/webapp and build/server directory of the project root
 ```
@@ -200,7 +200,7 @@ run docker container
 docker run -d --name apollon_standalone -p 8080:8080 apollon_standalone
 
 # build the web application and the application server
-yarn build
+npm run build
 
 # the output can be found in build/webapp and build/server directory of the project root
 ```
@@ -216,13 +216,13 @@ docker run -it --entrypoint /bin/bash apollon_standalone
 
 ```
 # installs dependencies
-yarn install
+npm install
 
 # build application
-yarn build
+npm run build
 
 # start webpack dev server
-yarn start
+npm run start
 
 # accessible via localhost:8888 (webpack dev server with proxy to application server)
 # accesible via localhost:8080 (application server with static files)
@@ -232,12 +232,12 @@ yarn start
 While developing the Standalone project, it is often required to make changes in the Apollon project.
 This can be achieved by executing the following workflow.
 
-1.  In the *Apollon* project: Generate a symlink by executing `yarn link` command.
-2.  In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `yarn link "@ls1intum/apollon"` command.
+1.  In the *Apollon* project: Generate a symlink by executing `npm link` command.
+2.  In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `npm link "@ls1intum/apollon"` command.
 
-For more information please refer to the [documentation](https://classic.yarnpkg.com/lang/en/docs/cli/link/) of yarn.
+For more information please refer to the [documentation](https://docs.npmjs.com/cli/v9/commands/npm-link) of npm.
 
 > ***Note***: While making changes in the *Apollon* project, for the changes to get reflected in *Standalone*, execute the following workflow:
 >
-> -   Recompile the Apollon project by executing `yarn prepare`
-> -   Rebuild the Standalone project by executing `yarn build`
+> -   Recompile the Apollon project by executing `npm run prepare`
+> -   Rebuild the Standalone project by executing `npm run build`

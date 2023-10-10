@@ -6,7 +6,7 @@
     "clean": "rm -rf ../../build/server",
     "start": "ts-node-dev src/main/server.ts",
     "build": "webpack --config webpack/webpack.config.js",
-    "lint": "tslint --force -p tsconfig.json -c tslint.json"
+    "lint": "eslint -c .eslintrc.js src/main"
   },
   "dependencies": {
     "body-parser": "1.20.2",
@@ -23,7 +23,15 @@
     "@types/express": "4.17.17",
     "@types/node": "20.5.8",
     "@types/pdfmake": "0.2.2",
+    "@typescript-eslint/eslint-plugin": "6.7.4",
+    "@typescript-eslint/parser": "6.7.4",
     "copy-webpack-plugin": "11.0.0",
+    "eslint": "8.51.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-jsdoc": "46.8.2",
+    "eslint-plugin-prefer-arrow": "1.2.3",
+    "eslint-plugin-prettier": "5.0.0",
+    "eslint-plugin-react": "7.33.2",
     "ts-node": "10.9.1",
     "ts-node-dev": "2.0.0",
     "tslint": "6.1.3",
