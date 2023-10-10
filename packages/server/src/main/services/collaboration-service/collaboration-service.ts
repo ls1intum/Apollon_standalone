@@ -1,4 +1,4 @@
-//@ts-ignore
+// @ts-ignore
 import WebSocket from 'ws';
 import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
@@ -22,13 +22,14 @@ export class CollaborationService {
           return ws.terminate();
         }
         ws.isAlive = false;
+        // tslint:disable-next-line:no-empty
         ws.ping(() => {});
       });
     }, 2000);
     this.wsServer.on('connection', (socket: any) => {
       socket.apollonId = randomString(15);
       socket.isAlive = true;
-      socket.on('pong', function () {
+      socket.on('pong', () => {
         socket.isAlive = true;
       });
       socket.on('message', (message: any) => {
