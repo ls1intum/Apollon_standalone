@@ -219,7 +219,7 @@ docker run -it --entrypoint /bin/bash apollon_standalone
 npm install
 
 # build application
-npm run build
+npm run build:local
 
 # start webpack dev server
 npm run start
