@@ -135,12 +135,12 @@ class ApollonEditorComponent extends Component<Props, State> {
           if (this.client) {
             const { collaborationName, collaborationColor } = this.props;
             const { token } = this.props.params;
-            const selElemIds = selection.elements;
-            const elements = this.props.diagram?.model?.elements;
+            const selElemIds = Object.keys(selection.elements);
+            const elements = Object.values(this.props.diagram?.model?.elements || {});
             const updatedElement = updateSelectedByArray(selElemIds, elements!, collaborationName, collaborationColor);
             const diagram = this.props.diagram;
             if (diagram && diagram.model && diagram.model.elements) {
-              diagram.model.elements = updatedElement!;
+              diagram.model.elements = updatedElement!.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
             }
 
             this.client.send(

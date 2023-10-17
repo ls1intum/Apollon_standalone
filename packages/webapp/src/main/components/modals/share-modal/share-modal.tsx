@@ -84,7 +84,7 @@ class ShareModalComponent extends Component<Props, State> {
   };
 
   publishDiagram = () => {
-    if (this.props.diagram && this.props.diagram.model && this.props.diagram.model.elements.length > 0) {
+    if (this.props.diagram && this.props.diagram.model && Object.keys(this.props.diagram.model.elements).length > 0) {
       DiagramRepository.publishDiagramOnServer(this.props.diagram)
         .then((token: string) => {
           this.setState({ token }, () => {
