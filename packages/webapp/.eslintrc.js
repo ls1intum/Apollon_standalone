@@ -20,12 +20,12 @@ module.exports = {
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    "@typescript-eslint/quotes": [
-      "error",
-      "single",
+    '@typescript-eslint/quotes': [
+      'error',
+      'single',
       {
-        "avoidEscape": true,
-        "allowTemplateLiterals": true
+        'avoidEscape': true,
+        'allowTemplateLiterals': true
       }
     ]
   },
