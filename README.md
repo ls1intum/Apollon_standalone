@@ -99,6 +99,11 @@ There are two variants to set this up:
 
 
 #### Manual setup (Installation of application server on linux machine)
+
+> [!IMPORTANT]  
+> Please make sure if there is any requirements regarding additional dependencies to build the node canvas package for
+your operating system! You can find instructions for installing these dependencies here:
+> https://github.com/Automattic/node-canvas#compiling
 ```
 # clone the repository
 git clone https://github.com/ls1intum/Apollon_standalone
