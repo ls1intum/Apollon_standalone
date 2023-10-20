@@ -13,8 +13,8 @@ ENV DEPLOYMENT_URL="http://localhost:8080"
 WORKDIR $build_dir
 
 COPY . .
-RUN yarn install
-RUN yarn build
+RUN npm install
+RUN npm run build
 
 # second stage which creates the container image to run the application
 FROM node:16

@@ -15,7 +15,7 @@ export class ConversionResource {
       if (typeof model === 'string') {
         model = JSON.parse(model);
       }
-      const { svg, clip } = await this.conversionService.convertToSvg((model as unknown) as UMLModel);
+      const { svg, clip } = await this.conversionService.convertToSvg(model as unknown as UMLModel);
       const { width, height } = clip;
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const doc = pdfMake.createPdf({
