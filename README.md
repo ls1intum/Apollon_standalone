@@ -227,7 +227,7 @@ npm install
 npm run build:local
 
 # start webpack dev server
-npm run start
+npm start
 
 # accessible via localhost:8888 (webpack dev server with proxy to application server)
 # accesible via localhost:8080 (application server with static files)
