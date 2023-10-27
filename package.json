@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "1.7.3",
+  "version": "2.0.0",
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:ls1intum/Apollon_standalone.git",
@@ -32,11 +32,10 @@
     "update": "npm run upgrade-interactive --latest"
   },
   "devDependencies": {
-    "concurrently": "8.2.1",
     "@stylelint/postcss-css-in-js": "0.38.0",
+    "concurrently": "8.2.1",
     "postcss": "8.4.31"
   },
-  "dependencies": {},
   "resolutions": {
     "semver": "7.5.4",
     "word-wrap": "1.2.5",

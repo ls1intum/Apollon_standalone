@@ -39,7 +39,7 @@ const enhance = compose<ComponentClass<OwnProps>>(
   }),
 );
 
-const diagramsInBeta: string[] = [];
+const diagramsInBeta: string[] = ['BPMN'];
 
 class CreateDiagramModalComponent extends Component<Props, State> {
   state = getInitialState();
