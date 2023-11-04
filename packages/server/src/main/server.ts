@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express, { Express, RequestHandler } from 'express';
+import * as Sentry from '@sentry/node';
 import { indexHtml, webappPath } from './constants';
 import { register } from './routes';
 import { CollaborationService } from './services/collaboration-service/collaboration-service';
@@ -7,6 +8,16 @@ import { CollaborationService } from './services/collaboration-service/collabora
 const port = 8080;
 
 export const app: Express = express();
+
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.DEPLOYMENT_URL?.split('//')[1] || '',
+    tracesSampleRate: 0.5,
+  });
+
+  Sentry.setTag('package', 'server');
+}
 
 app.use('/', express.static(webappPath));
 app.use(bodyParser.json() as RequestHandler);
