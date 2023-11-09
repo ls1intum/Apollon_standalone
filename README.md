@@ -232,6 +232,14 @@ npm start
 # accessible via localhost:8888 (webpack dev server with proxy to application server)
 # accesible via localhost:8080 (application server with static files)
 ```
+
+### Update dependencies
+
+```
+npm install -g npm-check-updates
+npm run update
+```
+
 ### Link local project of Apollon
 
 While developing the Standalone project, it is often required to make changes in the Apollon project.
