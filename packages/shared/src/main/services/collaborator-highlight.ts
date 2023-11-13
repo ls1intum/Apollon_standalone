@@ -13,7 +13,7 @@ export const updateSelectedByArray = (
   collaborationName: string,
   collaborationColor: string,
 ) => {
-  return elements?.map((x: UMLElement) => {
+  return Object.values(elements)?.map((x: UMLElement) => {
     const currObj = { elementId: x.id, name: collaborationName, color: collaborationColor };
 
     let updatedSelectedBy = x.selectedBy;

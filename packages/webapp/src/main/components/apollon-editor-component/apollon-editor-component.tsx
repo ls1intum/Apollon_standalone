@@ -1,4 +1,4 @@
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection, Patch } from '@ls1intum/apollon';
 import React, { Component, FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { RouterTypes, withRouter } from '../../hocs/withRouter';
@@ -9,7 +9,7 @@ import { updateSelectedByArray } from 'shared/src/main/services/collaborator-hig
 import styled from 'styled-components';
 // @ts-ignore
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
-import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL } from '../../constant';
+import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL, WS_PROTOCOL } from '../../constant';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { EditorOptionsRepository } from '../../services/editor-options/editor-options-repository';
@@ -110,6 +110,8 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.ref = element;
       if (this.ref) {
         const editor = new ApollonEditor(this.ref, this.props.options);
+
+        // TODO: remove this after handling selection properly
         editor.subscribeToModelDiscreteChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           if (this.client) {
@@ -126,6 +128,21 @@ class ApollonEditorComponent extends Component<Props, State> {
             this.hideSelfFromSelectedList();
           }
         });
+
+        editor.subscribeToModelChangePatches((patch: Patch) => {
+          if (this.client) {
+            const { token } = this.props.params;
+            const { collaborationName, collaborationColor } = this.props;
+            this.client.send(
+              JSON.stringify({
+                token,
+                collaborators: { name: collaborationName, color: collaborationColor },
+                patch,
+              })
+            );
+          }
+        });
+
         editor.subscribeToModelChange((model: UMLModel) => {
           const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
           this.props.updateDiagram(diagram);
@@ -238,18 +255,21 @@ class ApollonEditorComponent extends Component<Props, State> {
   };
 
   establishCollaborationConnection(token: string, name: string, color: string) {
-    this.client = new W3CWebSocket(`wss://${NO_HTTP_URL}`);
+    this.client = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
     this.client.onopen = () => {
       const collaborators = { name, color };
       this.client.send(JSON.stringify({ token, collaborators }));
     };
     this.client.onmessage = (message: any) => {
-      const { collaborators, diagram } = JSON.parse(message.data);
+      const { collaborators, diagram, patch } = JSON.parse(message.data);
       if (collaborators) {
         this.props.updateCollaborators(collaborators);
       }
       if (diagram) {
         this.props.importDiagram(JSON.stringify(diagram));
+      }
+      if (patch) {
+        this.props.editor?.importPatch(patch);
       }
     };
   }

@@ -3,6 +3,8 @@ export const APPLICATION_SERVER_VERSION = process.env.APPLICATION_SERVER_VERSION
 export const DEPLOYMENT_URL = process.env.DEPLOYMENT_URL;
 export const BASE_URL = `${DEPLOYMENT_URL}/api`;
 export const NO_HTTP_URL = DEPLOYMENT_URL?.split('//')[1] || '';
+export const WS_PROTOCOL = DEPLOYMENT_URL?.startsWith('https') ? 'wss' : 'ws';
+
 // prefixes
 export const localStoragePrefix = 'apollon_';
 export const localStorageDiagramPrefix = localStoragePrefix + 'diagram_';
