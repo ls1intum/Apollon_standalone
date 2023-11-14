@@ -9,6 +9,7 @@
     "lint": "eslint -c .eslintrc.js src/main"
   },
   "dependencies": {
+    "@sentry/node": "7.77.0",
     "body-parser": "1.20.2",
     "canvas": "2.11.2",
     "cors": "2.8.5",
