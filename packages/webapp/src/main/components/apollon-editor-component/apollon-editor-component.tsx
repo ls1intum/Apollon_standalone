@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { RouterTypes, withRouter } from '../../hocs/withRouter';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
-import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
+// import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
 
 import styled from 'styled-components';
 // @ts-ignore
@@ -22,6 +22,8 @@ import { ApplicationState } from '../store/application-state';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { withApollonEditor } from './with-apollon-editor';
 import { toast } from 'react-toastify';
+import { selectionDiff } from '../../utils/selection-diff';
+import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -91,6 +93,7 @@ class ApollonEditorComponent extends Component<Props, State> {
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
   private client: any;
+  private selection: Selection = { elements: {}, relationships: {} };
 
   componentDidUpdate(prevProps: Props) {
     if (this.client) {
@@ -111,24 +114,6 @@ class ApollonEditorComponent extends Component<Props, State> {
       if (this.ref) {
         const editor = new ApollonEditor(this.ref, this.props.options);
 
-        // TODO: remove this after handling selection properly
-        editor.subscribeToModelDiscreteChange((model: UMLModel) => {
-          const diagram: Diagram = { ...this.props.diagram, model } as Diagram;
-          if (this.client) {
-            const { token } = this.props.params;
-            const { collaborationName, collaborationColor } = this.props;
-            this.client.send(
-              JSON.stringify({
-                token,
-                collaborators: { name: collaborationName, color: collaborationColor },
-                diagram,
-                selectedElements: this.props.editor?.selection.elements,
-              }),
-            );
-            this.hideSelfFromSelectedList();
-          }
-        });
-
         editor.subscribeToModelChangePatches((patch: Patch) => {
           if (this.client) {
             const { token } = this.props.params;
@@ -136,7 +121,7 @@ class ApollonEditorComponent extends Component<Props, State> {
             this.client.send(
               JSON.stringify({
                 token,
-                collaborators: { name: collaborationName, color: collaborationColor },
+                collaborator: { name: collaborationName, color: collaborationColor },
                 patch,
               })
             );
@@ -149,25 +134,20 @@ class ApollonEditorComponent extends Component<Props, State> {
         });
 
         editor.subscribeToSelectionChange((selection: Selection) => {
-          if (this.client) {
+          const diff = selectionDiff(this.selection, selection);
+          this.selection = selection;
+
+          if (this.client && (diff.selected.length > 0 || diff.deselected.length > 0)) {
             const { collaborationName, collaborationColor } = this.props;
             const { token } = this.props.params;
-            const selElemIds = Object.keys(selection.elements);
-            const elements = Object.values(this.props.diagram?.model?.elements || {});
-            const updatedElement = updateSelectedByArray(selElemIds, elements!, collaborationName, collaborationColor);
-            const diagram = this.props.diagram;
-            if (diagram && diagram.model && diagram.model.elements) {
-              diagram.model.elements = updatedElement!.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
-            }
 
             this.client.send(
               JSON.stringify({
                 token,
-                collaborators: { name: collaborationName, color: collaborationColor },
-                diagram,
-              }),
+                collaborator: { name: collaborationName, color: collaborationColor },
+                selection: diff, 
+              })
             );
-            this.hideSelfFromSelectedList();
           }
         });
 
@@ -261,15 +241,20 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.client.send(JSON.stringify({ token, collaborators }));
     };
     this.client.onmessage = (message: any) => {
-      const { collaborators, diagram, patch } = JSON.parse(message.data);
+      const { originator, collaborators, diagram, patch, selection } =
+        JSON.parse(message.data) as CollaborationMessage;
       if (collaborators) {
         this.props.updateCollaborators(collaborators);
+        this.props.editor?.pruneRemoteSelectors(collaborators);
       }
       if (diagram) {
         this.props.importDiagram(JSON.stringify(diagram));
       }
       if (patch) {
         this.props.editor?.importPatch(patch);
+      }
+      if (selection && originator) {
+        this.props.editor?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
       }
     };
   }

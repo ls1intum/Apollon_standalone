@@ -1,9 +1,9 @@
-export class Collaborator {
-  name: string;
+export interface CollaboratorType {
   color: string;
+  name: string;
+}
 
-  constructor(name: string, color: string) {
-    this.name = name;
-    this.color = color;
+export class Collaborator implements CollaboratorType {
+  constructor(public name: string, public color: string) {
   }
 }
