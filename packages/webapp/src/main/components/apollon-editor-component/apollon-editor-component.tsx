@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { RouterTypes, withRouter } from '../../hocs/withRouter';
 import { compose } from 'redux';
 import { DiagramView } from 'shared/src/main/diagram-view';
-// import { updateSelectedByArray } from 'shared/src/main/services/collaborator-highlight';
 
 import styled from 'styled-components';
 // @ts-ignore

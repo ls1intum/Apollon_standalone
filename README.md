@@ -226,6 +226,9 @@ npm install
 # build application
 npm run build:local
 
+# create diagrams folder
+mkdir diagrams
+
 # start webpack dev server
 npm start
 
