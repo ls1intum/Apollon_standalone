@@ -10,6 +10,9 @@
     "email": "krusche@tum.de",
     "url": "https://ase.cit.tum.de/krusche"
   },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
@@ -36,7 +39,7 @@
     "concurrently": "8.2.2",
     "postcss": "8.4.31"
   },
-  "resolutions": {
+  "overrides": {
     "semver": "7.5.4",
     "word-wrap": "1.2.5",
     "tough-cookie": "4.1.3",
@@ -44,6 +47,6 @@
     "crypto-js": "4.2.0"
   },
   "dependencies": {
-    "fast-json-patch": "^3.1.1"
+    "fast-json-patch": "3.1.1"
   }
 }
