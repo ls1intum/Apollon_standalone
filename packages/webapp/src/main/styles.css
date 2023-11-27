@@ -23,6 +23,7 @@ body {
   flex-direction: column;
   flex-grow: 1;
   background-color: var(--apollon-background);
+  height: 100%;
 }
 
 .apollon-editor {
