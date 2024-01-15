@@ -23,6 +23,7 @@ import { withApollonEditor } from './with-apollon-editor';
 import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
+import { PatchVerifier } from '../../utils/patch-verifier';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -89,11 +90,13 @@ const enhance = compose<FunctionComponent<OwnProps>>(
   ),
 );
 
+
 class ApollonEditorComponent extends Component<Props, State> {
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
   private client: any;
   private selection: Selection = { elements: {}, relationships: {} };
+  private patchVerifier = new PatchVerifier();
 
   componentDidUpdate(prevProps: Props) {
     if (this.client) {
@@ -122,7 +125,7 @@ class ApollonEditorComponent extends Component<Props, State> {
               JSON.stringify({
                 token,
                 collaborator: { name: collaborationName, color: collaborationColor },
-                patch,
+                patch: this.patchVerifier.sign(patch),
               })
             );
           }
@@ -251,7 +254,10 @@ class ApollonEditorComponent extends Component<Props, State> {
         this.props.importDiagram(JSON.stringify(diagram));
       }
       if (patch) {
-        this.props.editor?.importPatch(patch);
+        const verified = this.patchVerifier.verified(patch);
+        if (verified.length > 0) {
+          this.props.editor?.importPatch(verified);
+        }
       }
       if (selection && originator) {
         this.props.editor?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
