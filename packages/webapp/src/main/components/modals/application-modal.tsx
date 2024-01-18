@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from '../store/application-state';
 import { ApplicationModalContent } from './application-modal-content';
 import { ModalRepository } from '../../services/modal/modal-repository';
-import { useSelector } from 'react-redux';
 
 export const ApplicationModal = () => {
   const [isClosable, setIsClosable] = useState(true);

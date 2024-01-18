@@ -6,10 +6,10 @@ import {
   compose,
   createStore,
   Dispatch,
+  PreloadedState,
   Reducer,
   Store,
   StoreEnhancer,
-  PreloadedState,
 } from 'redux';
 import { Actions } from '../../services/actions';
 import { reducers } from '../../services/reducer';

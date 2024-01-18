@@ -1,4 +1,4 @@
-import { ApollonEditor, ApollonMode, ApollonOptions, UMLModel, Selection, Patch } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, ApollonOptions, Patch, Selection, UMLModel } from '@ls1intum/apollon';
 import React, { Component, FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { RouterTypes, withRouter } from '../../hocs/withRouter';
@@ -90,7 +90,6 @@ const enhance = compose<FunctionComponent<OwnProps>>(
   ),
 );
 
-
 class ApollonEditorComponent extends Component<Props, State> {
   private readonly containerRef: (element: HTMLDivElement) => void;
   private ref?: HTMLDivElement;
@@ -126,7 +125,7 @@ class ApollonEditorComponent extends Component<Props, State> {
                 token,
                 collaborator: { name: collaborationName, color: collaborationColor },
                 patch: this.patchVerifier.sign(patch),
-              })
+              }),
             );
           }
         });
@@ -148,8 +147,8 @@ class ApollonEditorComponent extends Component<Props, State> {
               JSON.stringify({
                 token,
                 collaborator: { name: collaborationName, color: collaborationColor },
-                selection: diff, 
-              })
+                selection: diff,
+              }),
             );
           }
         });
@@ -244,8 +243,7 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.client.send(JSON.stringify({ token, collaborators }));
     };
     this.client.onmessage = (message: any) => {
-      const { originator, collaborators, diagram, patch, selection } =
-        JSON.parse(message.data) as CollaborationMessage;
+      const { originator, collaborators, diagram, patch, selection } = JSON.parse(message.data) as CollaborationMessage;
       if (collaborators) {
         this.props.updateCollaborators(collaborators);
         this.props.editor?.pruneRemoteSelectors(collaborators);

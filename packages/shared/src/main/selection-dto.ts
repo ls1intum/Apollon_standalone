@@ -4,6 +4,8 @@ export interface SelectionChangeType {
 }
 
 export class SelectionChange implements SelectionChangeType {
-  constructor(public selected: string[], public deselected: string[]) {
-  }
+  constructor(
+    public selected: string[],
+    public deselected: string[],
+  ) {}
 }

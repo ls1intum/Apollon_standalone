@@ -34,7 +34,8 @@
     "tslib": "2.6.2",
     "typesafe-actions": "5.1.0",
     "uuid": "9.0.1",
-    "websocket": "1.0.34"
+    "websocket": "1.0.34",
+    "posthog-js": "1.100.0"
   },
   "overrides": {
     "semver": "7.5.4",

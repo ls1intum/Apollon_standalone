@@ -79,6 +79,8 @@ module.exports = {
       'process.env.APPLICATION_SERVER_VERSION': JSON.stringify(process.env.APPLICATION_SERVER_VERSION || true),
       'process.env.DEPLOYMENT_URL': JSON.stringify(process.env.DEPLOYMENT_URL || 'http://localhost:8888'),
       'process.env.SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN || null),
+      'process.env.POSTHOG_HOST': JSON.stringify(process.env.POSTHOG_HOST || null),
+      'process.env.POSTHOG_KEY': JSON.stringify(process.env.POSTHOG_KEY || null),
     }),
   ],
 };

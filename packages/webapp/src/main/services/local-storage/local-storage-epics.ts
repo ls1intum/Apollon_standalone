@@ -8,7 +8,7 @@ import { StopAction, StopActionType } from '../actions';
 import moment from 'moment';
 import { Diagram, UpdateDiagramAction } from '../diagram/diagram-types';
 import { DiagramRepository } from '../diagram/diagram-repository';
-import { ErrorActionType, DisplayErrorAction } from '../error-management/error-types';
+import { DisplayErrorAction, ErrorActionType } from '../error-management/error-types';
 import { ErrorRepository } from '../error-management/error-repository';
 import { Observable, of } from 'rxjs';
 import { EditorOptionsRepository } from '../editor-options/editor-options-repository';

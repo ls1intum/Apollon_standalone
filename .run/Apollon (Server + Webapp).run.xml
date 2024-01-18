@@ -7,7 +7,10 @@
     </scripts>
     <node-interpreter value="project" />
     <package-manager value="npm" />
-    <envs />
+    <envs>
+      <env name="POSTHOG_KEY" value="phc_RZBvVhW05fgJFXQwYjtmpaPEixDhYPuhJ6fsCVMLjs2" />
+      <env name="POSTHOG_HOST" value="https://analytics.artemis.cit.tum.de" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>

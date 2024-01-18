@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ApplicationBar } from './components/application-bar/application-bar';
 import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
-import { ApollonEditor, ApollonOptions } from '@ls1intum/apollon';
+import { ApollonEditor } from '@ls1intum/apollon';
 import { ApplicationStore } from './components/store/application-store';
 import { ApplicationState } from './components/store/application-state';
 import {
@@ -9,6 +9,8 @@ import {
   localStorageCollaborationName,
   localStorageDiagramPrefix,
   localStorageLatest,
+  POSTHOG_HOST,
+  POSTHOG_KEY,
 } from './constant';
 import {
   ApollonEditorContext,
@@ -24,6 +26,11 @@ import { Diagram } from './services/diagram/diagram-types';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ApplicationModal } from './components/modals/application-modal';
 import { ToastContainer } from 'react-toastify';
+import { PostHogProvider } from 'posthog-js/react';
+
+const postHogOptions = {
+  api_host: POSTHOG_HOST,
+};
 
 const getInitialStore = (): ApplicationState => {
   const latestId: string | null = window.localStorage.getItem(localStorageLatest);
@@ -70,16 +77,18 @@ export const Application = () => {
   const context: ApollonEditorContext | null = { editor, setEditor: handleSetEditor };
 
   return (
-    <ApollonEditorProvider value={context}>
-      <ApplicationStore initialState={initialStore}>
-        <ApplicationBar />
-        <ApplicationModal />
-        {isFirefox && <FirefoxIncompatibilityHint />}
-        <ErrorPanel />
-        <ApollonEditorWrapper />
-      </ApplicationStore>
-      <ToastContainer />
-    </ApollonEditorProvider>
+    <PostHogProvider apiKey={POSTHOG_KEY} options={postHogOptions}>
+      <ApollonEditorProvider value={context}>
+        <ApplicationStore initialState={initialStore}>
+          <ApplicationBar />
+          <ApplicationModal />
+          {isFirefox && <FirefoxIncompatibilityHint />}
+          <ErrorPanel />
+          <ApollonEditorWrapper />
+        </ApplicationStore>
+        <ToastContainer />
+      </ApollonEditorProvider>
+    </PostHogProvider>
   );
 };
 

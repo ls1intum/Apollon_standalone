@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
-import { Modal, Button, InputGroup, FormControl, Tab, Col, Row, Nav } from 'react-bootstrap';
+import { Button, Col, FormControl, InputGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { Template, TemplateCategory } from './template-types';
 import { SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern/software-pattern-types';

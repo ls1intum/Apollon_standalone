@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
-import { SoftwarePatternTemplate, SoftwarePatternCategory, SoftwarePatternType } from './software-pattern-types';
+import { SoftwarePatternCategory, SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern-types';
 import { Template } from '../template-types';
 import { TemplateFactory } from '../template-factory';
 
