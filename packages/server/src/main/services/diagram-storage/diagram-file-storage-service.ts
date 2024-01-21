@@ -1,5 +1,6 @@
 import { Subject, groupBy, mergeMap, switchMap, from, debounceTime } from 'rxjs';
 import { auditDebounceTime } from 'audit-debounce';
+import { Operation, applyPatch } from 'fast-json-patch';
 
 import { FileStorageService } from '../storage-service/file-storage-service';
 import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
@@ -8,7 +9,8 @@ import { DiagramStorageService } from './diagram-storage-service';
 
 
 interface SaveRequest {
-  diagramDTO: DiagramDTO;
+  diagramDTO?: DiagramDTO;
+  patch?: Operation[];
   token: string;
   path: string;
 }
@@ -95,10 +97,21 @@ export class DiagramFileStorageService implements DiagramStorageService {
         // to learn how to cancel a write operation.
         //
         switchMap((request) => {
-          return from(
-            this.fileStorageService
-              .saveContentToFile(request.path, JSON.stringify(request.diagramDTO))
-          )
+          if (request.diagramDTO) {
+            return from(
+              this.fileStorageService
+                .saveContentToFile(request.path, JSON.stringify(request.diagramDTO))
+            )
+          } else if (request.patch) {
+            const patch = request.patch;
+            return from((async () => {
+              const diagram = await this.getDiagramByLink(request.token);
+              diagram!.model = applyPatch(diagram!.model, patch).newDocument;
+              return this.fileStorageService.saveContentToFile(request.path, JSON.stringify(diagram));
+            })());
+          } else {
+            return from(Promise.resolve());
+          }
         }),
       ))
     ).subscribe();
@@ -107,7 +120,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
   async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
     // alpha numeric token with length = tokenLength
     const path = this.getFilePathForToken(token);
-    const exists = await this.fileStorageService.doesFileExist(path);
+    const exists = await this.diagramExists(path);
 
     if (exists && !shared) {
       throw Error(`File at ${path} already exists`);
@@ -120,6 +133,22 @@ export class DiagramFileStorageService implements DiagramStorageService {
 
       return token;
     }
+  }
+
+  async patchDiagram(token: string, patch: Operation[]): Promise<void> {
+    const path = this.getFilePathForToken(token);
+    const exists = await this.diagramExists(token);
+
+    if (!exists) {
+      throw Error(`File at ${path} does not exist`);
+    } else {
+      this.router.next({ patch, token, path });
+    }
+  }
+
+  async diagramExists(token: string): Promise<boolean> {
+    const path = this.getFilePathForToken(token);
+    return this.fileStorageService.doesFileExist(path);
   }
 
   getDiagramByLink(token: string): Promise<DiagramDTO | undefined> {
