@@ -3,7 +3,6 @@ import { randomString } from '../../utils';
 import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
 import { SelectionChange } from 'shared/src/main/selection-dto';
-import { applyPatch } from 'fast-json-patch';
 import { Patch } from '@ls1intum/apollon';
 
 type Client = { token: string; collaborator: Collaborator };
@@ -120,9 +119,10 @@ export class CollaborationService {
   };
 
   onDiagramPatch = async (socket: any, token: string, patch: Patch, collaborator: Collaborator) => {
-    const diagram = await this.diagramService.getDiagramByLink(token);
-    diagram!.model = applyPatch(diagram!.model, patch).newDocument;
-    this.diagramService.saveDiagram(diagram!, token, true);
+    await this.diagramService.patchDiagram(token, patch);
+    // const diagram = await this.diagramService.getDiagramByLink(token);
+    // diagram!.model = applyPatch(diagram!.model, patch).newDocument;
+    // this.diagramService.saveDiagram(diagram!, token, true);
 
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.clients[socket.apollonId] = { token, collaborator };
