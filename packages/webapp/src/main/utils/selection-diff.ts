@@ -1,13 +1,12 @@
 import { Selection } from '@ls1intum/apollon';
 import { SelectionChangeType } from 'shared/src/main/selection-dto';
 
-
 export function selectionDiff(src: Selection, dest: Selection): SelectionChangeType {
   const selected = new Set<string>();
   const deselected = new Set<string>();
 
-  const srcUnion = {...src.elements, ...src.relationships};
-  const destUnion = {...dest.elements, ...dest.relationships};
+  const srcUnion = { ...src.elements, ...src.relationships };
+  const destUnion = { ...dest.elements, ...dest.relationships };
 
   Object.entries(srcUnion).forEach(([id, isSelected]) => {
     if (isSelected && !destUnion[id]) {
@@ -28,5 +27,5 @@ export function selectionDiff(src: Selection, dest: Selection): SelectionChangeT
   return {
     selected: Array.from(selected),
     deselected: Array.from(deselected),
-  }
+  };
 }

@@ -4,6 +4,8 @@ export interface CollaboratorType {
 }
 
 export class Collaborator implements CollaboratorType {
-  constructor(public name: string, public color: string) {
-  }
+  constructor(
+    public name: string,
+    public color: string,
+  ) {}
 }

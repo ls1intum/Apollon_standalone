@@ -1,5 +1,4 @@
-import { Component, ComponentClass } from 'react';
-import React from 'react';
+import React, { Component, ComponentClass } from 'react';
 import { Modal } from 'react-bootstrap';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { compose } from 'redux';

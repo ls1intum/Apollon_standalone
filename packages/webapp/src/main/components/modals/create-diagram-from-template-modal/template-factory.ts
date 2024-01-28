@@ -1,4 +1,3 @@
-import { TemplateCategory } from './template-types';
 import {
   SoftwarePatternCategory,
   SoftwarePatternTemplate,

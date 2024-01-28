@@ -1,6 +1,5 @@
-import { Patch } from '@ls1intum/apollon'
-import { Operation, ReplaceOperation } from 'fast-json-patch'
-
+import { Patch } from '@ls1intum/apollon';
+import { Operation, ReplaceOperation } from 'fast-json-patch';
 
 /**
  * A signed replace operation is a replace operation with an additional hash property.
@@ -30,7 +29,7 @@ export function isReplaceOperation(operation: Operation): operation is ReplaceOp
 }
 
 /**
- * @param operation 
+ * @param operation
  * @returns true if the operation is a signed operation, false otherwise. A signed operation is either
  * a replace operation with a hash property or any other operation.
  */
@@ -44,7 +43,7 @@ export function isSignedOperation(operation: Operation): operation is SignedOper
  * of the same scope (e.g. the same path) before re-broadcasting that particular change, the client
  * can safely discard the change as it will (optimistically) be overridden when the server re-broadcasts
  * the tracked change.
- * 
+ *
  * This greatly helps with stuttering issues due to clients constantly re-applying changes they have
  * already applied locally but in a different order. See
  * [**this issue**](https://github.com/ls1intum/Apollon_standalone/pull/70) for more details.
@@ -54,7 +53,7 @@ export class PatchVerifier {
 
   /**
    * Signs an operation and tracks it. Only replace operations are signed and tracked.
-   * @param operation 
+   * @param operation
    * @returns The signed version of the operation (to be sent to the server)
    */
   public signOperation(operation: Operation): SignedOperation {
@@ -71,11 +70,11 @@ export class PatchVerifier {
 
   /**
    * Signs all operations inside the patch.
-   * @param patch 
+   * @param patch
    * @returns the signed patch (to be sent to the server)
    */
   public sign(patch: Patch) {
-    return patch.map(op => this.signOperation(op));
+    return patch.map((op) => this.signOperation(op));
   }
 
   /**
@@ -85,19 +84,15 @@ export class PatchVerifier {
    * - If the operation is a signed replace operation and no other operation with the same path is tracked,
    *   it will be applied.
    * - Otherwise it will be discarded.
-   * 
+   *
    * If it receives an operation that is already tracked, it will be discarded, and the
    * operation will be untracked (so following operations on the same path will be applied).
-   * 
-   * @param operation 
+   *
+   * @param operation
    * @returns true if the operation should be applied, false if it should be discarded.
    */
   public isVerifiedOperation(operation: Operation): boolean {
-    if (
-      isReplaceOperation(operation)
-      && isSignedOperation(operation)
-      && operation.path in this.waitlist
-    ) {
+    if (isReplaceOperation(operation) && isSignedOperation(operation) && operation.path in this.waitlist) {
       if (this.waitlist[operation.path] === operation.hash) {
         delete this.waitlist[operation.path];
       }
@@ -110,10 +105,10 @@ export class PatchVerifier {
 
   /**
    * Filters an incoming patch, only leaving the operations that should be applied.
-   * @param patch 
+   * @param patch
    * @returns a patch with operations that should be applied.
    */
   public verified(patch: Patch): Patch {
-    return patch.filter(op => this.isVerifiedOperation(op));
+    return patch.filter((op) => this.isVerifiedOperation(op));
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component, ComponentClass } from 'react';
-import { NavDropdown, Dropdown } from 'react-bootstrap';
+import { Dropdown, NavDropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { compose } from 'redux';

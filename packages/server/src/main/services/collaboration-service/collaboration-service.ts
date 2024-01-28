@@ -128,15 +128,12 @@ export class CollaborationService {
     this.clients[socket.apollonId] = { token, collaborator };
 
     this.wsServer.clients.forEach((clientSocket: any) => {
-      if (
-        clientSocket.readyState === WebSocket.OPEN &&
-        this.clients[clientSocket.apollonId]?.token === token
-      ) {
+      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId]?.token === token) {
         clientSocket.send(
           JSON.stringify({
             collaborators: tokenClients.map((client) => client.collaborator),
             patch,
-            originator: collaborator
+            originator: collaborator,
           }),
         );
       }
@@ -157,7 +154,7 @@ export class CollaborationService {
           JSON.stringify({
             collaborators: tokenClients.map((client) => client.collaborator),
             selection,
-            originator: collaborator
+            originator: collaborator,
           }),
         );
       }

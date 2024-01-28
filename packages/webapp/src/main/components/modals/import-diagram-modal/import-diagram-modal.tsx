@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { ImportRepository } from '../../../services/import/import-repository';
