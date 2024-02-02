@@ -116,7 +116,7 @@ class ApollonEditorComponent extends Component<Props, State> {
       if (this.ref) {
         const editor = new ApollonEditor(this.ref, this.props.options);
 
-        editor.subscribeToModelChangePatches((patch: Patch) => {
+        editor.subscribeToAllModelChangePatches((patch: Patch) => {
           if (this.client) {
             const { token } = this.props.params;
             const { collaborationName, collaborationColor } = this.props;
