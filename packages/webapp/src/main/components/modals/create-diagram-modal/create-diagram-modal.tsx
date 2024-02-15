@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store/application-state';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { ModalContentProps } from '../application-modal-types';
+import posthog from 'posthog-js';
 
 type OwnProps = {} & ModalContentProps;
 
@@ -63,6 +64,12 @@ class CreateDiagramModalComponent extends Component<Props, State> {
 
   createNewDiagram() {
     this.props.createDiagram(this.state.diagramTitle, this.state.selectedDiagramType as UMLDiagramType);
+
+    posthog.capture('diagram_created', {
+      title: this.state.diagramTitle,
+      type: this.state.selectedDiagramType,
+    });
+
     this.props.close();
   }
 
