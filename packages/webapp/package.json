@@ -15,7 +15,7 @@
     "node": ">=18.17.0"
   },
   "dependencies": {
-    "@ls1intum/apollon": "3.3.5",
+    "@ls1intum/apollon": "3.3.8",
     "@sentry/react": "7.91.0",
     "bootstrap": "5.3.2",
     "moment": "2.29.4",
