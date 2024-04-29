@@ -1,19 +1,19 @@
-import { debounceTime, from, groupBy, mergeMap, Subject, switchMap } from 'rxjs';
-import { auditDebounceTime } from 'audit-debounce';
 import { applyPatch, Operation } from 'fast-json-patch';
 
 import { FileStorageService } from '../storage-service/file-storage-service';
 import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
 import { diagramStoragePath } from '../../constants';
 import { DiagramStorageService } from './diagram-storage-service';
+import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-storage-rate-limiter';
 
-interface SaveRequest {
-  diagramDTO?: DiagramDTO;
-  patch?: Operation[];
-  token: string;
+type SaveRequest = DiagramStorageRequest & {
   path: string;
 }
 
+/**
+ * Service for storing diagrams on the file system.
+ * Requires `/diagrams` directory to be present in the working directory.
+ */
 export class DiagramFileStorageService implements DiagramStorageService {
   /**
    * How long should a substream for handling save requests of a particular
@@ -31,92 +31,45 @@ export class DiagramFileStorageService implements DiagramStorageService {
    */
   static readonly SAVE_INTERVAL = 3_000;
 
+  /**
+   * The file storage service to use for storing diagrams.
+   */
   private fileStorageService: FileStorageService = new FileStorageService();
 
-  //
-  // this router handles saving of diagrams.
-  // requests for saving diagrams can come at any time, and might
-  // need some pacing to avoid overloading the file system (which results in corrupted files.
-  //
-  private router = new Subject<SaveRequest>();
+  /**
+   * The rate limiter for saving diagrams.
+   */
+  private limiter: DiagramStorageRateLimiter<SaveRequest>
 
   constructor() {
-    //
-    // I do realize complex rxjs pipelines are not the easiest to read.
-    // so I will try to explain what is going on here.
-    //
-    this.router
-      .pipe(
+    this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
+      async (request) => {
         //
-        // first, we group requests by token, since we don't want
-        // save requests for one token to affect requests of another
-        // token on the server (each token relates to a different diagram)
+        // FIXME: this requires cancellation  mechanism on storage, which is not implemented yet.
+        // read [this](https://stackoverflow.com/questions/74529131/node-js-how-to-cancel-a-writefile-operation)
+        // to learn how to cancel a write operation.
         //
-        groupBy((request) => request.token, {
-          //
-          // this duration selector determines how long the "group" stream
-          // should be kept alive. without a duration selector, these "groups"
-          // will be kept alive indefinitely, clogging up memory.
-          //
-          duration: (group) =>
-            group.pipe(
-              //
-              // indicates that each group should be kept alive
-              // SAVE_GROUP_TTL milliseconds after the last save request for that
-              // group. note that the diagram might still be worked on,
-              // but we can create a new group for new save requests if they happen.
-              //
-              debounceTime(DiagramFileStorageService.SAVE_GROUP_TTL),
-            ),
-        }),
+        await this.fileStorageService.saveContentToFile(request.path, JSON.stringify(request.diagramDTO));
+      },
+      async (request) => {
         //
-        // with `mergeMap()`, we will operate on each "group" independently
-        // and then merge the results back into a singular stream.
+        // FIXME: this requires cancellation  mechanism on storage, which is not implemented yet.
+        // read [this](https://stackoverflow.com/questions/74529131/node-js-how-to-cancel-a-writefile-operation)
+        // to learn how to cancel a write operation.
         //
-        mergeMap((group) =>
-          group.pipe(
-            //
-            // this will try to wait for SAVE_DEBOUNCE_TIME milliseconds
-            // after each incoming save request before saving the diagram.
-            // since that can be too long if save requests are incoming frequently,
-            // we will also save the diagram every SAVE_INTERVAL milliseconds to ensure
-            // we don't lose data (in case the server process stops, for example due to a crash).
-            //
-            auditDebounceTime(DiagramFileStorageService.SAVE_DEBOUNCE_TIME, DiagramFileStorageService.SAVE_INTERVAL),
-            //
-            // since saving is an async operation itself, we need to use `switchMap()`
-            // to ensure only a single save operation is running at any given time.
-            //
-            // FIXME: this requires cancellation  mechanism on file storage, which is not implemented yet.
-            // read [this](https://stackoverflow.com/questions/74529131/node-js-how-to-cancel-a-writefile-operation)
-            // to learn how to cancel a write operation.
-            //
-            switchMap((request) => {
-              if (request.diagramDTO) {
-                return from(
-                  this.fileStorageService.saveContentToFile(request.path, JSON.stringify(request.diagramDTO)),
-                );
-              } else if (request.patch) {
-                const patch = request.patch;
-                return from(
-                  (async () => {
-                    const diagram = await this.getDiagramByLink(request.token);
-                    diagram!.model = applyPatch(diagram!.model, patch).newDocument;
-                    return this.fileStorageService.saveContentToFile(request.path, JSON.stringify(diagram));
-                  })(),
-                );
-              } else {
-                return from(Promise.resolve());
-              }
-            }),
-          ),
-        ),
-      )
-      .subscribe();
+        const diagram = await this.getDiagramByLink(request.token);
+        diagram!.model = applyPatch(diagram!.model, request.patch).newDocument;
+        await this.fileStorageService.saveContentToFile(request.path, JSON.stringify(diagram));
+      },
+      {
+        saveInterval: DiagramFileStorageService.SAVE_INTERVAL,
+        saveDebounceTime: DiagramFileStorageService.SAVE_DEBOUNCE_TIME,
+        saveGroupTTL: DiagramFileStorageService.SAVE_GROUP_TTL,
+      },
+    );
   }
 
   async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
-    // alpha numeric token with length = tokenLength
     const path = this.getFilePathForToken(token);
     const exists = await this.diagramExists(path);
 
@@ -124,7 +77,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
       throw Error(`File at ${path} already exists`);
     } else {
       if (exists) {
-        this.router.next({ diagramDTO, token, path });
+        this.limiter.request({ diagramDTO, token, path });
       } else {
         await this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO));
       }
@@ -140,7 +93,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
     if (!exists) {
       throw Error(`File at ${path} does not exist`);
     } else {
-      this.router.next({ patch, token, path });
+      this.limiter.request({ patch, token, path });
     }
   }
 
@@ -154,6 +107,9 @@ export class DiagramFileStorageService implements DiagramStorageService {
     return this.fileStorageService.getFileContent(path).then((fileContent) => JSON.parse(fileContent) as DiagramDTO);
   }
 
+  /**
+   * Returns the file path for a diagram with given token.
+   */
   private getFilePathForToken(token: string): string {
     return `${diagramStoragePath}/${token}.json`;
   }

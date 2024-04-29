@@ -5,10 +5,10 @@ import pdfMake from 'pdfmake/build/pdfmake.min';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from 'shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
-import { DiagramFileStorageService } from '../services/diagram-storage/diagram-file-storage-service';
+import { DiagramStorageFactory } from '../services/diagram-storage';
 
 export class DiagramResource {
-  diagramService: DiagramService = new DiagramService(new DiagramFileStorageService());
+  diagramService: DiagramService = new DiagramService(DiagramStorageFactory.getStorageService());
 
   getDiagram = (req: Request, res: Response) => {
     const tokenValue: string = req.params.token;
