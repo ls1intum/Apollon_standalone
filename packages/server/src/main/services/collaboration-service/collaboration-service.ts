@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { randomString } from '../../utils';
-import { DiagramFileStorageService } from '../diagram-storage/diagram-file-storage-service';
+import { DiagramStorageFactory, DiagramStorageService } from '../diagram-storage';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
 import { SelectionChange } from 'shared/src/main/selection-dto';
 import { Patch } from '@ls1intum/apollon';
@@ -10,11 +10,11 @@ type Client = { token: string; collaborator: Collaborator };
 export class CollaborationService {
   private wsServer: any;
   private clients: { [key: string]: Client } = {};
-  private diagramService: DiagramFileStorageService;
+  private diagramService: DiagramStorageService;
   private readonly interval: NodeJS.Timeout;
   constructor() {
     this.wsServer = new WebSocket.Server({ noServer: true });
-    this.diagramService = new DiagramFileStorageService();
+    this.diagramService = DiagramStorageFactory.getStorageService();
     this.interval = setInterval(() => {
       this.wsServer.clients.forEach((ws: any) => {
         if (ws.isAlive === false) {

@@ -217,6 +217,31 @@ useful command to debug:
 docker run -it --entrypoint /bin/bash apollon_standalone
 ```
 
+## Redis Storage
+
+Alternative to a filesystem, the application server can use a Redis database to store the shared diagrams.
+To use Redis, set the environment variable `APOLLON_REDIS_URL` to the URL of the Redis database.
+
+> [!IMPORTANT]
+> Apollon Standalone requires the Redis JSON module to be enabled. [Read the documents](https://redis.io/docs/latest/develop/data-types/json/) to learn how to enable the JSON module.
+
+
+```bash
+APOLLON_REDIS_URL=redis://[[username]:[password]@][host][:port]
+```
+
+For example:
+
+```bash
+export APOLLON_REDIS_URL=redis://alice:foobared@awesome.redis.server:6380
+```
+
+You can also set the `REDIS_URL` to an empty string, in which case `localhost:6379` will be used as the default.
+
+```bash
+export APOLLON_REDIS_URL=""
+```
+
 ## Developer Setup
 
 ```
@@ -257,3 +282,18 @@ For more information please refer to the [documentation](https://docs.npmjs.com/
 >
 > -   Recompile the Apollon project by executing `npm run prepare`
 > -   Rebuild the Standalone project by executing `npm run build`
+
+### Using Redis in Development
+
+To use Redis in development, you can use the following commands:
+
+```bash
+docker run -p 6379:6379 -it redis/redis-stack-server:latest
+```
+
+This runs the Redis stack, which also includes the Redis JSON module. You can now instruct
+Apollon Standalone to use Redis by setting the `APOLLON_REDIS_URL` environment variable.
+
+```bash
+APOLLON_REDIS_URL="" npm start
+```

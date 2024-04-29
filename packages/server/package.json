@@ -23,6 +23,7 @@
     "jsdom": "23.2.0",
     "pdfmake": "0.2.10",
     "rxjs": "7.8.1",
+    "redis": "4.6.13",
     "shared": "2.1.3"
   },
   "devDependencies": {
