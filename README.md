@@ -236,11 +236,54 @@ For example:
 export APOLLON_REDIS_URL=redis://alice:foobared@awesome.redis.server:6380
 ```
 
-You can also set the `REDIS_URL` to an empty string, in which case `localhost:6379` will be used as the default.
+You can also set the `APOLLON_REDIS_URL` to an empty string, in which case `localhost:6379` will be used as the default.
 
 ```bash
 export APOLLON_REDIS_URL=""
 ```
+
+You can also set `APOLLON_REDIS_DIAGRAM_TTL` environment variable to set the time-to-live for the shared diagrams in Redis. If not provided, shared diagrams will be stored indefinitely. The specified duration is parsed using the [ms](https://www.npmjs.com/package/ms) package, so you can use human-readable strings like `1d`, `2h`, `30m`, etc.
+
+```bash
+export APOLLON_REDIS_DIAGRAM_TTL="30d"
+```
+
+### Deploying with Redis and Docker
+
+Apollon Standalone can be deployed using Docker and connected to another Docker container running Redis.
+
+**STEP 1**: Create a Docker network.
+```bash
+docker network create apollon_network
+```
+
+**STEP 2**: Run the Redis container.
+```bash
+docker run -d --name apollon_redis --network apollon_network redis/redis-stack-server:latest
+```
+
+**STEP 3**: Build the Apollon Standalone Docker container.
+```bash
+docker build -t apollon_standalone -f ./Dockerfile.redis .
+```
+
+> [!IMPORTANT]
+> The Dockerfile for Apollon Standalone using Redis is seperate from the default Dockerfile. Make sure that you build the correct Dockerfile, i.e. `Dockerfile.redis`.
+
+**STEP 4**: Run the Apollon Standalone Docker container.
+```bash
+docker run -d \
+  --name apollon_standalone-0 \
+  --network apollon_network \
+  -e APOLLON_REDIS_URL=redis://apollon_redis:6379 \
+  -p 8080:8080 apollon_standalone
+```
+
+> [!NOTE]
+> Running Redis in a container on the same network is a secure method of deploying Redis. If you have Redis running via some other means, simply provide `APOLLON_REDIS_URL` with the correct URL.
+
+> [!NOTE]
+> Provide `APOLLON_REDIS_DIAGRAM_TTL` environment variable to set the time-to-live for the shared diagrams in Redis. If not provided, shared diagrams will be stored indefinitely.
 
 ## Developer Setup
 

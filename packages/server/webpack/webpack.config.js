@@ -26,7 +26,6 @@ module.exports = {
   },
   externals: {
     canvas: 'commonjs ./canvas/canvas',
-    bufferutil: 'bufferutil',
     'utf-8-validate': 'utf-8-validate',
   },
   plugins: [

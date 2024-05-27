@@ -17,7 +17,7 @@ RUN npm install
 RUN npm run build
 
 # second stage which creates the container image to run the application
-FROM node:16
+FROM node:18
 
 RUN apt-get update && apt-get -y install cron
 
