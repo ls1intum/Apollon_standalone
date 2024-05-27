@@ -285,6 +285,9 @@ docker run -d \
 > [!NOTE]
 > Provide `APOLLON_REDIS_DIAGRAM_TTL` environment variable to set the time-to-live for the shared diagrams in Redis. If not provided, shared diagrams will be stored indefinitely.
 
+> [!NOTE]
+> Do not forget to set the `DEPLOYMENT_URL` environment variable to the URL of the deployed application, when deploying to production environments.
+
 ## Developer Setup
 
 ```
