@@ -1,3 +1,4 @@
+import ms from 'ms';
 import { Operation } from 'fast-json-patch';
 import { RedisClientType, createClient } from 'redis';
 
@@ -8,6 +9,27 @@ import { applyPatchToRedisValue } from './redis-patch';
 
 type SaveRequest = DiagramStorageRequest & {
   key: string;
+}
+
+
+/**
+ * Options for the Redis storage service.
+ */
+export interface RedisStorageOptions {
+  /**
+   * The URL to connect to the Redis server. see
+   * [the documentation of `redis` package](https://www.npmjs.com/package/redis#usage)
+   * for more information on the URL format.
+   */
+  url?: string;
+
+  /**
+   * The time-to-live for diagrams stored in Redis. If set, the diagram will
+   * be automatically deleted after the given time has passed since the last
+   * save operation. The value is parsed using the [`ms`](https://www.npmjs.com/package/ms)
+   * package, so you can use values like `1d`, `1h`, `30m`, etc.
+   */
+  ttl?: string;
 }
 
 
@@ -42,20 +64,20 @@ export class DiagramRedisStorageService implements DiagramStorageService {
   private limiter: DiagramStorageRateLimiter<SaveRequest>;
 
   /**
-   * @param redisUrl the URL to connect to the Redis server. see
-   *               [the documentation of `redis` package](https://www.npmjs.com/package/redis#usage)
-   *               for more information on the URL format.
+   * @param options Options for the Redis storage service.
    */
-  constructor(redisUrl?: string) {
-    this.redisClient = this.createRedisClient(redisUrl);
+  constructor(readonly options?: RedisStorageOptions) {
+    this.redisClient = this.createRedisClient(options?.url);
     this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
       async (request) => {
         const client = await this.redisClient;
         await client.json.set(request.key, '$', request.diagramDTO as any);
+        await this.checkExpire(request.key);
       },
       async (request) => {
         const client = await this.redisClient;
         await applyPatchToRedisValue(client, request.key, request.patch, '$.model');
+        await this.checkExpire(request.key);
       },
       {
         saveInterval: DiagramRedisStorageService.SAVE_INTERVAL,
@@ -76,8 +98,8 @@ export class DiagramRedisStorageService implements DiagramStorageService {
         this.limiter.request({ diagramDTO, token, key });
       } else {
         const client = await this.redisClient;
-        const res = await client.json.set(key, '$', diagramDTO as any);
-        console.log(res);
+        await client.json.set(key, '$', diagramDTO as any);
+        await this.checkExpire(key);
       }
 
       return token;
@@ -119,6 +141,13 @@ export class DiagramRedisStorageService implements DiagramStorageService {
     }
   }
 
+  protected async checkExpire(key: string) {
+    if (this.options?.ttl) {
+      const client = await this.redisClient;
+      await client.expire(key, ms(this.options.ttl) / 1000);
+    }
+  }
+  
   /**
    * Returns the redis key to use for a diagram with given token.
    */
