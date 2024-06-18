@@ -6,7 +6,7 @@
   "dependencies": {
     "@ls1intum/apollon": "3.3.14",
     "moment": "2.30.1",
-    "ws": "8.16.0"
+    "ws": "8.17.1"
   },
   "engines": {
     "node": ">=18.17.0"
