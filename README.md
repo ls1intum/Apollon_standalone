@@ -260,6 +260,8 @@ git clone https://github.com/ls1intum/Apollon_standalone.git
 
 #### STEP 2: Configure the environment
 
+> [!NOTE] You can skip this step for local deployment.
+
 Add a `.env` file in the root folder of the code. Add the following variables:
 
 ```toml
