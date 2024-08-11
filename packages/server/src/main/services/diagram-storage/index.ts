@@ -3,6 +3,7 @@ export { DiagramStorageService } from './diagram-storage-service';
 import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramRedisStorageService } from './diagram-redis-storage-service';
 import { DiagramFileStorageService } from './diagram-file-storage-service';
+import { MigratingStorageService } from './migrating-storage-service';
 
 
 /**
@@ -14,10 +15,20 @@ export class DiagramStorageFactory {
 
   private static createStorageService(): DiagramStorageService {
     if (process.env.APOLLON_REDIS_URL !== undefined) {
-      return new DiagramRedisStorageService({
+
+      const redisStorage = new DiagramRedisStorageService({
         url: process.env.APOLLON_REDIS_URL,
         ttl: process.env.APOLLON_REDIS_DIAGRAM_TTL,
       });
+
+      if (process.env.APOLLON_REDIS_MIGRATE_FROM_FILE !== undefined) {
+        return new MigratingStorageService({
+          targetStorage: redisStorage,
+          sourceStorage: new DiagramFileStorageService(),
+        });
+      } else {
+        return redisStorage;
+      }
     } else {
       return new DiagramFileStorageService();
     }
