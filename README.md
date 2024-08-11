@@ -250,43 +250,37 @@ export APOLLON_REDIS_DIAGRAM_TTL="30d"
 
 ### Deploying with Redis and Docker
 
-Apollon Standalone can be deployed using Docker and connected to another Docker container running Redis.
+Apollon Standalone, using Redis as its storage, can be deployed using Docker. To do that, follow these steps:
 
-**STEP 1**: Create a Docker network.
+#### STEP 1: Clone the code
+
 ```bash
-docker network create apollon_network
+git clone https://github.com/ls1intum/Apollon_standalone.git
 ```
 
-**STEP 2**: Run the Redis container.
-```bash
-docker run -d --name apollon_redis --network apollon_network redis/redis-stack-server:latest
+#### STEP 2: Configure the environment
+
+> [!NOTE] You can skip this step for local deployment.
+
+Add a `.env` file in the root folder of the code. Add the following variables:
+
+```toml
+# The URL of the server, e.g. the address at which
+# Apollon Standalone would be accessible after deployment.
+DEPLOYMENT_URL=https://my.server/apollon/
+
+# The duration for which shared diagrams will be stored
+# (they will be removed afterwards)
+APOLLON_REDIS_DIAGRAM_TTL=30d
 ```
 
-**STEP 3**: Build the Apollon Standalone Docker container.
+#### STEP 3: Run using Docker Compose
+
 ```bash
-docker build -t apollon_standalone -f ./Dockerfile.redis .
+docker compose up -d
 ```
 
-> [!IMPORTANT]
-> The Dockerfile for Apollon Standalone using Redis is seperate from the default Dockerfile. Make sure that you build the correct Dockerfile, i.e. `Dockerfile.redis`.
-
-**STEP 4**: Run the Apollon Standalone Docker container.
-```bash
-docker run -d \
-  --name apollon_standalone-0 \
-  --network apollon_network \
-  -e APOLLON_REDIS_URL=redis://apollon_redis:6379 \
-  -p 8080:8080 apollon_standalone
-```
-
-> [!NOTE]
-> Running Redis in a container on the same network is a secure method of deploying Redis. If you have Redis running via some other means, simply provide `APOLLON_REDIS_URL` with the correct URL.
-
-> [!NOTE]
-> Provide `APOLLON_REDIS_DIAGRAM_TTL` environment variable to set the time-to-live for the shared diagrams in Redis. If not provided, shared diagrams will be stored indefinitely.
-
-> [!NOTE]
-> Do not forget to set the `DEPLOYMENT_URL` environment variable to the URL of the deployed application, when deploying to production environments.
+Apollon Standalone will be running on `localhost:8080`, using a private network bridge to connect to Redis, and storing shared images on a specific Docker volume.
 
 ## Developer Setup
 
