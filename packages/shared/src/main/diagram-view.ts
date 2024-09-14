@@ -3,4 +3,5 @@ export enum DiagramView {
   SEE_FEEDBACK = 'SEE_FEEDBACK',
   EDIT = 'EDIT',
   COLLABORATE = 'COLLABORATE',
+  EMBED = 'EMBED',
 }

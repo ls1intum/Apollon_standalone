@@ -6,9 +6,11 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from 'shared/src/main/diagram-dto';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramStorageFactory } from '../services/diagram-storage';
+import { ConversionService } from '../services/conversion-service/conversion-service';
 
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(DiagramStorageFactory.getStorageService());
+  conversionService: ConversionService = new ConversionService();
 
   getDiagram = (req: Request, res: Response) => {
     const tokenValue: string = req.params.token;
@@ -19,9 +21,14 @@ export class DiagramResource {
     if (/^[a-zA-Z0-9]+$/.test(tokenValue)) {
       this.diagramService
         .getDiagramByLink(tokenValue)
-        .then((diagram: DiagramDTO | undefined) => {
+        .then(async (diagram: DiagramDTO | undefined) => {
           if (diagram) {
-            res.json(diagram);
+            if (req.query.type === 'svg') {
+              const diagramSvg = await this.conversionService.convertToSvg(diagram.model);
+              res.send(diagramSvg.svg);
+            } else {
+              res.json(diagram);
+            }
           } else {
             res.status(404).send('Diagram not found');
           }
