@@ -53,7 +53,7 @@ class ShareModalComponent extends Component<Props, State> {
         `![${
           this.props.diagram ? this.props.diagram.title : 'Diagram'
         }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)` +
-        `\n[Edit a copy](${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${DiagramView.EDIT}`
+        `\n[Edit a copy](${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${DiagramView.EDIT})`
       );
     }
 
