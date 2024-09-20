@@ -15,7 +15,7 @@
     "@ls1intum/apollon": "3.3.14",
     "@sentry/node": "7.110.1",
     "audit-debounce": "0.1.1",
-    "body-parser": "1.20.2",
+    "body-parser": "1.20.3",
     "canvas": "2.11.2",
     "cors": "2.8.5",
     "express": "4.19.2",
