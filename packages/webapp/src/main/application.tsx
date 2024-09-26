@@ -61,6 +61,9 @@ const getInitialStore = (): ApplicationState => {
       collaborators: [],
       fromServer: false,
     },
+    sidebar: {
+      displaySidebar: false,
+    },
   };
 };
 

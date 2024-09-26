@@ -14,6 +14,8 @@ import { ModalRepository } from '../../services/modal/modal-repository';
 import { ModalContentType } from '../modals/application-modal-types';
 import { ConnectClientsComponent } from './connected-clients-component';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
+import { LayoutTextSidebarReverse, LayoutSidebarInsetReverse } from 'react-bootstrap-icons';
+import { SidebarRepository } from '../../services/sidebar/sidebar-repository';
 
 type OwnProps = {};
 
@@ -39,6 +41,7 @@ const ApplicationVersion = styled.span`
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
   openModal: typeof ModalRepository.showModal;
+  toggleSidebar: typeof SidebarRepository.toggleSidebar;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -53,6 +56,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   {
     updateDiagram: DiagramRepository.updateDiagram,
     openModal: ModalRepository.showModal,
+    toggleSidebar: SidebarRepository.toggleSidebar,
   },
 );
 
@@ -121,6 +125,16 @@ class ApplicationBarComponent extends Component<Props, State> {
             </Nav>
             <ConnectClientsComponent collaborators={this.props.collaborators} />
           </Navbar.Collapse>
+          <Nav.Item
+            onClick={() => {
+              this.props.toggleSidebar();
+            }}
+          >
+            <div className="sidebar-toggle me-lg-4">
+              <LayoutTextSidebarReverse size={20} color="#AEB1B5" />
+              {/* <LayoutSidebarInsetReverse size={20} color="#AEB1B5" /> */}
+            </div>
+          </Nav.Item>
           <ThemeSwitcherMenu />
         </Navbar>
       </>

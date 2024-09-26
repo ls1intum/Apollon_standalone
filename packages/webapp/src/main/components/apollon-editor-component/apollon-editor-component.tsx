@@ -23,10 +23,11 @@ import { withApollonEditor } from './with-apollon-editor';
 import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
+import { VersionManagementSidebar } from '../version-management-sidebar/version-management-sidebar';
 
 const ApollonContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-grow: 2;
   overflow: hidden;
 `;
@@ -41,6 +42,7 @@ type StateProps = {
   fromServer: boolean;
   collaborationName: string;
   collaborationColor: string;
+  displaySidebar: boolean;
 };
 
 type DispatchProps = {
@@ -76,6 +78,7 @@ const enhance = compose<FunctionComponent<OwnProps>>(
       fromServer: state.share.fromServer,
       collaborationName: state.share.collaborationName,
       collaborationColor: state.share.collaborationColor,
+      displaySidebar: state.sidebar.displaySidebar,
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
@@ -275,7 +278,13 @@ class ApollonEditorComponent extends Component<Props, State> {
       this.props.options.mode +
       this.props.options.type +
       this.props.options.readonly;
-    return <ApollonContainer key={key} ref={this.containerRef} />;
+    return (
+      <>
+        <ApollonContainer key={key} ref={this.containerRef}>
+          {this.props.displaySidebar && <VersionManagementSidebar />}
+        </ApollonContainer>
+      </>
+    );
   }
 }
 

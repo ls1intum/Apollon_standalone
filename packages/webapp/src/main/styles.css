@@ -98,6 +98,10 @@ legend.scheduler-border {
   border-color: var(--apollon-alert-warning-border);
 }
 
+.sidebar-toggle {
+  cursor: pointer;
+}
+
 .theme-toggle {
   cursor: pointer;
 }
