@@ -25,6 +25,7 @@ export class DiagramResource {
           if (diagram) {
             if (req.query.type === 'svg') {
               const diagramSvg = await this.conversionService.convertToSvg(diagram.model);
+              res.setHeader('Content-Type', 'image/svg+xml');
               res.send(diagramSvg.svg);
             } else {
               res.json(diagram);
