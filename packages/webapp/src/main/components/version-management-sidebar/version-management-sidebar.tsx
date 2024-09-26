@@ -151,7 +151,7 @@ const PreviewActions = styled.div`
 
 type OwnProps = {};
 
-type State = { currentlyViewedVersionIndex: number };
+type State = { currentlyViewedVersionIndex: number; versions: any };
 
 type StateProps = {};
 
@@ -164,19 +164,22 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(n
 const getInitialState = () => {
   return {
     currentlyViewedVersionIndex: -1,
+    versions: [
+      {
+        title: 'Test',
+        description: 'I added a single class and created a new version to see if this even works',
+        lastUpdated: new Date(),
+      },
+      { title: 'First draft', description: 'I created the first draft of my model', lastUpdated: new Date() },
+      { title: 'Feedback implemented', description: 'I have implemented feedback', lastUpdated: new Date() },
+      {
+        title: 'Second draft',
+        description: 'This is the second draft that will recieve feedback and be used in the documentation',
+        lastUpdated: new Date(),
+      },
+    ],
   };
 };
-
-const versions = [
-  { title: 'Test 1', description: 'I added a new diagram for testing', lastUpdated: new Date() },
-  { title: 'Test 2', description: 'I added a new diagram for testing', lastUpdated: new Date() },
-  { title: 'Test 3', description: 'I added a new diagram for testing', lastUpdated: new Date() },
-  {
-    title: 'Test 4',
-    description: 'I added a new diagram for testing, and some more text to fuck with the niceness',
-    lastUpdated: new Date(),
-  },
-];
 
 class VersionManagementSidebarComponent extends Component<Props, State> {
   state = getInitialState();
@@ -246,67 +249,70 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
                 <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
               </Version>
             </TimelineVersion>
-            {versions.reverse().map((version, index) => (
-              <TimelineVersion key={index}>
-                <VersionPosition>
-                  {index === versions.length - 1 ? <LastVerticalLine /> : <VerticalLine />}
-                  {index === this.state.currentlyViewedVersionIndex ? (
-                    <RecordCircle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                  ) : (
-                    <Circle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                  )}
-                </VersionPosition>
-                <Version>
-                  <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
-                  <div style={{ fontWeight: 400, fontSize: '0.8rem' }}>{version.description}</div>
-                  <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                    {this.formatLastUpdated(version.lastUpdated)}
-                  </div>
-                  <VersionActions>
-                    <ActionButton
-                      onClick={() => {
-                        this.editVersion(index);
-                      }}
-                    >
-                      <Pencil />
-                    </ActionButton>
-                    <ActionButton
-                      onClick={() => {
-                        this.deleteVersion(index);
-                      }}
-                    >
-                      <Trash />
-                    </ActionButton>
-                    <ActionButton
-                      onClick={() => {
-                        this.previewVersion(index);
-                      }}
-                    >
-                      <Eye />
-                    </ActionButton>
-                  </VersionActions>
-                  {index === this.state.currentlyViewedVersionIndex && (
-                    <PreviewActions>
-                      <div
+            {this.state.versions
+              .slice()
+              .reverse()
+              .map((version, index) => (
+                <TimelineVersion key={index}>
+                  <VersionPosition>
+                    {index === this.state.versions.length - 1 ? <LastVerticalLine /> : <VerticalLine />}
+                    {index === this.state.currentlyViewedVersionIndex ? (
+                      <RecordCircle style={{ zIndex: 1, backgroundColor: 'white' }} />
+                    ) : (
+                      <Circle style={{ zIndex: 1, backgroundColor: 'white' }} />
+                    )}
+                  </VersionPosition>
+                  <Version>
+                    <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
+                    <div style={{ fontWeight: 400, fontSize: '0.8rem' }}>{version.description}</div>
+                    <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                      {this.formatLastUpdated(version.lastUpdated)}
+                    </div>
+                    <VersionActions>
+                      <ActionButton
                         onClick={() => {
-                          this.exitPreview();
+                          this.editVersion(index);
                         }}
                       >
-                        Exit preview
-                      </div>
-                      <div
+                        <Pencil />
+                      </ActionButton>
+                      <ActionButton
                         onClick={() => {
-                          this.restoreVersion(index);
+                          this.deleteVersion(index);
                         }}
                       >
-                        Restore version
-                      </div>
-                    </PreviewActions>
-                  )}
-                  {/* <VersionActionsMenu /> */}
-                </Version>
-              </TimelineVersion>
-            ))}
+                        <Trash />
+                      </ActionButton>
+                      <ActionButton
+                        onClick={() => {
+                          this.previewVersion(index);
+                        }}
+                      >
+                        <Eye />
+                      </ActionButton>
+                    </VersionActions>
+                    {index === this.state.currentlyViewedVersionIndex && (
+                      <PreviewActions>
+                        <div
+                          onClick={() => {
+                            this.exitPreview();
+                          }}
+                        >
+                          Exit preview
+                        </div>
+                        <div
+                          onClick={() => {
+                            this.restoreVersion(index);
+                          }}
+                        >
+                          Restore version
+                        </div>
+                      </PreviewActions>
+                    )}
+                    {/* <VersionActionsMenu /> */}
+                  </Version>
+                </TimelineVersion>
+              ))}
           </Timeline>
         </div>
       </TimelineContainer>
