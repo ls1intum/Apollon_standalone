@@ -9,10 +9,10 @@ const TimelineContainer = styled.div`
   position: fixed;
   top: auto;
   bottom: auto;
-  width: 241px;
+  width: 250px;
   height: 100%;
   right: 0;
-  background-color: white;
+  background-color: var(--apollon-background);
   border-left: 1px solid #e6e6e6;
 `;
 
@@ -24,6 +24,7 @@ const TimelineHeader = styled.div`
   font-size: 0.9rem;
   font-weight: 600;
   border-bottom: 1px solid #e6e6e6;
+  color: var(--apollon-background-inverse);
 `;
 
 const NewVersionButton = styled.div`
@@ -49,6 +50,7 @@ const TimelineVersion = styled.div`
   position: relative;
   padding: 0.25rem 0.75rem;
   display: inline-flex;
+  width: 100%;
 `;
 
 const VerticalLine = styled.div`
@@ -70,15 +72,6 @@ const FirstVerticalLine = styled.div`
   top: 0;
 `;
 
-const LastVerticalLine = styled.div`
-  width: 1px;
-  background-color: #e6e6e6;
-  height: 22px;
-  position: absolute;
-  z-index: -1;
-  top: 0;
-`;
-
 const VersionPosition = styled.div`
   flex-shrink: 0;
   border-radius: 5px;
@@ -88,6 +81,12 @@ const VersionPosition = styled.div`
   flex-direction: column;
   align-items: center;
   width: 24px;
+  background-color: var(--apollon-background);
+  color: var(--apollon-background-inverse);
+
+  svg {
+    z-index: 1;
+  }
 `;
 
 const Version = styled.div`
@@ -101,11 +100,9 @@ const Version = styled.div`
     background-color: #f3f3f3;
     border-radius: 0.25rem;
     transition: 0.2s ease-in;
+    width: 100%;
+    box-sizing: border-box;
   }
-
-  // &:hover {
-  //   background-color: #e6e6e6;
-  // }
 `;
 
 const VersionActions = styled.div`
@@ -239,11 +236,7 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
             <TimelineVersion>
               <VersionPosition>
                 <FirstVerticalLine />
-                {this.state.currentlyViewedVersionIndex === -1 ? (
-                  <RecordCircle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                ) : (
-                  <Circle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                )}
+                {this.state.currentlyViewedVersionIndex === -1 ? <RecordCircle /> : <Circle />}
               </VersionPosition>
               <Version>
                 <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
@@ -255,12 +248,8 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
               .map((version, index) => (
                 <TimelineVersion key={index}>
                   <VersionPosition>
-                    {index === this.state.versions.length - 1 ? <LastVerticalLine /> : <VerticalLine />}
-                    {index === this.state.currentlyViewedVersionIndex ? (
-                      <RecordCircle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                    ) : (
-                      <Circle style={{ zIndex: 1, backgroundColor: 'white' }} />
-                    )}
+                    {index !== this.state.versions.length - 1 && <VerticalLine />}
+                    {index === this.state.currentlyViewedVersionIndex ? <RecordCircle /> : <Circle />}
                   </VersionPosition>
                   <Version>
                     <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
