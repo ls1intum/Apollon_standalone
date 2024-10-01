@@ -2,12 +2,14 @@ import React, { useContext } from 'react';
 import { Dropdown, NavDropdown } from 'react-bootstrap';
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
 import { ModalContentType } from '../../modals/application-modal-types';
-import { useExportSVG } from '../../../services/export/useExportSVG';
+
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useExportPNG } from '../../../services/export/useExportPNG';
-import { useExportPDF } from '../../../services/export/useExportPDF';
+
 import { showModal } from '../../../services/modal/modalSlice';
-import { useExportJSON } from '../../../services/export/useExportJSON';
+import { useExportJSON } from '../../../services/export/useExportJson';
+import { useExportPDF } from '../../../services/export/useExportPdf';
+import { useExportPNG } from '../../../services/export/useExportPng';
+import { useExportSVG } from '../../../services/export/useExportSvg';
 
 export const FileMenu: React.FC = () => {
   const apollonEditor = useContext(ApollonEditorContext);
