@@ -2,13 +2,6 @@ import { Action } from 'redux';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { Moment } from 'moment';
 
-export type Diagram = {
-  id: string;
-  title: string;
-  model?: UMLModel;
-  lastUpdate: Moment;
-};
-
 export type DiagramActions = UpdateDiagramAction | CreateDiagramAction;
 
 export const enum DiagramActionTypes {

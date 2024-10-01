@@ -8,7 +8,6 @@ import { ApplicationState } from '../store/application-state';
 import styled from 'styled-components';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { appVersion } from '../../application-constants';
-import { Diagram } from '../../services/diagram/diagram-types';
 import { APPLICATION_SERVER_VERSION } from '../../constant';
 import { ModalRepository } from '../../services/modal/modal-repository';
 import { ModalContentType } from '../modals/application-modal-types';
@@ -66,7 +65,7 @@ const getInitialState = (props: Props): State => {
 
 class ApplicationBarComponent extends Component<Props, State> {
   state = getInitialState(this.props);
-
+  
   constructor(props: Props) {
     super(props);
     this.changeDiagramTitlePreview = this.changeDiagramTitlePreview.bind(this);
