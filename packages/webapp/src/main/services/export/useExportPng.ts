@@ -2,30 +2,24 @@ import { useCallback } from 'react';
 import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { useFileDownload } from '../file-download/useFileDownload';
 
-export const useExportPng = () => {
+export const useExportPNG = () => {
   const downloadFile = useFileDownload();
 
-  const exportPng = useCallback(
+  const exportPNG = useCallback(
     async (editor: ApollonEditor, diagramTitle: string, setWhiteBackground: boolean) => {
-      // Step 1: Export the diagram as SVG from the ApollonEditor
+
       const apollonSVG: SVG = await editor.exportAsSVG();
-
-      // Step 2: Convert the exported SVG to a PNG
       const pngBlob: Blob = await convertRenderedSVGToPNG(apollonSVG, setWhiteBackground);
-
-      // Step 3: Create a file name for the PNG
       const fileName = `${diagramTitle}.png`;
-
-      // Step 4: Create a Blob for the PNG and trigger file download
+      
       const fileToDownload = new File([pngBlob], fileName, { type: 'image/png' });
 
-      // Trigger the download using the useFileDownload hook
       downloadFile({ file: fileToDownload, filename: fileName });
     },
     [downloadFile]
   );
 
-  return exportPng;
+  return exportPNG;
 };
 
 // Helper function to convert SVG to PNG

@@ -4,6 +4,7 @@ import { DiagramRepository } from './diagram-repository';
 import { uuid } from '../../utils/uuid';
 import moment, { Moment } from 'moment';
 import { changeDiagramType } from '../editor-options/editorOptionSlice';
+import { LocalStorageRepository } from '../local-storage/local-storage-repository';
 
 export type Diagram = {
   id: string;
@@ -25,7 +26,15 @@ const initialState: DiagramState = {
   error: null,
 };
 
-// Thunk to handle creating a diagram
+export const updateDiagramThunk = createAsyncThunk(
+  'diagram/updateWithLocalStorage',
+  async (diagram: Partial<Diagram>, { dispatch }) => {
+    console.log('DEBUG  updateDiagramThunk before await');
+    await dispatch(updateDiagram(diagram));
+    console.log('DEBUG  updateDiagramThunk after await');
+  },
+);
+
 export const createDiagram = createAsyncThunk(
   'diagram/create',
   async (
@@ -39,28 +48,13 @@ export const createDiagram = createAsyncThunk(
       lastUpdate: moment(),
     };
 
-    // Dispatch the update diagram action after creation
-    dispatch(updateDiagram(diagram));
+    dispatch(updateDiagramThunk(diagram));
     dispatch(changeDiagramType(diagramType));
 
     return diagram;
   },
 );
 
-// Thunk to handle fetching a diagram from the server
-export const fetchDiagramByToken = createAsyncThunk(
-  'diagram/fetchByToken',
-  async (token: string, { rejectWithValue }) => {
-    try {
-      const diagram = await DiagramRepository.getDiagramFromServerByToken(token);
-      return diagram;
-    } catch (error) {
-      return rejectWithValue('Failed to fetch diagram');
-    }
-  },
-);
-
-// Define the slice using Redux Toolkit
 const diagramSlice = createSlice({
   name: 'diagram',
   initialState,
@@ -75,51 +69,14 @@ const diagramSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      // // Create Diagram
-      // .addCase(createDiagram.pending, (state) => {
-      //     state.loading = true;
-      //     state.error = null;
-      // })
-      // .addCase(createDiagram.fulfilled, (state, action: PayloadAction<Diagram>) => {
-      //     state.loading = false;
-      //     state.diagram = action.payload;
-      // })
-      // .addCase(createDiagram.rejected, (state, action) => {
-      //     state.loading = false;
-      //     state.error = action.error.message || 'Failed to create diagram';
-      // })
-
-      // // Update Diagram
-      // .addCase(updateDiagram.pending, (state) => {
-      //     state.loading = true;
-      //     state.error = null;
-      // })
-      // .addCase(updateDiagram.fulfilled, (state, action: PayloadAction<Partial<Diagram>>) => {
-      //     state.loading = false;
-      //     if (state.diagram) {
-      //         state.diagram = { ...state.diagram, ...action.payload, lastUpdate: moment() };
-      //     }
-      // })
-      // .addCase(updateDiagram.rejected, (state, action) => {
-      //     state.loading = false;
-      //     state.error = action.error.message || 'Failed to update diagram';
-      // })
-
-      // Fetch Diagram
-      .addCase(fetchDiagramByToken.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchDiagramByToken.fulfilled, (state, action: PayloadAction<Diagram | null>) => {
-        state.loading = false;
-        state.diagram = action.payload;
-      })
-      .addCase(fetchDiagramByToken.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+    builder.addCase(updateDiagramThunk.fulfilled, (state) => {
+      if (state.diagram) {
+        console.log('DEBUG  extraReducers LocalStorageRepository storeDiagram is called');
+        LocalStorageRepository.storeDiagram(state.diagram);
+      }
+    });
   },
+
   selectors: {
     selectDiagram: (state: DiagramState) => state.diagram,
   },

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { ApplicationBar } from './components/application-bar/application-bar';
-import { ApollonEditorWrapper } from './components/apollon-editor-component/apollon-editor-component';
+import { ApollonEditorComponent } from './components/apollon-editor-component/apollon-editor-component';
 import { ApollonEditor } from '@ls1intum/apollon';
 import {
   POSTHOG_HOST,
   POSTHOG_KEY,
 } from './constant';
 import {
-  ApollonEditorContext,
   ApollonEditorProvider,
+  
 } from './components/apollon-editor-component/apollon-editor-context';
 import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
 import { ErrorPanel } from './components/error-handling/error-panel';
@@ -25,23 +25,20 @@ const postHogOptions = {
 
 export const Application = () => {
   const [editor, setEditor] = useState<ApollonEditor>();
-  const handleSetEditor = (ref: ApollonEditor) => {
-    if (ref) {
-      setEditor(ref);
-    }
+  const handleSetEditor = (newEditor: ApollonEditor) => {
+      setEditor(newEditor);
   };
-  const isFirefox: boolean = /Firefox/i.test(navigator.userAgent);
-  const context: ApollonEditorContext | null = { editor, setEditor: handleSetEditor };
+  const isFirefox = /Firefox/i.test(navigator.userAgent);
 
   return (
     <PostHogProvider apiKey={POSTHOG_KEY} options={postHogOptions}>
-      <ApollonEditorProvider value={context}>
+      <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
         <ApplicationStore >
           <ApplicationBar />
           <ApplicationModal />
           {isFirefox && <FirefoxIncompatibilityHint />}
           <ErrorPanel />
-          <ApollonEditorWrapper />
+          <ApollonEditorComponent />
         </ApplicationStore>
         <ToastContainer />
       </ApollonEditorProvider>

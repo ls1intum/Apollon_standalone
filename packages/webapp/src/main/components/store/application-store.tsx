@@ -1,5 +1,4 @@
 import React from 'react';
-import { combineReducers, PreloadedState } from 'redux';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import moment from 'moment';
@@ -9,14 +8,19 @@ import {
   localStorageCollaborationName,
   localStorageCollaborationColor,
 } from '../../constant';
-import { defaultEditorOptions } from '../../services/editor-options/editor-options-reducer';
-import { EditorOptions } from '../../services/editor-options/editor-options-types';
 import { uuid } from '../../utils/uuid';
-import { reducers } from '../../services/reducer';
-import { Diagram, DiagramState } from '../../services/diagram/diagramSlice';
-import { ApollonError } from '../../services/error-management/error-types';
+import { Diagram, diagramReducer, DiagramState } from '../../services/diagram/diagramSlice';
+
 import { ModalState } from '../../services/modal/modal-types';
 import { ShareState } from '../../services/share/share-types';
+import {
+  defaultEditorOptions,
+  EditorOptions,
+  editorOptionsReducer,
+} from '../../services/editor-options/editorOptionSlice';
+import { ApollonError, errorReducer } from '../../services/error-management/errorManagementSlice';
+import { modalReducer } from '../../services/modal/modalSlice';
+import { shareReducer } from '../../services/share/shareSlice';
 
 interface ApplicationState {
   diagram: DiagramState;
@@ -62,7 +66,14 @@ const getInitialStore = (): ApplicationState => {
 };
 
 const store = configureStore({
-  reducer: combineReducers(reducers),
+  // reducer: combineReducers(reducers),
+  reducer: {
+    diagram: diagramReducer,
+    editorOptions: editorOptionsReducer,
+    errors: errorReducer,
+    modal: modalReducer,
+    share: shareReducer,
+  },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
   preloadedState: getInitialStore(),
   devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in non-production environments

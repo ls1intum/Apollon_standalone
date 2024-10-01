@@ -1,23 +1,8 @@
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { BASE_URL } from '../../constant';
 import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { Diagram } from './diagramSlice';
 
 export const DiagramRepository = {
-  createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
-    type: DiagramActionTypes.CREATE_DIAGRAM,
-    payload: {
-      diagramType,
-      diagramTitle,
-      template,
-    },
-  }),
-  updateDiagram: (values: Partial<Diagram & { diagramType: UMLDiagramType }>): UpdateDiagramAction => ({
-    type: DiagramActionTypes.UPDATE_DIAGRAM,
-    payload: {
-      values,
-    },
-  }),
   getDiagramFromServerByToken(token: string): Promise<DiagramDTO | null> {
     const resourceUrl = `${BASE_URL}/diagrams/${token}`;
     return fetch(resourceUrl, {

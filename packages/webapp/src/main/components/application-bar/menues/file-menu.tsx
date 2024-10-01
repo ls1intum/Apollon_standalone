@@ -1,140 +1,78 @@
-import React, { Component, ComponentClass } from 'react';
+import React, { useContext } from 'react';
 import { Dropdown, NavDropdown } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
 import { ApollonEditorContext } from '../../apollon-editor-component/apollon-editor-context';
-import { ExportRepository } from '../../../services/export/export-repository';
-import { Diagram } from '../../../services/diagram/diagram-types';
-import { ModalRepository } from '../../../services/modal/modal-repository';
 import { ModalContentType } from '../../modals/application-modal-types';
+import { useExportSVG } from '../../../services/export/useExportSVG';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useExportPNG } from '../../../services/export/useExportPNG';
+import { useExportPDF } from '../../../services/export/useExportPDF';
+import { showModal } from '../../../services/modal/modalSlice';
+import { useExportJSON } from '../../../services/export/useExportJSON';
 
-type Props = {};
+export const FileMenu: React.FC = () => {
+  const apollonEditor = useContext(ApollonEditorContext);
+  const dispatch = useAppDispatch();
 
-type State = {
-  show: boolean;
-};
+  const editor = apollonEditor?.editor;
+  const diagram = useAppSelector((state) => state.diagram.diagram);
+  const exportAsSVG = useExportSVG();
+  const exportAsPNG = useExportPNG();
+  const exportAsPDF = useExportPDF();
+  const exportAsJSON = useExportJSON();
 
-type StateProps = {
-  diagram: Diagram | null;
-};
-
-type DispatchProps = {
-  exportAsSVG: typeof ExportRepository.exportAsSVG;
-  exportAsPNG: typeof ExportRepository.exportAsPNG;
-  exportAsJSON: typeof ExportRepository.exportAsJSON;
-  exportAsPDF: typeof ExportRepository.exportAsPDF;
-  openModal: typeof ModalRepository.showModal;
-};
-
-const enhance = compose<ComponentClass<Props>>(
-  withApollonEditor,
-  connect<StateProps, DispatchProps, Props, ApplicationState>(
-    (state, props) => {
-      return {
-        diagram: state.diagram,
-      };
-    },
-    {
-      exportAsSVG: ExportRepository.exportAsSVG,
-      exportAsPNG: ExportRepository.exportAsPNG,
-      exportAsJSON: ExportRepository.exportAsJSON,
-      exportAsPDF: ExportRepository.exportAsPDF,
-      openModal: ModalRepository.showModal,
-    },
-  ),
-);
-
-type OwnProps = StateProps & DispatchProps & Props & ApollonEditorContext;
-
-class FileMenuComponent extends Component<OwnProps, State> {
-  constructor(props: OwnProps) {
-    super(props);
-    this.exportDiagram = this.exportDiagram.bind(this);
-  }
-
-  componentDidMount() {
-    document.addEventListener('click', this.hideMenu);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.hideMenu);
-  }
-
-  showMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    this.setState({ show: true });
-    event.stopPropagation();
-  };
-
-  hideMenu = (event: MouseEvent) => {
-    this.setState({ show: false });
-    event.stopPropagation();
-  };
-
-  exportDiagram(exportType: 'PNG' | 'PNG_WHITE' | 'SVG' | 'JSON' | 'PDF'): void {
-    if (this.props.editor && this.props.diagram?.title) {
+  const exportDiagram = (exportType: 'PNG' | 'PNG_WHITE' | 'SVG' | 'JSON' | 'PDF'): void => {
+    if (editor && diagram?.title) {
       switch (exportType) {
         case 'SVG':
-          this.props.exportAsSVG(this.props.editor, this.props.diagram?.title);
+          exportAsSVG(editor, diagram?.title);
           break;
         case 'PNG_WHITE':
-          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title, true);
+          exportAsPNG(editor, diagram?.title, true);
           break;
         case 'PNG':
-          this.props.exportAsPNG(this.props.editor, this.props.diagram?.title, false);
+          exportAsPNG(editor, diagram?.title, false);
           break;
         case 'PDF':
-          this.props.exportAsPDF(this.props.editor, this.props.diagram?.title);
+          exportAsPDF(editor, diagram?.title);
           break;
         case 'JSON':
-          this.props.exportAsJSON(this.props.editor, this.props.diagram);
+          exportAsJSON(editor, diagram);
       }
     }
-  }
+  };
 
-  render() {
-    return (
-      <>
-        <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0" onClick={this.showMenu}>
-          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramModal)}>
-            New
-          </NavDropdown.Item>
-          <NavDropdown.Item
-            onClick={(event) => this.props.openModal(ModalContentType.CreateDiagramFromTemplateModal, 'lg')}
-          >
-            Start from Template
-          </NavDropdown.Item>
-          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.LoadDiagramModal)}>
-            Load
-          </NavDropdown.Item>
-          <NavDropdown.Item onClick={(event) => this.props.openModal(ModalContentType.ImportDiagramModal)}>
-            Import
-          </NavDropdown.Item>
-          <Dropdown id="export-dropdown" drop="end">
-            <Dropdown.Toggle
-              id="dropdown-basic"
-              split
-              className="bg-transparent w-100 text-start ps-3 d-flex align-items-center"
-            >
-              <span className="flex-grow-1">Export</span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('SVG')}>As SVG</Dropdown.Item>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG_WHITE')}>
-                As PNG (White Background)
-              </Dropdown.Item>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PNG')}>
-                As PNG (Transparent Background)
-              </Dropdown.Item>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('JSON')}>As JSON</Dropdown.Item>
-              <Dropdown.Item onClick={(event: any) => this.exportDiagram('PDF')}>As PDF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </NavDropdown>
-      </>
-    );
-  }
-}
-
-export const FileMenu = enhance(FileMenuComponent);
+  return (
+    <NavDropdown id="file-menu-item" title="File" className="pt-0, pb-0">
+      <NavDropdown.Item onClick={() => dispatch(showModal({ type: ModalContentType.CreateDiagramModal }))}>
+        New
+      </NavDropdown.Item>
+      <NavDropdown.Item
+        onClick={() => dispatch(showModal({ type: ModalContentType.CreateDiagramFromTemplateModal, size: 'lg' }))}
+      >
+        Start from Template
+      </NavDropdown.Item>
+      <NavDropdown.Item onClick={() => dispatch(showModal({ type: ModalContentType.LoadDiagramModal }))}>
+        Load
+      </NavDropdown.Item>
+      <NavDropdown.Item onClick={(event) => dispatch(showModal({ type: ModalContentType.ImportDiagramModal }))}>
+        Import
+      </NavDropdown.Item>
+      <Dropdown id="export-dropdown" drop="end">
+        <Dropdown.Toggle
+          id="dropdown-basic"
+          split
+          className="bg-transparent w-100 text-start ps-3 d-flex align-items-center"
+        >
+          <span className="flex-grow-1">Export</span>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => exportDiagram('SVG')}>As SVG</Dropdown.Item>
+          <Dropdown.Item onClick={() => exportDiagram('PNG_WHITE')}>As PNG (White Background)</Dropdown.Item>
+          <Dropdown.Item onClick={() => exportDiagram('PNG')}>As PNG (Transparent Background)</Dropdown.Item>
+          <Dropdown.Item onClick={() => exportDiagram('JSON')}>As JSON</Dropdown.Item>
+          <Dropdown.Item onClick={() => exportDiagram('PDF')}>As PDF</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </NavDropdown>
+  );
+};
