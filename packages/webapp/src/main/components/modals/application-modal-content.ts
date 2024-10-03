@@ -1,5 +1,4 @@
-import { ComponentType } from 'react';
-import { ModalContentType } from './application-modal-types';
+import { ModalContentProps, ModalContentType } from './application-modal-types';
 import { HelpModelingModal } from './help-modeling-modal/help-modeling-modal';
 import { ImportDiagramModal } from './import-diagram-modal/import-diagram-modal';
 import { InformationModal } from './information-modal/information-modal';
@@ -9,7 +8,7 @@ import { CreateFromTemplateModal } from './create-diagram-from-template-modal/cr
 import { ShareModal } from './share-modal/share-modal';
 import { CollaborationModal } from './collaboration-modal/collaboration-modal';
 
-export const ApplicationModalContent: { [key in ModalContentType]: ComponentType<any> } = {
+export const ApplicationModalContent: { [key in ModalContentType]: React.FC<ModalContentProps> } = {
   [ModalContentType.HelpModelingModal]: HelpModelingModal,
   [ModalContentType.ImportDiagramModal]: ImportDiagramModal,
   [ModalContentType.InformationModal]: InformationModal,

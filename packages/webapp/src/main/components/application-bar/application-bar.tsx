@@ -29,13 +29,10 @@ const ApplicationVersion = styled.span`
 export const ApplicationBar: React.FC = () => {
   const dispatch = useAppDispatch();
 
-
   const { diagram } = useAppSelector((state) => state.diagram);
   const collaborators = useAppSelector((state) => state.share.collaborators);
 
-
   const [diagramTitle, setDiagramTitle] = useState<string>(diagram?.title || '');
-
 
   useEffect(() => {
     if (diagram?.title) {
@@ -43,11 +40,9 @@ export const ApplicationBar: React.FC = () => {
     }
   }, [diagram?.title]);
 
-
   const changeDiagramTitlePreview = (event: ChangeEvent<HTMLInputElement>) => {
     setDiagramTitle(event.target.value);
   };
-
 
   const changeDiagramTitleApplicationState = () => {
     if (diagram) {
@@ -55,41 +50,38 @@ export const ApplicationBar: React.FC = () => {
     }
   };
 
-
   const handleOpenModal = () => {
     dispatch(showModal({ type: ModalContentType.ShareModal, size: 'lg' }));
   };
 
   return (
-    <>
-      <Navbar className="navbar" variant="dark" expand="lg">
-        <Navbar.Brand>
-          <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />{' '}
-          <span className="fw-bold ms-2">Apollon</span>
-        </Navbar.Brand>
-        <ApplicationVersion>{appVersion}</ApplicationVersion>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <FileMenu />
-            {/*<ViewMenu />*/}
-            {APPLICATION_SERVER_VERSION && (
-              <Nav.Item>
-                <Nav.Link onClick={handleOpenModal}>Share</Nav.Link>
-              </Nav.Item>
-            )}
-            <HelpMenu />
-            <DiagramTitle
-              type="text"
-              value={diagramTitle}
-              onChange={changeDiagramTitlePreview}
-              onBlur={changeDiagramTitleApplicationState}
-            />
-          </Nav>
-          <ConnectClientsComponent collaborators={collaborators} />
-        </Navbar.Collapse>
-        <ThemeSwitcherMenu />
-      </Navbar>
-    </>
+    <Navbar className="navbar" variant="dark" expand="lg">
+      <Navbar.Brand>
+        <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />{' '}
+        <span className="fw-bold ms-2">Apollon</span>
+      </Navbar.Brand>
+      <ApplicationVersion>{appVersion}</ApplicationVersion>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto">
+          <FileMenu />
+          {/*<ViewMenu />*/}
+          {APPLICATION_SERVER_VERSION && (
+            <Nav.Item>
+              <Nav.Link onClick={handleOpenModal}>Share</Nav.Link>
+            </Nav.Item>
+          )}
+          <HelpMenu />
+          <DiagramTitle
+            type="text"
+            value={diagramTitle}
+            onChange={changeDiagramTitlePreview}
+            onBlur={changeDiagramTitleApplicationState}
+          />
+        </Nav>
+        <ConnectClientsComponent collaborators={collaborators} />
+      </Navbar.Collapse>
+      <ThemeSwitcherMenu />
+    </Navbar>
   );
 };

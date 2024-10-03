@@ -6,11 +6,13 @@ import { LoadDiagramContent } from './load-diagram-content';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { hideModal } from '../../../services/modal/modalSlice';
 import { useLocalStorage } from '../../../services/local-storage/useLocalStorage';
+import { ModalContentProps } from '../application-modal-types';
+import { createDiagram } from '../../../services/diagram/diagramSlice';
 
-export const LoadDiagramModal: React.FC = () => {
+export const LoadDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
   const { diagram } = useAppSelector((state) => state.diagram);
   const dispatch = useAppDispatch();
-  const loadDiagram  = useLocalStorage();
+  const loadDiagram = useLocalStorage();
 
   const getSavedDiagrams = (): LocalStorageDiagramListItem[] => {
     const localDiagrams = LocalStorageRepository.getStoredDiagrams();
@@ -18,8 +20,17 @@ export const LoadDiagramModal: React.FC = () => {
   };
 
   const onSelect = (id: string) => {
-    loadDiagram(id);
-    dispatch(hideModal());
+    const loadedDiagram = loadDiagram(id);
+    if (loadedDiagram) {
+      dispatch(
+        createDiagram({
+          diagramTitle: loadedDiagram.title,
+          diagramType: loadedDiagram.model?.type || 'ClassDiagram',
+          template: loadedDiagram.model,
+        }),
+      );
+    }
+    close();
   };
 
   return (

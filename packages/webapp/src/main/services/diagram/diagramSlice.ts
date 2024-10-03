@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
-import { DiagramRepository } from './diagram-repository';
 import { uuid } from '../../utils/uuid';
 import moment, { Moment } from 'moment';
 import { changeDiagramType } from '../editor-options/editorOptionSlice';

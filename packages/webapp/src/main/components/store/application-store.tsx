@@ -11,16 +11,14 @@ import {
 import { uuid } from '../../utils/uuid';
 import { Diagram, diagramReducer, DiagramState } from '../../services/diagram/diagramSlice';
 
-import { ModalState } from '../../services/modal/modal-types';
-import { ShareState } from '../../services/share/share-types';
 import {
   defaultEditorOptions,
   EditorOptions,
   editorOptionsReducer,
 } from '../../services/editor-options/editorOptionSlice';
 import { ApollonError, errorReducer } from '../../services/error-management/errorManagementSlice';
-import { modalReducer } from '../../services/modal/modalSlice';
-import { shareReducer } from '../../services/share/shareSlice';
+import { modalReducer, ModalState } from '../../services/modal/modalSlice';
+import { shareReducer, ShareState } from '../../services/share/shareSlice';
 
 interface ApplicationState {
   diagram: DiagramState;
