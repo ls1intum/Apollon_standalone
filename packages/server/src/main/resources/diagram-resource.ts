@@ -24,15 +24,20 @@ export class DiagramResource {
         .then(async (diagram: DiagramDTO | undefined) => {
           if (diagram) {
             if (req.query.type === 'svg') {
-              const diagramSvg = await this.conversionService.convertToSvg(diagram.model);
+              const diagramSvg = (await this.conversionService.convertToSvg(diagram.model)).svg;
+              const diagramSvgWhiteBackground = diagramSvg.replace(
+                /<svg([^>]*)>/,
+                '<svg$1 style="background-color: white;">',
+              );
+
               res.setHeader('Content-Type', 'image/svg+xml');
-              res.send(diagramSvg.svg);
-            } else {
-              res.json(diagram);
+              return res.send(diagramSvgWhiteBackground);
             }
-          } else {
-            res.status(404).send('Diagram not found');
+
+            return res.json(diagram);
           }
+
+          return res.status(404).send('Diagram not found');
         })
         .catch(() => res.status(503).send('Error occurred'));
     } else {
