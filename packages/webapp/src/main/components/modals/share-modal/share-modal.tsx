@@ -149,7 +149,7 @@ class ShareModalComponent extends Component<Props, State> {
     return (
       <>
         <Modal.Header closeButton>
-          <Modal.Title>Share Test</Modal.Title>
+          <Modal.Title>Share</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <>
