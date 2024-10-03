@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
-import {  updateDiagramThunk } from '../../services/diagram/diagramSlice';
+import { updateDiagramThunk } from '../../services/diagram/diagramSlice';
 import { useLocation, useParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -28,27 +28,24 @@ const ApollonContainer = styled.div`
   overflow: hidden;
 `;
 
-export const ApollonEditorComponent: React.FC= () => {
+export const ApollonEditorComponent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<ApollonEditor | null>(null);
-  const clientRef = useRef<W3CWebSocket | null>(null); 
+  const clientRef = useRef<W3CWebSocket | null>(null);
   const [selection, setSelection] = useState<Selection>({ elements: {}, relationships: {} });
   const location = useLocation();
   const params = useParams();
   const editorContext = useContext(ApollonEditorContext);
-  const {  collaborationName, collaborationColor } = useAppSelector((state) => state.share);
+  const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
   const importDiagram = useImportDiagram();
-  const {diagram: reduxDiagram} = useAppSelector((state)=>state.diagram)
-  const options = useAppSelector((state)=>state.editorOptions)
+  const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
+  const options = useAppSelector((state) => state.editorOptions);
 
   const editor = editorContext?.editor;
   const setEditor = editorContext?.setEditor;
 
-  const memoizedOptions = useMemo(
-    () => options,
-    [options.type, options.mode, options.readonly],
-  );
+  const memoizedOptions = useMemo(() => options, [options.type, options.mode, options.readonly]);
 
   // Establish collaboration connection
   const establishCollaborationConnection = (token: string, name: string, color: string) => {
@@ -84,7 +81,6 @@ export const ApollonEditorComponent: React.FC= () => {
 
   // Initialize the editor once, when the container is available
   useEffect(() => {
-    console.log('DEBUGF wwowoow');
     if (containerRef.current && !editorRef.current && setEditor) {
       editorRef.current = new ApollonEditor(containerRef.current, memoizedOptions);
 
@@ -102,7 +98,7 @@ export const ApollonEditorComponent: React.FC= () => {
       });
 
       editorRef.current.subscribeToModelChange((model: UMLModel) => {
-        const diagram = { ...reduxDiagram, model } ;
+        const diagram = { ...reduxDiagram, model };
         dispatch(updateDiagramThunk(diagram));
       });
 
@@ -125,11 +121,9 @@ export const ApollonEditorComponent: React.FC= () => {
 
       setEditor(editorRef.current);
     }
-  }, [containerRef, memoizedOptions, setEditor]);
+  }, [containerRef, setEditor]);
 
   useEffect(() => {
-    console.log('DEBUGF wwowoow');
-
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
       const { token } = params;
       if (token) {
@@ -153,8 +147,8 @@ export const ApollonEditorComponent: React.FC= () => {
             case DiagramView.COLLABORATE:
               dispatch(changeEditorMode(ApollonMode.Modelling));
               dispatch(changeReadonlyMode(false));
-              if (!collaborationName ||collaborationColor) {
-                dispatch(showModal({type:ModalContentType.CollaborationModal, size:'lg'}));
+              if (!collaborationName || collaborationColor) {
+                dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
               }
               establishCollaborationConnection(token, collaborationName, collaborationColor);
               if (notifyUser === 'true') {
@@ -210,5 +204,3 @@ export const ApollonEditorComponent: React.FC= () => {
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };
-
-

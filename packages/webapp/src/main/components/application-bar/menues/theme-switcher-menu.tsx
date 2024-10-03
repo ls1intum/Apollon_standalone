@@ -4,8 +4,6 @@ import { LocalStorageRepository } from '../../../../main/services/local-storage/
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import ThemeSwitcherIcon from 'webapp/assets/theme-switcher.svg';
 
-
-
 export const ThemeSwitcherMenu: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -81,11 +79,7 @@ export const ThemeSwitcherMenu: React.FC = () => {
             <div className="switch-box">
               Sync with Operating System
               <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={overrideUserThemePreference}
-                  onChange={handleInputChange}
-                />
+                <input type="checkbox" checked={overrideUserThemePreference} onChange={handleInputChange} />
                 <span className="slider round" />
               </label>
             </div>
@@ -112,4 +106,3 @@ export const ThemeSwitcherMenu: React.FC = () => {
     </OverlayTrigger>
   );
 };
-

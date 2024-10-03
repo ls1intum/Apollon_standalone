@@ -1,31 +1,16 @@
 import { UMLDiagramType } from '@ls1intum/apollon';
 import React, { useState } from 'react';
 import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { ModalContentProps } from '../application-modal-types';
 import posthog from 'posthog-js';
 import { useAppDispatch } from '../../store/hooks';
 import { createDiagram } from '../../../services/diagram/diagramSlice';
 
-type State = {
-  selectedDiagramType: string;
-  diagramTitle: string;
-  generatedTitle: boolean;
-};
-
-const getInitialState = (): State => {
-  return {
-    selectedDiagramType: UMLDiagramType.ClassDiagram,
-    diagramTitle: UMLDiagramType.ClassDiagram,
-    generatedTitle: true,
-  };
-};
-
 const diagramsInBeta: string[] = ['BPMN'];
 
 export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
   const [selectedDiagramType, setSelectedDiagramType] = useState<UMLDiagramType>(UMLDiagramType.ClassDiagram);
-  const [diagramTitle, setDiagramTitle] = useState('Class diagram');
+  const [diagramTitle, setDiagramTitle] = useState<string>(UMLDiagramType.ClassDiagram);
 
   const dispatch = useAppDispatch();
 
@@ -56,7 +41,10 @@ export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
             <ListGroup.Item
               key={value}
               action
-              onClick={() => setSelectedDiagramType(value)}
+              onClick={() => {
+                setSelectedDiagramType(value);
+                setDiagramTitle(value);
+              }}
               active={selectedDiagramType === value}
             >
               {value}
