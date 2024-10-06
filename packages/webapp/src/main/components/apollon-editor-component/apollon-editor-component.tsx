@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
-import { updateDiagramThunk } from '../../services/diagram/diagramSlice';
+import { setCreateNewEditor, updateDiagramThunk } from '../../services/diagram/diagramSlice';
 import { useLocation, useParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -39,7 +39,7 @@ export const ApollonEditorComponent: React.FC = () => {
   const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
   const importDiagram = useImportDiagram();
-  const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
+  const { diagram: reduxDiagram, createNewEditor } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.editorOptions);
 
   const editor = editorContext?.editor;
@@ -47,7 +47,6 @@ export const ApollonEditorComponent: React.FC = () => {
 
   const memoizedOptions = useMemo(() => options, [options.type, options.mode, options.readonly]);
 
-  // Establish collaboration connection
   const establishCollaborationConnection = (token: string, name: string, color: string) => {
     if (!clientRef.current) {
       const newClient = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
@@ -78,11 +77,13 @@ export const ApollonEditorComponent: React.FC = () => {
       };
     }
   };
-
-  // Initialize the editor once, when the container is available
   useEffect(() => {
-    if (containerRef.current && !editorRef.current && setEditor) {
-      editorRef.current = new ApollonEditor(containerRef.current, memoizedOptions);
+    if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
+      if (editorRef.current) {
+        editorRef.current.destroy();
+      }
+      const editor = new ApollonEditor(containerRef.current, memoizedOptions);
+      editorRef.current = editor;
 
       editorRef.current.subscribeToAllModelChangePatches((patch: Patch) => {
         if (clientRef.current) {
@@ -120,8 +121,9 @@ export const ApollonEditorComponent: React.FC = () => {
       });
 
       setEditor(editorRef.current);
+      dispatch(setCreateNewEditor(false));
     }
-  }, [containerRef, setEditor]);
+  }, [containerRef.current, createNewEditor]);
 
   useEffect(() => {
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
@@ -198,9 +200,7 @@ export const ApollonEditorComponent: React.FC = () => {
     );
   };
 
-  const key = useMemo(() => {
-    return (reduxDiagram?.id || uuid()) + options.mode + options.type + options.readonly;
-  }, [reduxDiagram?.id, options.mode, options.type, options.readonly]);
+  const key = reduxDiagram?.id || uuid() + options.mode + options.type + options.readonly;
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };

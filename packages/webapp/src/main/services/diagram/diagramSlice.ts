@@ -15,20 +15,20 @@ export interface DiagramState {
   diagram: Diagram | null;
   loading: boolean;
   error: string | null;
+  createNewEditor: boolean;
 }
 
 const initialState: DiagramState = {
   diagram: null,
   loading: false,
   error: null,
+  createNewEditor: true,
 };
 
 export const updateDiagramThunk = createAsyncThunk(
   'diagram/updateWithLocalStorage',
   async (diagram: Partial<Diagram>, { dispatch }) => {
-    console.log('DEBUG  updateDiagramThunk before await');
     await dispatch(updateDiagram(diagram));
-    console.log('DEBUG  updateDiagramThunk after await');
   },
 );
 
@@ -38,6 +38,7 @@ export const createDiagram = createAsyncThunk(
     { diagramTitle, diagramType, template }: { diagramTitle: string; diagramType: UMLDiagramType; template?: UMLModel },
     { dispatch },
   ) => {
+    dispatch(setCreateNewEditor(true));
     const diagram: Diagram = {
       id: uuid(),
       title: diagramTitle,
@@ -65,11 +66,13 @@ const diagramSlice = createSlice({
       state.diagram!.id = action.payload;
       state.loading = true;
     },
+    setCreateNewEditor: (state, action: PayloadAction<boolean>) => {
+      state.createNewEditor = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateDiagramThunk.fulfilled, (state) => {
       if (state.diagram) {
-        console.log('DEBUG  extraReducers LocalStorageRepository storeDiagram is called');
         LocalStorageRepository.storeDiagram(state.diagram);
         state.loading = false;
       }
@@ -78,10 +81,11 @@ const diagramSlice = createSlice({
 
   selectors: {
     selectDiagram: (state: DiagramState) => state.diagram,
+    selectCreatenewEditor: (state: DiagramState) => state.createNewEditor,
   },
 });
 
-export const { updateDiagram } = diagramSlice.actions;
-export const { selectDiagram } = diagramSlice.selectors;
+export const { updateDiagram, setCreateNewEditor } = diagramSlice.actions;
+export const { selectDiagram, selectCreatenewEditor } = diagramSlice.selectors;
 
 export const diagramReducer = diagramSlice.reducer;

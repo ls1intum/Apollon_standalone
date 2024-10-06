@@ -4,7 +4,7 @@ import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-
 import { ModalContentProps } from '../application-modal-types';
 import posthog from 'posthog-js';
 import { useAppDispatch } from '../../store/hooks';
-import { createDiagram } from '../../../services/diagram/diagramSlice';
+import { createDiagram, setCreateNewEditor } from '../../../services/diagram/diagramSlice';
 
 const diagramsInBeta: string[] = ['BPMN'];
 

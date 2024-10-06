@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import moment from 'moment';
 import {
   localStorageLatest,
   localStorageDiagramPrefix,
@@ -41,12 +40,12 @@ const getInitialStore = (): ApplicationState => {
     diagram = { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: new Date().toISOString() };
   }
 
-  // initial application state
   return {
     diagram: {
       diagram,
       error: null,
       loading: false,
+      createNewEditor: true,
     },
     editorOptions,
     errors: [],
@@ -64,7 +63,6 @@ const getInitialStore = (): ApplicationState => {
 };
 
 const store = configureStore({
-  // reducer: combineReducers(reducers),
   reducer: {
     diagram: diagramReducer,
     editorOptions: editorOptionsReducer,
