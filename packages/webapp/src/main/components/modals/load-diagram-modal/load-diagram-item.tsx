@@ -24,7 +24,7 @@ export const LoadDiagramItem: React.FC<Props> = ({ item }) => {
       </div>
       <div className="flex-shrink-0">
         <SubTitle>last updated:</SubTitle>
-        <SubTitle>{item.lastUpdate.locale(locale).format(longDate)}</SubTitle>
+        <SubTitle>{new Date(item.lastUpdate).toLocaleTimeString(locale)}</SubTitle>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { uuid } from '../../utils/uuid';
-import moment, { Moment } from 'moment';
 import { changeDiagramType } from '../editor-options/editorOptionSlice';
 import { LocalStorageRepository } from '../local-storage/local-storage-repository';
 
@@ -9,10 +8,9 @@ export type Diagram = {
   id: string;
   title: string;
   model?: UMLModel;
-  lastUpdate: Moment;
+  lastUpdate: string;
 };
 
-// Define the initial state for the slice
 export interface DiagramState {
   diagram: Diagram | null;
   loading: boolean;
@@ -44,7 +42,7 @@ export const createDiagram = createAsyncThunk(
       id: uuid(),
       title: diagramTitle,
       model: template,
-      lastUpdate: moment(),
+      lastUpdate: new Date().toISOString(),
     };
 
     dispatch(updateDiagramThunk(diagram));
@@ -65,6 +63,7 @@ const diagramSlice = createSlice({
     },
     createDiagram: (state, action: PayloadAction<string>) => {
       state.diagram!.id = action.payload;
+      state.loading = true;
     },
   },
   extraReducers: (builder) => {
@@ -72,6 +71,7 @@ const diagramSlice = createSlice({
       if (state.diagram) {
         console.log('DEBUG  extraReducers LocalStorageRepository storeDiagram is called');
         LocalStorageRepository.storeDiagram(state.diagram);
+        state.loading = false;
       }
     });
   },

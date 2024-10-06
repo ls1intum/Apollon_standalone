@@ -38,7 +38,7 @@ const getInitialStore = (): ApplicationState => {
     diagram = latestDiagram;
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
   } else {
-    diagram = { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() };
+    diagram = { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: new Date().toISOString() };
   }
 
   // initial application state
