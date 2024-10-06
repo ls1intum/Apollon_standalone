@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
 import { ApplicationModalContent } from './application-modal-content';
-import { ModalRepository } from '../../services/modal/modal-repository';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { hideModal } from '../../services/modal/modalSlice';
 
 export const ApplicationModal = () => {
   const [isClosable, setIsClosable] = useState(true);
-  const displayModal = useSelector((state: ApplicationState) => state.modal.type);
-  const modalSize = useSelector((state: ApplicationState) => state.modal.size);
-  const dispatch = useDispatch();
+  const displayModal = useAppSelector((state) => state.modal.type);
+  const modalSize = useAppSelector((state) => state.modal.size);
+  const dispatch = useAppDispatch();
 
   const onClosableChange = (closable: boolean) => {
     setIsClosable(closable);
@@ -18,12 +17,12 @@ export const ApplicationModal = () => {
 
   const handleClose = () => {
     if (isClosable) {
-      dispatch(ModalRepository.hideModal());
+      dispatch(hideModal());
     }
   };
 
   const closeModal = () => {
-    dispatch(ModalRepository.hideModal());
+    dispatch(hideModal());
   };
 
   if (!displayModal) {

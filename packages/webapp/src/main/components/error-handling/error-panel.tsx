@@ -1,32 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
-import { ApollonError } from '../../services/error-management/error-types';
+
 import { ErrorMessage } from './error-message';
-import { ErrorRepository } from '../../services/error-management/error-repository';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { dismissError } from '../../services/error-management/errorManagementSlice';
 
-type OwnProps = {};
 
-type DispatchProps = { dismissError: typeof ErrorRepository.dismissError };
 
-type StateProps = { errors: ApollonError[] };
-
-type Props = StateProps & DispatchProps & OwnProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => ({
-    errors: state.errors,
-  }),
-  { dismissError: ErrorRepository.dismissError },
-);
-
-function ErrorPanelComponent(props: Props) {
+export const  ErrorPanel:React.FC =()=> {
+  const errors = useAppSelector(state=>state.errors)
+const dispatch = useAppDispatch();
   return (
     <>
-      {props.errors.map((error, index) => (
+      {errors.map((error, index) => (
         <ErrorMessage
           error={error}
-          onClose={(apollonError: ApollonError) => props.dismissError(apollonError.id)}
+          onClose={(apollonError) => dispatch(dismissError(apollonError.id))}
           key={index}
         />
       ))}
@@ -34,4 +22,4 @@ function ErrorPanelComponent(props: Props) {
   );
 }
 
-export const ErrorPanel = enhance(ErrorPanelComponent);
+
