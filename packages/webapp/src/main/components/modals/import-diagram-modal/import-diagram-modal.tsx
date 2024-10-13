@@ -1,12 +1,10 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
-import { useAppDispatch } from '../../store/hooks';
 import { useImportDiagram } from '../../../services/import/useImportDiagram';
 
 export const ImportDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
-  const dispatch = useAppDispatch();
   const importDiagram = useImportDiagram();
 
   const importDiagramHandler = () => {

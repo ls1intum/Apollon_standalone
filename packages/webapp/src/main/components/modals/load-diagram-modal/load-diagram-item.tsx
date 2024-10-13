@@ -1,7 +1,6 @@
 import React from 'react';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import styled from 'styled-components';
-import { longDate } from '../../../constant';
 import { useAppSelector } from '../../store/hooks';
 
 const SubTitle = styled.span`
@@ -15,7 +14,7 @@ type Props = {
 };
 
 export const LoadDiagramItem: React.FC<Props> = ({ item }) => {
-  const locale = useAppSelector((state) => state.editorOptions.locale);
+  const locale = useAppSelector((state) => state.diagram.editorOptions.locale);
   return (
     <div className="d-flex justify-content-between align-items-center">
       <div className="text-truncate pr-1">

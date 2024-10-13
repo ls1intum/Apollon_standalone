@@ -4,25 +4,25 @@ import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-
 import { ModalContentProps } from '../application-modal-types';
 import posthog from 'posthog-js';
 import { useAppDispatch } from '../../store/hooks';
-import { createDiagram, setCreateNewEditor } from '../../../services/diagram/diagramSlice';
+import { createDiagram } from '../../../services/diagram/diagramSlice';
 
 const diagramsInBeta: string[] = ['BPMN'];
 
-export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
+export const CreateDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
   const [selectedDiagramType, setSelectedDiagramType] = useState<UMLDiagramType>(UMLDiagramType.ClassDiagram);
-  const [diagramTitle, setDiagramTitle] = useState<string>(UMLDiagramType.ClassDiagram);
+  const [title, setTitle] = useState<string>(UMLDiagramType.ClassDiagram);
 
   const dispatch = useAppDispatch();
 
   const createNewDiagram = () => {
-    dispatch(createDiagram({ diagramTitle, diagramType: selectedDiagramType }));
+    dispatch(createDiagram({ title, diagramType: selectedDiagramType }));
 
     posthog.capture('diagram_created', {
-      title: diagramTitle,
+      title,
       type: selectedDiagramType,
     });
 
-    props.close();
+    close();
   };
 
   return (
@@ -33,7 +33,7 @@ export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
       <Modal.Body>
         <label htmlFor="diagram-title">Diagram Title</label>
         <InputGroup className="mb-3">
-          <FormControl id="diagram-title" value={diagramTitle} onChange={(e) => setDiagramTitle(e.target.value)} />
+          <FormControl id="diagram-title" value={title} onChange={(e) => setTitle(e.target.value)} />
         </InputGroup>
         <label htmlFor="diagram-type-list">Diagram Type</label>
         <ListGroup id="diagram-type-list">
@@ -43,7 +43,7 @@ export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
               action
               onClick={() => {
                 setSelectedDiagramType(value);
-                setDiagramTitle(value);
+                setTitle(value);
               }}
               active={selectedDiagramType === value}
             >
@@ -58,7 +58,7 @@ export const CreateDiagramModal: React.FC<ModalContentProps> = (props) => {
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={props.close}>
+        <Button variant="secondary" onClick={close}>
           Close
         </Button>
         <Button variant="primary" onClick={createNewDiagram} disabled={!selectedDiagramType}>

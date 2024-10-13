@@ -10,12 +10,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const [view, setView] = useState<DiagramView>(DiagramView.EDIT);
   const [token, setToken] = useState('');
   const dispatch = useAppDispatch();
   const diagram = useAppSelector((state) => state.diagram.diagram);
+  const navigate = useNavigate();
 
   const getLinkForView = () => {
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
@@ -56,7 +58,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
           LocalStorageRepository.setLastPublishedToken(token);
           LocalStorageRepository.setLastPublishedType(view);
           if (view === 'COLLABORATE') {
-            window.location.href = getLinkForView() + '&notifyUser=true';
+            navigate(`${getLinkForView()}&notifyUser=true`);
           }
           copyLink(true);
           close();

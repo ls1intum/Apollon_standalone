@@ -12,13 +12,12 @@ import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
-import { setCreateNewEditor, updateDiagramThunk } from '../../services/diagram/diagramSlice';
-import { useLocation, useParams } from 'react-router-dom';
+import { changeEditorMode, changeReadonlyMode, updateDiagramThunk } from '../../services/diagram/diagramSlice';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateCollaborators } from '../../services/share/shareSlice';
 import { useImportDiagram } from '../../services/import/useImportDiagram';
-import { changeEditorMode, changeReadonlyMode } from '../../services/editor-options/editorOptionSlice';
 import { showModal } from '../../services/modal/modalSlice';
 
 const ApollonContainer = styled.div`
@@ -28,7 +27,7 @@ const ApollonContainer = styled.div`
   overflow: hidden;
 `;
 
-export const ApollonEditorComponent: React.FC = () => {
+export const ApollonEditorComponentWithConnection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<ApollonEditor | null>(null);
   const clientRef = useRef<W3CWebSocket | null>(null);
@@ -39,8 +38,9 @@ export const ApollonEditorComponent: React.FC = () => {
   const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
   const importDiagram = useImportDiagram();
-  const { diagram: reduxDiagram, createNewEditor } = useAppSelector((state) => state.diagram);
-  const options = useAppSelector((state) => state.editorOptions);
+  const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
+  const options = useAppSelector((state) => state.diagram.editorOptions);
+  const navigate = useNavigate();
 
   const editor = editorContext?.editor;
   const setEditor = editorContext?.setEditor;
@@ -78,52 +78,62 @@ export const ApollonEditorComponent: React.FC = () => {
     }
   };
   useEffect(() => {
-    if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
-      if (editorRef.current) {
-        editorRef.current.destroy();
+    const initializeEditor = async () => {
+      if (containerRef.current && reduxDiagram && setEditor) {
+        if (editorRef.current) {
+          await editorRef.current?.nextRender;
+          editorRef.current.destroy();
+        }
+
+        const editor = new ApollonEditor(containerRef.current, memoizedOptions);
+        editorRef.current = editor;
+        await editorRef.current?.nextRender;
+
+        if (reduxDiagram.model) {
+          editorRef.current.model = reduxDiagram.model;
+        }
+
+        editorRef.current.subscribeToAllModelChangePatches((patch: Patch) => {
+          if (clientRef.current) {
+            const { token } = params;
+            clientRef.current.send(
+              JSON.stringify({
+                token,
+                collaborator: { name: collaborationName, color: collaborationColor },
+                patch,
+              }),
+            );
+          }
+        });
+
+        editorRef.current.subscribeToModelChange((model: UMLModel) => {
+          const diagram = { ...reduxDiagram, model };
+          dispatch(updateDiagramThunk(diagram));
+        });
+
+        editorRef.current.subscribeToSelectionChange((newSelection) => {
+          const diff = selectionDiff(selection, newSelection);
+          setSelection(newSelection);
+
+          if (clientRef.current && (diff.selected.length > 0 || diff.deselected.length > 0)) {
+            const { token } = params;
+
+            clientRef.current.send(
+              JSON.stringify({
+                token,
+                collaborator: { name: collaborationName, color: collaborationColor },
+                selection: diff,
+              }),
+            );
+          }
+        });
+
+        setEditor(editorRef.current);
       }
-      const editor = new ApollonEditor(containerRef.current, memoizedOptions);
-      editorRef.current = editor;
+    };
 
-      editorRef.current.subscribeToAllModelChangePatches((patch: Patch) => {
-        if (clientRef.current) {
-          const { token } = params;
-          clientRef.current.send(
-            JSON.stringify({
-              token,
-              collaborator: { name: collaborationName, color: collaborationColor },
-              patch,
-            }),
-          );
-        }
-      });
-
-      editorRef.current.subscribeToModelChange((model: UMLModel) => {
-        const diagram = { ...reduxDiagram, model };
-        dispatch(updateDiagramThunk(diagram));
-      });
-
-      editorRef.current.subscribeToSelectionChange((newSelection) => {
-        const diff = selectionDiff(selection, newSelection);
-        setSelection(newSelection);
-
-        if (clientRef.current && (diff.selected.length > 0 || diff.deselected.length > 0)) {
-          const { token } = params;
-
-          clientRef.current.send(
-            JSON.stringify({
-              token,
-              collaborator: { name: collaborationName, color: collaborationColor },
-              selection: diff,
-            }),
-          );
-        }
-      });
-
-      setEditor(editorRef.current);
-      dispatch(setCreateNewEditor(false));
-    }
-  }, [containerRef.current, createNewEditor]);
+    initializeEditor();
+  }, [containerRef.current]);
 
   useEffect(() => {
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
@@ -155,17 +165,16 @@ export const ApollonEditorComponent: React.FC = () => {
               establishCollaborationConnection(token, collaborationName, collaborationColor);
               if (notifyUser === 'true') {
                 displayToast();
-                window.history.replaceState({}, document.title, window.location.pathname + '?view=' + view);
+                navigate(`?view=${view}`, { replace: true });
+                // window.history.replaceState({}, document.title, window.location.pathname + '?view=' + view);
               }
               break;
           }
         }
-
         if (view !== DiagramView.COLLABORATE) {
           DiagramRepository.getDiagramFromServerByToken(token).then((diagram) => {
             if (diagram) {
               importDiagram(JSON.stringify(diagram));
-
               const queryParam = new URLSearchParams(location.search);
               const diagramView: DiagramView | null = queryParam.get('view') as DiagramView;
               if (diagramView) {

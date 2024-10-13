@@ -29,7 +29,7 @@ export const CreateFromTemplateModal: React.FC<ModalContentProps> = ({ close }) 
   const createNewDiagram = () => {
     dispatch(
       createDiagram({
-        diagramTitle: selectedTemplate.type,
+        title: selectedTemplate.type,
         diagramType: selectedTemplate.diagramType,
         template: selectedTemplate.diagram,
       }),

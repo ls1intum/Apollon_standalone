@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ApplicationBar } from './components/application-bar/application-bar';
-import { ApollonEditorComponent } from './components/apollon-editor-component/apollon-editor-component';
+import { ApollonEditorComponent } from './components/apollon-editor-component/ApollonEditorComponent';
 import { ApollonEditor } from '@ls1intum/apollon';
-import {
-  POSTHOG_HOST,
-  POSTHOG_KEY,
-} from './constant';
-import {
-  ApollonEditorProvider,
-  
-} from './components/apollon-editor-component/apollon-editor-context';
+import { POSTHOG_HOST, POSTHOG_KEY } from './constant';
+import { ApollonEditorProvider } from './components/apollon-editor-component/apollon-editor-context';
 import { FirefoxIncompatibilityHint } from './components/incompatability-hints/firefox-incompatibility-hint';
 import { ErrorPanel } from './components/error-handling/error-panel';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -17,42 +11,36 @@ import { ApplicationModal } from './components/modals/application-modal';
 import { ToastContainer } from 'react-toastify';
 import { PostHogProvider } from 'posthog-js/react';
 import { ApplicationStore } from './components/store/application-store';
+import { ApollonEditorComponentWithConnection } from './components/apollon-editor-component/ApollonEditorComponentWithConnection';
 
 const postHogOptions = {
   api_host: POSTHOG_HOST,
 };
 
-
-export const Application = () => {
+export function RoutedApplication() {
   const [editor, setEditor] = useState<ApollonEditor>();
   const handleSetEditor = (newEditor: ApollonEditor) => {
-      setEditor(newEditor);
+    setEditor(newEditor);
   };
-  const isFirefox = /Firefox/i.test(navigator.userAgent);
+  const isFirefox = useMemo(() => /Firefox/i.test(navigator.userAgent), []);
 
   return (
     <PostHogProvider apiKey={POSTHOG_KEY} options={postHogOptions}>
-      <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
-        <ApplicationStore >
-          <ApplicationBar />
-          <ApplicationModal />
-          {isFirefox && <FirefoxIncompatibilityHint />}
-          <ErrorPanel />
-          <ApollonEditorComponent />
-        </ApplicationStore>
-        <ToastContainer />
-      </ApollonEditorProvider>
+      <ApplicationStore>
+        <BrowserRouter>
+          <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
+            <ApplicationBar />
+            <ApplicationModal />
+            {isFirefox && <FirefoxIncompatibilityHint />}
+            <Routes>
+              <Route path={'/:token'} element={<ApollonEditorComponentWithConnection />} />
+              <Route path={'/'} element={<ApollonEditorComponent />} />
+            </Routes>
+            <ErrorPanel />
+            <ToastContainer />
+          </ApollonEditorProvider>
+        </BrowserRouter>
+      </ApplicationStore>
     </PostHogProvider>
-  );
-};
-
-export function RoutedApplication() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={'/:token'} element={<Application />} />
-        <Route path={'/'} element={<Application />} />
-      </Routes>
-    </BrowserRouter>
   );
 }

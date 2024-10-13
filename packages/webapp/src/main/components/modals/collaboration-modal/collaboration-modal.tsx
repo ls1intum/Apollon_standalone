@@ -1,11 +1,12 @@
-import React, { ChangeEvent, MouseEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { generateRandomName } from '../../../utils/random-name-generator/random-name-generator';
 import { updateCollaborationColor, updateCollaborationName } from '../../../services/share/shareSlice';
+import { ModalContentProps } from '../application-modal-types';
 
-export const CollaborationModal: React.FC = () => {
+export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosableChange }) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState(generateRandomName());
@@ -14,6 +15,16 @@ export const CollaborationModal: React.FC = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.currentTarget.value);
   };
+
+  useEffect(() => {
+    if (onClosableChange) {
+      if (name.length > 1) {
+        onClosableChange(true);
+      } else {
+        onClosableChange(false);
+      }
+    }
+  }, [onClosableChange]);
 
   const setCollaborationNameAndColor = (e: MouseEvent<HTMLButtonElement>) => {
     LocalStorageRepository.setCollaborationName(name);

@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { ApollonMode, Locale, Styles, UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { uuid } from '../../utils/uuid';
-import { changeDiagramType } from '../editor-options/editorOptionSlice';
 import { LocalStorageRepository } from '../local-storage/local-storage-repository';
+import { DeepPartial } from 'redux';
+import { localStorageDiagramPrefix, localStorageLatest } from '../../constant';
 
 export type Diagram = {
   id: string;
@@ -11,15 +12,56 @@ export type Diagram = {
   lastUpdate: string;
 };
 
-export interface DiagramState {
-  diagram: Diagram | null;
-  loading: boolean;
-  error: string | null;
-  createNewEditor: boolean;
-}
+export type EditorOptions = {
+  type: UMLDiagramType;
+  mode?: ApollonMode;
+  readonly?: boolean;
+  enablePopups?: boolean;
+  enableCopyPaste?: boolean;
+  theme?: DeepPartial<Styles>;
+  locale: Locale;
+  colorEnabled?: boolean;
+};
 
-const initialState: DiagramState = {
-  diagram: null,
+export const defaultEditorOptions: EditorOptions = {
+  type: UMLDiagramType.ClassDiagram,
+  mode: ApollonMode.Modelling,
+  readonly: false,
+  enablePopups: true,
+  enableCopyPaste: true,
+  locale: Locale.en,
+  colorEnabled: true,
+};
+
+const getInitialEditorOptions = (): EditorOptions => {
+  const latestId = window.localStorage.getItem(localStorageLatest);
+  const editorOptions = defaultEditorOptions;
+
+  if (latestId) {
+    const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
+    editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
+  } else {
+  }
+
+  return editorOptions;
+};
+
+const getInitialDiagram = (): Diagram => {
+  const latestId: string | null = window.localStorage.getItem(localStorageLatest);
+  let diagram: Diagram;
+  if (latestId) {
+    const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
+    diagram = latestDiagram;
+  } else {
+    diagram = { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: new Date().toISOString() };
+  }
+
+  return diagram;
+};
+
+const initialState = {
+  diagram: getInitialDiagram(),
+  editorOptions: getInitialEditorOptions(),
   loading: false,
   error: null,
   createNewEditor: true,
@@ -32,27 +74,6 @@ export const updateDiagramThunk = createAsyncThunk(
   },
 );
 
-export const createDiagram = createAsyncThunk(
-  'diagram/create',
-  async (
-    { diagramTitle, diagramType, template }: { diagramTitle: string; diagramType: UMLDiagramType; template?: UMLModel },
-    { dispatch },
-  ) => {
-    dispatch(setCreateNewEditor(true));
-    const diagram: Diagram = {
-      id: uuid(),
-      title: diagramTitle,
-      model: template,
-      lastUpdate: new Date().toISOString(),
-    };
-
-    dispatch(updateDiagramThunk(diagram));
-    dispatch(changeDiagramType(diagramType));
-
-    return diagram;
-  },
-);
-
 const diagramSlice = createSlice({
   name: 'diagram',
   initialState,
@@ -62,12 +83,36 @@ const diagramSlice = createSlice({
         state.diagram = { ...state.diagram, ...action.payload };
       }
     },
-    createDiagram: (state, action: PayloadAction<string>) => {
-      state.diagram!.id = action.payload;
-      state.loading = true;
+    createDiagram: (
+      state,
+      action: PayloadAction<{ title: string; diagramType: UMLDiagramType; template?: UMLModel }>,
+    ) => {
+      state.diagram = {
+        id: uuid(),
+        title: action.payload.title,
+        model: action.payload.template,
+        lastUpdate: new Date().toISOString(),
+      };
+      state.editorOptions.type = action.payload.diagramType;
+      state.createNewEditor = true;
     },
+    loadDiagram: (state, action: PayloadAction<Diagram>) => {
+      state.diagram = action.payload;
+      state.createNewEditor = true;
+      state.editorOptions.type = action.payload.model?.type ?? 'ClassDiagram';
+    },
+
     setCreateNewEditor: (state, action: PayloadAction<boolean>) => {
       state.createNewEditor = action.payload;
+    },
+    changeDiagramType: (state, action: PayloadAction<UMLDiagramType>) => {
+      state.editorOptions.type = action.payload;
+    },
+    changeEditorMode: (state, action: PayloadAction<ApollonMode>) => {
+      state.editorOptions.mode = action.payload;
+    },
+    changeReadonlyMode: (state, action: PayloadAction<boolean>) => {
+      state.editorOptions.readonly = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -80,12 +125,20 @@ const diagramSlice = createSlice({
   },
 
   selectors: {
-    selectDiagram: (state: DiagramState) => state.diagram,
-    selectCreatenewEditor: (state: DiagramState) => state.createNewEditor,
+    selectDiagram: (state) => state.diagram,
+    selectCreatenewEditor: (state) => state.createNewEditor,
   },
 });
 
-export const { updateDiagram, setCreateNewEditor } = diagramSlice.actions;
+export const {
+  updateDiagram,
+  setCreateNewEditor,
+  changeEditorMode,
+  changeReadonlyMode,
+  changeDiagramType,
+  createDiagram,
+  loadDiagram,
+} = diagramSlice.actions;
 export const { selectDiagram, selectCreatenewEditor } = diagramSlice.selectors;
 
 export const diagramReducer = diagramSlice.reducer;

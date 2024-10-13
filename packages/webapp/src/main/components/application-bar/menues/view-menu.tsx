@@ -2,7 +2,7 @@ import React from 'react';
 import { NavDropdown } from 'react-bootstrap';
 import { ApollonMode } from '@ls1intum/apollon';
 import { useAppDispatch } from '../../store/hooks';
-import { changeEditorMode } from '../../../services/editor-options/editorOptionSlice';
+import { changeEditorMode } from '../../../services/diagram/diagramSlice';
 
 export const ViewMenu = () => {
   const dispatch = useAppDispatch();

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
+import { localStorageCollaborationName, localStorageCollaborationColor } from '../../constant';
 
 export type ShareState = {
   collaborationName: string;
@@ -8,16 +9,18 @@ export type ShareState = {
   fromServer: boolean;
 };
 
-const initialState: ShareState = {
-  collaborationName: '',
-  collaborationColor: '',
-  collaborators: [],
-  fromServer: false,
+const getInitialShareState = (): ShareState => {
+  return {
+    collaborationName: window.localStorage.getItem(localStorageCollaborationName) || '',
+    collaborationColor: window.localStorage.getItem(localStorageCollaborationColor) || '',
+    collaborators: [],
+    fromServer: false,
+  };
 };
 
 const shareSlice = createSlice({
   name: 'share',
-  initialState,
+  initialState: getInitialShareState(),
   reducers: {
     updateCollaborationName(state, action: PayloadAction<string>) {
       state.collaborationName = action.payload;
