@@ -17,12 +17,11 @@ const ApollonContainer = styled.div`
 export const ApollonEditorComponent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<ApollonEditor | null>(null);
-  const editorContext = useContext(ApollonEditorContext);
   const dispatch = useAppDispatch();
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
   const createNewEditor = useAppSelector(selectCreatenewEditor);
-
+  const editorContext = useContext(ApollonEditorContext);
   const setEditor = editorContext?.setEditor;
 
   const memoizedOptions = useMemo(() => options, [options.type, options.mode, options.readonly]);
@@ -34,14 +33,13 @@ export const ApollonEditorComponent: React.FC = () => {
 
       if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
         if (editorRef.current) {
-          await editorRef.current?.nextRender;
+          await editorRef.current.nextRender;
           editorRef.current.destroy();
         }
-        const editor = new ApollonEditor(containerRef.current, memoizedOptions);
-        editorRef.current = editor;
+        editorRef.current = new ApollonEditor(containerRef.current, memoizedOptions);
+        await editorRef.current?.nextRender;
 
         if (reduxDiagram.model) {
-          await editorRef.current?.nextRender;
           editorRef.current.model = reduxDiagram.model;
         }
         editorRef.current.subscribeToModelChange((model: UMLModel) => {
@@ -55,9 +53,9 @@ export const ApollonEditorComponent: React.FC = () => {
     };
 
     initializeEditor();
-  }, [containerRef.current, createNewEditor]);
+  }, [containerRef.current, createNewEditor, setEditor]);
 
-  const key = reduxDiagram?.id || uuid() + options.mode + options.type + options.readonly;
+  const key = (reduxDiagram?.id || uuid()) + options.mode + options.type + options.readonly;
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };

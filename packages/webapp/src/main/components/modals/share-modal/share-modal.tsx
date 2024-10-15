@@ -13,7 +13,6 @@ import { displayError } from '../../../services/error-management/errorManagement
 import { useNavigate } from 'react-router-dom';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
-  const [view, setView] = useState<DiagramView>(DiagramView.EDIT);
   const [token, setToken] = useState('');
   const dispatch = useAppDispatch();
   const diagram = useAppSelector((state) => state.diagram.diagram);
@@ -23,7 +22,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
-  const getMessageForView = () => {
+  const getMessageForView = (view: DiagramView) => {
     switch (view) {
       case DiagramView.GIVE_FEEDBACK:
         return 'give feedback';
@@ -37,30 +36,27 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return 'edit';
   };
 
-  const shareDiagram = (view: DiagramView) => {
-    setView(view);
-    publishDiagram();
-  };
-
-  const copyLink = (showToast = false) => {
+  const copyLink = (view: DiagramView) => {
     const link = getLinkForView();
     navigator.clipboard.writeText(link);
-    if (showToast) {
-      displayToast();
-    }
+    toast.success(
+      'The link has been copied to your clipboard and can be shared to ' +
+        getMessageForView(view) +
+        ', simply by pasting the link. You can re-access the link by going to share menu.',
+      {
+        autoClose: 10000,
+      },
+    );
   };
 
-  const publishDiagram = () => {
+  const publishDiagram = (view: DiagramView) => {
     if (diagram && diagram.model && Object.keys(diagram.model.elements).length > 0) {
       DiagramRepository.publishDiagramOnServer(diagram)
         .then((token: string) => {
           setToken(token);
           LocalStorageRepository.setLastPublishedToken(token);
           LocalStorageRepository.setLastPublishedType(view);
-          if (view === 'COLLABORATE') {
-            navigate(`${getLinkForView()}&notifyUser=true`);
-          }
-          copyLink(true);
+          copyLink(view);
           close();
         })
         .catch((error) => {
@@ -85,17 +81,6 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const hasRecentlyPublished = () => {
     const lastPublishedToken = LocalStorageRepository.getLastPublishedToken();
     return !!lastPublishedToken;
-  };
-
-  const displayToast = () => {
-    toast.success(
-      'The link has been copied to your clipboard and can be shared to ' +
-        getMessageForView() +
-        ', simply by pasting the link. You can re-access the link by going to share menu.',
-      {
-        autoClose: 10000,
-      },
-    );
   };
 
   return (
@@ -124,7 +109,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    shareDiagram(DiagramView.EDIT);
+                    publishDiagram(DiagramView.EDIT);
                   }}
                   className="btn btn-outline-secondary w-100"
                 >
@@ -135,7 +120,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    shareDiagram(DiagramView.GIVE_FEEDBACK);
+                    publishDiagram(DiagramView.GIVE_FEEDBACK);
                   }}
                   className="btn btn-outline-secondary  w-100"
                 >
@@ -146,7 +131,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    shareDiagram(DiagramView.SEE_FEEDBACK);
+                    publishDiagram(DiagramView.SEE_FEEDBACK);
                   }}
                   className="btn btn-outline-secondary  w-100"
                 >
@@ -157,7 +142,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    shareDiagram(DiagramView.COLLABORATE);
+                    publishDiagram(DiagramView.COLLABORATE);
                   }}
                   className="btn btn-outline-secondary w-100"
                 >
@@ -182,7 +167,10 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                     />
                   </a>
                 )}
-                <Button variant="outline-secondary" onClick={() => copyLink(true)}>
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => copyLink(LocalStorageRepository.getLastPublishedType() as DiagramView)}
+                >
                   Copy Link
                 </Button>
               </InputGroup>

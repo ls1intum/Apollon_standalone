@@ -12,8 +12,13 @@ import { toast } from 'react-toastify';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
-import { changeEditorMode, changeReadonlyMode, updateDiagramThunk } from '../../services/diagram/diagramSlice';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  changeEditorMode,
+  changeReadonlyMode,
+  selectCreatenewEditor,
+  updateDiagramThunk,
+} from '../../services/diagram/diagramSlice';
+import { useLocation, useParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateCollaborators } from '../../services/share/shareSlice';
@@ -34,21 +39,19 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const [selection, setSelection] = useState<Selection>({ elements: {}, relationships: {} });
   const location = useLocation();
   const params = useParams();
-  const editorContext = useContext(ApollonEditorContext);
   const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
   const importDiagram = useImportDiagram();
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
-  const navigate = useNavigate();
-
-  const editor = editorContext?.editor;
+  const createNewEditor = useAppSelector(selectCreatenewEditor);
+  const editorContext = useContext(ApollonEditorContext);
   const setEditor = editorContext?.setEditor;
 
   const memoizedOptions = useMemo(() => options, [options.type, options.mode, options.readonly]);
 
   const establishCollaborationConnection = (token: string, name: string, color: string) => {
-    if (!clientRef.current) {
+    if (!clientRef.current && editorRef.current) {
       const newClient = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
       clientRef.current = newClient;
 
@@ -63,23 +66,24 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         ) as CollaborationMessage;
         if (collaborators) {
           dispatch(updateCollaborators(collaborators));
-          editor?.pruneRemoteSelectors(collaborators);
+          editorRef.current?.pruneRemoteSelectors(collaborators);
         }
         if (diagram) {
-          importDiagram(JSON.stringify(diagram));
+          console.log('diagram', diagram);
+          // importDiagram(JSON.stringify(diagram));
         }
         if (patch) {
-          editor?.importPatch(patch);
+          editorRef.current?.importPatch(patch);
         }
         if (selection && originator) {
-          editor?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
+          editorRef.current?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
         }
       };
     }
   };
   useEffect(() => {
     const initializeEditor = async () => {
-      if (containerRef.current && reduxDiagram && setEditor) {
+      if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
         if (editorRef.current) {
           await editorRef.current?.nextRender;
           editorRef.current.destroy();
@@ -133,7 +137,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     };
 
     initializeEditor();
-  }, [containerRef.current]);
+  }, [containerRef.current, createNewEditor, setEditor]);
 
   useEffect(() => {
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
@@ -141,7 +145,6 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
       if (token) {
         const query = new URLSearchParams(location.search);
         const view: DiagramView | null = query.get('view') as DiagramView;
-        const notifyUser: string | null = query.get('notifyUser');
         if (view) {
           switch (view) {
             case DiagramView.SEE_FEEDBACK:
@@ -163,11 +166,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
                 dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
               }
               establishCollaborationConnection(token, collaborationName, collaborationColor);
-              if (notifyUser === 'true') {
-                displayToast();
-                navigate(`?view=${view}`, { replace: true });
-                // window.history.replaceState({}, document.title, window.location.pathname + '?view=' + view);
-              }
+
               break;
           }
         }
@@ -200,16 +199,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     }
   }, [collaborationName, collaborationColor]);
 
-  const displayToast = () => {
-    toast.success(
-      'The link has been copied to your clipboard and can be shared to Collaborate, simply by pasting the link. You can re-access the link by going to share menu.',
-      {
-        autoClose: 10000,
-      },
-    );
-  };
-
-  const key = reduxDiagram?.id || uuid() + options.mode + options.type + options.readonly;
+  const key = (reduxDiagram?.id || uuid()) + options.mode + options.type + options.readonly;
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };
