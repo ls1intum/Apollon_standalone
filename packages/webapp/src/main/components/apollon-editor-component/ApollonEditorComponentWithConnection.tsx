@@ -16,6 +16,7 @@ import {
   changeEditorMode,
   changeReadonlyMode,
   selectCreatenewEditor,
+  setCreateNewEditor,
   updateDiagramThunk,
 } from '../../services/diagram/diagramSlice';
 import { useLocation, useParams } from 'react-router-dom';
@@ -82,6 +83,8 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     }
   };
   useEffect(() => {
+    console.log('collaborationName', collaborationName);
+
     const initializeEditor = async () => {
       if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
         if (editorRef.current) {
@@ -133,6 +136,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         });
 
         setEditor(editorRef.current);
+        dispatch(setCreateNewEditor(false));
       }
     };
 
@@ -140,11 +144,15 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   }, [containerRef.current, createNewEditor, setEditor]);
 
   useEffect(() => {
+    console.log('collaborationName', collaborationName);
+    console.log('collaborationColor', collaborationColor);
+
     if (APPLICATION_SERVER_VERSION && DEPLOYMENT_URL) {
       const { token } = params;
       if (token) {
         const query = new URLSearchParams(location.search);
         const view: DiagramView | null = query.get('view') as DiagramView;
+        console.log('view', view);
         if (view) {
           switch (view) {
             case DiagramView.SEE_FEEDBACK:
@@ -162,7 +170,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
             case DiagramView.COLLABORATE:
               dispatch(changeEditorMode(ApollonMode.Modelling));
               dispatch(changeReadonlyMode(false));
-              if (!collaborationName || collaborationColor) {
+              if (!collaborationName || !collaborationColor) {
                 dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
               }
               establishCollaborationConnection(token, collaborationName, collaborationColor);
@@ -199,7 +207,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     }
   }, [collaborationName, collaborationColor]);
 
-  const key = (reduxDiagram?.id || uuid()) + options.mode + options.type + options.readonly;
+  const key = reduxDiagram?.id || uuid();
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };

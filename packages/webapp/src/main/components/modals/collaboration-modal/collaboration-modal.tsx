@@ -13,18 +13,14 @@ export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosa
   const [color] = useState('#' + Math.floor(Math.random() * 16777215).toString(16));
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.currentTarget.value);
-  };
-
-  useEffect(() => {
-    if (onClosableChange) {
-      if (name.length > 1) {
-        onClosableChange(true);
-      } else {
-        onClosableChange(false);
-      }
+    const newName = e.currentTarget.value;
+    setName(newName);
+    if (newName.length > 0) {
+      onClosableChange(true);
+    } else {
+      onClosableChange(false);
     }
-  }, [onClosableChange]);
+  };
 
   const setCollaborationNameAndColor = (e: MouseEvent<HTMLButtonElement>) => {
     LocalStorageRepository.setCollaborationName(name);
