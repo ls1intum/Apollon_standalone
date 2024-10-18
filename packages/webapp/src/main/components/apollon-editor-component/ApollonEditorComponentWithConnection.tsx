@@ -1,5 +1,5 @@
-import { ApollonEditor, ApollonMode, Patch, Selection, UMLModel } from '@ls1intum/apollon';
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import { ApollonEditor, ApollonMode, Patch, UMLModel } from '@ls1intum/apollon';
+import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { DiagramView } from 'shared/src/main/diagram-view';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
@@ -34,7 +34,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<ApollonEditor | null>(null);
   const clientRef = useRef<W3CWebSocket | null>(null);
-  const [selection, setSelection] = useState<Selection>({ elements: {}, relationships: {} });
+  const selectionRef = useRef({ elements: {}, relationships: {} });
   const { token } = useParams();
   const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
@@ -52,7 +52,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
 
     clientRef.current.onopen = () => {
       const collaborators = { name, color };
-      newClient.send(JSON.stringify({ token, collaborators }));
+      clientRef.current!.send(JSON.stringify({ token, collaborators }));
     };
 
     clientRef.current.onmessage = async (message: any) => {
@@ -66,11 +66,14 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         await editorRef.current.nextRender;
         dispatch(updateDiagramThunk({ model: diagram.model }));
         editorRef.current.model = diagram.model;
+        await editorRef.current.nextRender;
       }
-      if (patch) {
+      if (patch && editorRef.current) {
+        await editorRef.current.nextRender;
         editorRef.current?.importPatch(patch);
       }
-      if (selection && originator) {
+      if (selection && originator && editorRef.current) {
+        await editorRef.current.nextRender;
         editorRef.current?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
       }
     };
@@ -88,14 +91,9 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         }
       });
 
-      editorRef.current.subscribeToModelChange((model: UMLModel) => {
-        const diagram = { ...reduxDiagram, model };
-        dispatch(updateDiagramThunk(diagram));
-      });
-
       editorRef.current.subscribeToSelectionChange((newSelection) => {
-        const diff = selectionDiff(selection, newSelection);
-        setSelection(newSelection);
+        const diff = selectionDiff(selectionRef.current, newSelection);
+        selectionRef.current = newSelection;
 
         if (clientRef.current && (diff.selected.length > 0 || diff.deselected.length > 0)) {
           clientRef.current.send(
@@ -154,7 +152,15 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
             editorRef.current = editor;
             await editorRef.current?.nextRender;
             editorRef.current.model = diagram.model;
-            establishCollaborationConnection(token, collaborationName, collaborationColor);
+
+            editorRef.current.subscribeToModelChange((model: UMLModel) => {
+              const diagram = { ...reduxDiagram, model };
+              dispatch(updateDiagramThunk(diagram));
+            });
+
+            if (view !== DiagramView.EDIT) {
+              establishCollaborationConnection(token, collaborationName, collaborationColor);
+            }
 
             setEditor(editorRef.current);
           }
