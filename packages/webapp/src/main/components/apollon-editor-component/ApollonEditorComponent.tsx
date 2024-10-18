@@ -28,11 +28,7 @@ export const ApollonEditorComponent: React.FC = () => {
 
   useEffect(() => {
     const initializeEditor = async () => {
-      if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
-        if (editorRef.current) {
-          await editorRef.current.nextRender;
-          editorRef.current.destroy();
-        }
+      if (containerRef.current != null && createNewEditor) {
         editorRef.current = new ApollonEditor(containerRef.current, memoizedOptions);
         await editorRef.current?.nextRender;
 
@@ -44,15 +40,15 @@ export const ApollonEditorComponent: React.FC = () => {
           dispatch(updateDiagramThunk(diagram));
         });
 
-        setEditor(editorRef.current);
+        setEditor!(editorRef.current);
         dispatch(setCreateNewEditor(false));
       }
     };
 
     initializeEditor();
-  }, [containerRef.current, createNewEditor, setEditor]);
+  }, [containerRef.current, createNewEditor]);
 
-  const key = (reduxDiagram?.id || uuid()) + options.mode + options.type + options.readonly;
+  const key = reduxDiagram?.id || uuid();
 
   return <ApollonContainer key={key} ref={containerRef} />;
 };

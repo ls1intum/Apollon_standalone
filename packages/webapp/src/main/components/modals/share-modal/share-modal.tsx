@@ -11,6 +11,7 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
+import { setCreateNewEditor } from '../../../services/diagram/diagramSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const [token, setToken] = useState('');
@@ -57,6 +58,8 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
           LocalStorageRepository.setLastPublishedToken(token);
           LocalStorageRepository.setLastPublishedType(view);
           copyLink(view);
+          dispatch(setCreateNewEditor(true));
+          navigate(`/${token}?view=${view}`);
           close();
         })
         .catch((error) => {
