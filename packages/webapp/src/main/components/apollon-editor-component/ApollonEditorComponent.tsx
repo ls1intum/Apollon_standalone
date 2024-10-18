@@ -28,9 +28,6 @@ export const ApollonEditorComponent: React.FC = () => {
 
   useEffect(() => {
     const initializeEditor = async () => {
-      console.log('initializeEditor,  createNewEditor:', createNewEditor);
-      console.log('initializeEditor,  containerRef:', containerRef.current);
-
       if (containerRef.current && createNewEditor && reduxDiagram && setEditor) {
         if (editorRef.current) {
           await editorRef.current.nextRender;

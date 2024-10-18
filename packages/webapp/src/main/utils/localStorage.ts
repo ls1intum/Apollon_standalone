@@ -17,7 +17,5 @@ export const getDiagramFromLocalStorage = (): Diagram | null => {
   } else {
     diagram = { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: new Date().toISOString() };
   }
-
-  console.log('diagram', diagram);
   return diagram ?? null;
 };

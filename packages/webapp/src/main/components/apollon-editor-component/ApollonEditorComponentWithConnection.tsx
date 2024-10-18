@@ -38,11 +38,9 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const clientRef = useRef<W3CWebSocket | null>(null);
   const [selection, setSelection] = useState<Selection>({ elements: {}, relationships: {} });
   const { token } = useParams();
-  // const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
-  const collaborationName = 'EGE' + Math.floor(Math.random() * 16777215).toString(16);
-  const collaborationColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
   const dispatch = useAppDispatch();
-  const importDiagram = useImportDiagram();
+  // const importDiagram = useImportDiagram();
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
   const createNewEditor = useAppSelector(selectCreatenewEditor);
@@ -52,10 +50,6 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const view = searchParams.get('view');
 
   const establishCollaborationConnection = (token: string, name: string, color: string) => {
-    console.log('establishCollaborationConnection token:', token);
-    console.log('establishCollaborationConnection name:', name);
-    console.log('establishCollaborationConnection color:', color);
-
     const newClient = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
     clientRef.current = newClient;
 
@@ -88,15 +82,12 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   };
   useEffect(() => {
     const initializeEditor = async () => {
-      if (
-        token &&
-        APPLICATION_SERVER_VERSION &&
-        DEPLOYMENT_URL &&
-        containerRef.current &&
-        createNewEditor &&
-        reduxDiagram &&
-        setEditor
-      ) {
+      if (!collaborationName || !collaborationColor) {
+        dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
+        return;
+      }
+
+      if (token && APPLICATION_SERVER_VERSION && DEPLOYMENT_URL && containerRef.current && createNewEditor) {
         if (!editorRef.current) {
           let editorOptions = structuredClone(options);
 
@@ -125,9 +116,6 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
                 dispatch(changeReadonlyMode(false));
                 editorOptions.mode = ApollonMode.Modelling;
                 editorOptions.readonly = false;
-                // if (!collaborationName || !collaborationColor) {
-                //   dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
-                // }
                 if (!clientRef.current) {
                   establishCollaborationConnection(token, collaborationName, collaborationColor);
                 }
@@ -150,6 +138,34 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
 
                 editorRef.current.model = diagram.model;
 
+                editorRef.current.subscribeToModelDiscreteChange((modal: UMLModel) => {
+                  console.log('subscribeToModelDiscreteChange modal:', modal);
+                  // if (clientRef.current) {
+                  //   clientRef.current.send(
+                  //     JSON.stringify({
+                  //       token,
+                  //       collaborator: { name: collaborationName, color: collaborationColor },
+                  //       patch,
+                  //     }),
+                  //   );
+                  // }
+                });
+
+                editorRef.current.subscribeToModelContinuousChangePatches((patch: Patch) => {
+                  console.log('subscribeToModelContinuousChangePatches patch:', patch);
+
+                  if (clientRef.current) {
+                    clientRef.current.send(
+                      JSON.stringify({
+                        token,
+                        collaborator: { name: collaborationName, color: collaborationColor },
+                        patch,
+                      }),
+                    );
+                  }
+                });
+
+                console.log('--- A ---');
                 editorRef.current.subscribeToAllModelChangePatches((patch: Patch) => {
                   console.log('subscribeToAllModelChangePatches patch:', patch);
                   if (clientRef.current) {
@@ -196,7 +212,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     };
 
     initializeEditor();
-  }, [containerRef.current]);
+  }, [containerRef.current, collaborationName, collaborationColor]);
 
   const key = reduxDiagram?.id || uuid();
 

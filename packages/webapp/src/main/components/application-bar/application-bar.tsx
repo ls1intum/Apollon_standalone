@@ -30,7 +30,6 @@ export const ApplicationBar: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { diagram } = useAppSelector((state) => state.diagram);
-  const collaborators = useAppSelector((state) => state.share.collaborators);
 
   const [diagramTitle, setDiagramTitle] = useState<string>(diagram?.title || '');
 
@@ -79,7 +78,7 @@ export const ApplicationBar: React.FC = () => {
             onBlur={changeDiagramTitleApplicationState}
           />
         </Nav>
-        <ConnectClientsComponent collaborators={collaborators} />
+        <ConnectClientsComponent />
       </Navbar.Collapse>
       <ThemeSwitcherMenu />
     </Navbar>
