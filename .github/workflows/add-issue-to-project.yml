@@ -1,0 +1,28 @@
+name: Add New Issue or PR to Project
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  add_to_project:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add issue to project
+        if: github.event_name == 'issues'
+        uses: actions/add-to-project@v1
+        with:
+          project-url: https://github.com/orgs/ls1intum/projects/75
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          content-id: ${{ github.event.issue.node_id }}
+
+      - name: Add pull request to project
+        if: github.event_name == 'pull_request'
+        uses: actions/add-to-project@v1
+        with:
+          project-url: https://github.com/orgs/ls1intum/projects/75
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          content-id: ${{ github.event.pull_request.node_id }}
