@@ -3,16 +3,20 @@ import { Collaborator } from 'shared/src/main/collaborator-dto';
 import { localStorageCollaborationName, localStorageCollaborationColor } from '../../constant';
 
 export type ShareState = {
-  collaborationName: string;
-  collaborationColor: string;
+  userCollaborationData: {
+    name: string | null;
+    color: string | null;
+  };
   collaborators: Collaborator[];
   fromServer: boolean;
 };
 
 const getInitialShareState = (): ShareState => {
   return {
-    collaborationName: window.localStorage.getItem(localStorageCollaborationName) || '',
-    collaborationColor: window.localStorage.getItem(localStorageCollaborationColor) || '',
+    userCollaborationData: {
+      name: window.localStorage.getItem(localStorageCollaborationName),
+      color: window.localStorage.getItem(localStorageCollaborationColor),
+    },
     collaborators: [],
     fromServer: false,
   };
@@ -22,12 +26,9 @@ const shareSlice = createSlice({
   name: 'share',
   initialState: getInitialShareState(),
   reducers: {
-    updateCollaborationName(state, action: PayloadAction<string>) {
-      state.collaborationName = action.payload;
-    },
-
-    updateCollaborationColor(state, action: PayloadAction<string>) {
-      state.collaborationColor = action.payload;
+    updateCollaborationData(state, action: PayloadAction<{ name: string; color: string }>) {
+      state.userCollaborationData.name = action.payload.name;
+      state.userCollaborationData.color = action.payload.name;
     },
 
     updateCollaborators(state, action: PayloadAction<Collaborator[]>) {
@@ -40,7 +41,6 @@ const shareSlice = createSlice({
   },
 });
 
-export const { updateCollaborationName, updateCollaborationColor, updateCollaborators, gotFromServer } =
-  shareSlice.actions;
+export const { updateCollaborationData, updateCollaborators, gotFromServer } = shareSlice.actions;
 
 export const shareReducer = shareSlice.reducer;

@@ -3,7 +3,7 @@ import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { generateRandomName } from '../../../utils/random-name-generator/random-name-generator';
-import { updateCollaborationColor, updateCollaborationName } from '../../../services/share/shareSlice';
+import { updateCollaborationData } from '../../../services/share/shareSlice';
 import { ModalContentProps } from '../application-modal-types';
 
 export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosableChange }) => {
@@ -25,8 +25,8 @@ export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosa
   const setCollaborationNameAndColor = (e: MouseEvent<HTMLButtonElement>) => {
     LocalStorageRepository.setCollaborationName(name);
     LocalStorageRepository.setCollaborationColor(color);
-    dispatch(updateCollaborationName(name));
-    dispatch(updateCollaborationColor(color));
+    dispatch(updateCollaborationData({ name, color }));
+
     close();
   };
 

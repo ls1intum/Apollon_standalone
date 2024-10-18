@@ -11,12 +11,7 @@ import { ModalContentType } from '../modals/application-modal-types';
 import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
-import {
-  changeEditorMode,
-  changeReadonlyMode,
-  selectCreatenewEditor,
-  updateDiagramThunk,
-} from '../../services/diagram/diagramSlice';
+import { selectCreatenewEditor, setCreateNewEditor, updateDiagramThunk } from '../../services/diagram/diagramSlice';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -36,7 +31,9 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const clientRef = useRef<W3CWebSocket | null>(null);
   const selectionRef = useRef({ elements: {}, relationships: {} });
   const { token } = useParams();
-  const { collaborationName, collaborationColor } = useAppSelector((state) => state.share);
+  const { name: collaborationName, color: collaborationColor } = useAppSelector(
+    (state) => state.share.userCollaborationData,
+  );
   const dispatch = useAppDispatch();
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
@@ -46,35 +43,46 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const [searchParams] = useSearchParams();
   const view = searchParams.get('view');
 
-  const establishCollaborationConnection = (token: string, name: string, color: string) => {
+  const establishCollaborationConnection = async (token: string, name: string, color: string) => {
     const newClient = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
+
     clientRef.current = newClient;
 
-    clientRef.current.onopen = () => {
-      const collaborators = { name, color };
-      clientRef.current!.send(JSON.stringify({ token, collaborators }));
-    };
+    // Wait for WebSocket connection to open
+    await new Promise<void>((resolve, reject) => {
+      clientRef.current!.onopen = () => {
+        console.log('WebSocket connection established');
+        resolve(); // Resolve the promise when connection opens
+      };
+
+      clientRef.current!.onerror = (error) => {
+        console.error('WebSocket connection error:', error);
+        reject(error); // Reject the promise if an error occurs
+      };
+    });
+    const collaborators = { name, color };
+    clientRef.current!.send(JSON.stringify({ token, collaborators }));
 
     clientRef.current.onmessage = async (message: any) => {
       const { originator, collaborators, diagram, patch, selection } = JSON.parse(message.data) as CollaborationMessage;
 
-      if (collaborators) {
-        dispatch(updateCollaborators(collaborators));
-        editorRef.current?.pruneRemoteSelectors(collaborators);
-      }
-      if (diagram?.model && editorRef.current) {
+      if (editorRef.current) {
         await editorRef.current.nextRender;
-        dispatch(updateDiagramThunk({ model: diagram.model }));
-        editorRef.current.model = diagram.model;
-        await editorRef.current.nextRender;
-      }
-      if (patch && editorRef.current) {
-        await editorRef.current.nextRender;
-        editorRef.current?.importPatch(patch);
-      }
-      if (selection && originator && editorRef.current) {
-        await editorRef.current.nextRender;
-        editorRef.current?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
+
+        if (collaborators) {
+          dispatch(updateCollaborators(collaborators));
+          editorRef.current.pruneRemoteSelectors(collaborators);
+        }
+        if (diagram?.model && editorRef.current) {
+          dispatch(updateDiagramThunk({ model: diagram.model }));
+          editorRef.current.model = diagram.model;
+        }
+        if (patch && editorRef.current) {
+          editorRef.current?.importPatch(patch);
+        }
+        if (selection && originator && editorRef.current) {
+          editorRef.current?.remoteSelect(originator.name, originator.color, selection.selected, selection.deselected);
+        }
       }
     };
 
@@ -109,7 +117,12 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   };
   useEffect(() => {
     const initializeEditor = async () => {
-      if (!collaborationName || !collaborationColor) {
+      const shouldConnectToServer =
+        view === DiagramView.COLLABORATE || view === DiagramView.GIVE_FEEDBACK || view === DiagramView.SEE_FEEDBACK;
+      const haveConnectionData = collaborationName && collaborationColor;
+
+      if (shouldConnectToServer && !haveConnectionData) {
+        dispatch(setCreateNewEditor(true));
         dispatch(showModal({ type: ModalContentType.CollaborationModal, size: 'lg' }));
         return;
       }
@@ -120,26 +133,18 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         if (view) {
           switch (view) {
             case DiagramView.SEE_FEEDBACK:
-              dispatch(changeEditorMode(ApollonMode.Assessment));
-              dispatch(changeReadonlyMode(true));
               editorOptions.mode = ApollonMode.Assessment;
               editorOptions.readonly = true;
               break;
             case DiagramView.GIVE_FEEDBACK:
-              dispatch(changeEditorMode(ApollonMode.Assessment));
-              dispatch(changeReadonlyMode(false));
               editorOptions.mode = ApollonMode.Assessment;
               editorOptions.readonly = false;
               break;
             case DiagramView.EDIT:
-              dispatch(changeEditorMode(ApollonMode.Modelling));
-              dispatch(changeReadonlyMode(false));
               editorOptions.mode = ApollonMode.Modelling;
               editorOptions.readonly = false;
               break;
             case DiagramView.COLLABORATE:
-              dispatch(changeEditorMode(ApollonMode.Modelling));
-              dispatch(changeReadonlyMode(false));
               editorOptions.mode = ApollonMode.Modelling;
               editorOptions.readonly = false;
               break;
@@ -147,10 +152,20 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         }
 
         DiagramRepository.getDiagramFromServerByToken(token).then(async (diagram) => {
+          console.log('initializeEditor diagram ', JSON.stringify(diagram));
           if (diagram) {
+            if (editorRef.current) {
+              console.log('initializeEditor DESTROOOOY ');
+              await editorRef.current.nextRender;
+              editorRef.current.destroy();
+            }
             const editor = new ApollonEditor(containerRef.current!, editorOptions);
+            await editor.nextRender;
             editorRef.current = editor;
-            await editorRef.current?.nextRender;
+
+            await editorRef.current.nextRender;
+            editorRef.current.type = diagram.model.type;
+            await editorRef.current.nextRender;
             editorRef.current.model = diagram.model;
 
             editorRef.current.subscribeToModelChange((model: UMLModel) => {
@@ -158,18 +173,23 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
               dispatch(updateDiagramThunk(diagram));
             });
 
-            if (view !== DiagramView.EDIT) {
-              establishCollaborationConnection(token, collaborationName, collaborationColor);
+            if (shouldConnectToServer) {
+              establishCollaborationConnection(token, collaborationName!, collaborationColor!);
             }
 
             setEditor(editorRef.current);
+            dispatch(setCreateNewEditor(false));
           }
         });
       }
     };
 
     initializeEditor();
-  }, [containerRef.current, collaborationName, collaborationColor, createNewEditor]);
+  }, [containerRef.current, collaborationName, createNewEditor]);
+
+  useEffect(() => {
+    dispatch(setCreateNewEditor(true));
+  }, [view]);
 
   const key = reduxDiagram?.id || uuid();
 

@@ -45,7 +45,7 @@ const structuralDiagrams = [
 
 export const CreateDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
   const [selectedDiagramType, setSelectedDiagramType] = useState<UMLDiagramType>(UMLDiagramType.ClassDiagram);
-  const [title, setTitle] = useState<string>(UMLDiagramType.ClassDiagram);
+  const [title, setTitle] = useState<string>(diagramNamesMap[UMLDiagramType.ClassDiagram]);
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { DEPLOYMENT_URL } from '../../../constant';
@@ -14,10 +14,11 @@ import { useNavigate } from 'react-router-dom';
 import { setCreateNewEditor } from '../../../services/diagram/diagramSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
-  const [token, setToken] = useState('');
   const dispatch = useAppDispatch();
   const diagram = useAppSelector((state) => state.diagram.diagram);
   const navigate = useNavigate();
+  const urlPath = window.location.pathname;
+  const tokenInUrl = urlPath.substring(1); // This removes the leading "/"
 
   const getLinkForView = () => {
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
@@ -37,9 +38,11 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return 'edit';
   };
 
-  const copyLink = (view: DiagramView) => {
-    const link = getLinkForView();
-    navigator.clipboard.writeText(link);
+  const copyLink = (view: DiagramView, token?: string) => {
+    if (token) {
+      navigate(`/${token}?view=${view}`);
+    }
+    dispatch(setCreateNewEditor(true));
     toast.success(
       'The link has been copied to your clipboard and can be shared to ' +
         getMessageForView(view) +
@@ -50,16 +53,22 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     );
   };
 
+  const handleShareButtonPress = (view: DiagramView) => {
+    if (tokenInUrl) {
+      navigate(`/${tokenInUrl}?view=${view}`);
+      close();
+    } else {
+      publishDiagram(view);
+    }
+  };
+
   const publishDiagram = (view: DiagramView) => {
     if (diagram && diagram.model && Object.keys(diagram.model.elements).length > 0) {
       DiagramRepository.publishDiagramOnServer(diagram)
         .then((token: string) => {
-          setToken(token);
           LocalStorageRepository.setLastPublishedToken(token);
           LocalStorageRepository.setLastPublishedType(view);
-          copyLink(view);
-          dispatch(setCreateNewEditor(true));
-          navigate(`/${token}?view=${view}`);
+          copyLink(view, token);
           close();
         })
         .catch((error) => {
@@ -112,7 +121,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    publishDiagram(DiagramView.EDIT);
+                    handleShareButtonPress(DiagramView.EDIT);
                   }}
                   className="btn btn-outline-secondary w-100"
                 >
@@ -123,7 +132,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    publishDiagram(DiagramView.GIVE_FEEDBACK);
+                    handleShareButtonPress(DiagramView.GIVE_FEEDBACK);
                   }}
                   className="btn btn-outline-secondary  w-100"
                 >
@@ -134,7 +143,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    publishDiagram(DiagramView.SEE_FEEDBACK);
+                    handleShareButtonPress(DiagramView.SEE_FEEDBACK);
                   }}
                   className="btn btn-outline-secondary  w-100"
                 >
@@ -145,7 +154,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    publishDiagram(DiagramView.COLLABORATE);
+                    handleShareButtonPress(DiagramView.COLLABORATE);
                   }}
                   className="btn btn-outline-secondary w-100"
                 >
@@ -159,7 +168,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
             <fieldset className="scheduler-border">
               <legend className="scheduler-border float-none w-auto">Recently shared Diagram:</legend>
               <InputGroup>
-                {!token ? (
+                {!tokenInUrl ? (
                   <FormControl readOnly value={getLinkForView()} />
                 ) : (
                   <a target="blank" href={getLinkForView()}>
@@ -172,7 +181,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                 )}
                 <Button
                   variant="outline-secondary"
-                  onClick={() => copyLink(LocalStorageRepository.getLastPublishedType() as DiagramView)}
+                  onClick={() => copyLink(LocalStorageRepository.getLastPublishedType() as DiagramView, tokenInUrl)}
                 >
                   Copy Link
                 </Button>

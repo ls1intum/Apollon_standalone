@@ -52,11 +52,6 @@ export const LocalStorageRepository = {
     return localDiagrams;
   },
 
-  getCollaborationName: () => {
-    const collaborationName: string = window.localStorage.getItem(localStorageCollaborationName) ?? '';
-    return collaborationName;
-  },
-
   setCollaborationName: (name: string) => {
     window.localStorage.setItem(localStorageCollaborationName, name);
   },

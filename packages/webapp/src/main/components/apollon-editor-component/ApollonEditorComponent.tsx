@@ -24,12 +24,10 @@ export const ApollonEditorComponent: React.FC = () => {
   const editorContext = useContext(ApollonEditorContext);
   const setEditor = editorContext?.setEditor;
 
-  const memoizedOptions = useMemo(() => options, [options.type, options.mode, options.readonly]);
-
   useEffect(() => {
     const initializeEditor = async () => {
       if (containerRef.current != null && createNewEditor) {
-        editorRef.current = new ApollonEditor(containerRef.current, memoizedOptions);
+        editorRef.current = new ApollonEditor(containerRef.current, options);
         await editorRef.current?.nextRender;
 
         if (reduxDiagram.model) {

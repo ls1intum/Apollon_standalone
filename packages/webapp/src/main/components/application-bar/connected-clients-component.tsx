@@ -27,11 +27,12 @@ export const Container = styled.div`
 
 export function ConnectClientsComponent() {
   const collaborators = useAppSelector((state) => state.share.collaborators);
-  const { collaborationName } = useAppSelector((state) => state.share);
+  const { name } = useAppSelector((state) => state.share.userCollaborationData);
 
-  if (!collaborationName || collaborators.length === 0) return;
+  if (!name || collaborators.length === 0) return;
+
   const elements = collaborators
-    .filter((c) => c?.name !== collaborationName)
+    .filter((c) => c != null && c?.name !== name)
     .map((collaborator) => (
       <NameContainer
         style={{ backgroundColor: collaborator?.color }}
