@@ -1,151 +1,108 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
+import React, { useState, useEffect } from 'react';
 import { setTheme, toggleTheme } from '../../../utils/theme-switcher';
 import { LocalStorageRepository } from '../../../../main/services/local-storage/local-storage-repository';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import ThemeSwitcherIcon from 'webapp/assets/theme-switcher.svg';
 
-type OwnProps = {};
+export const ThemeSwitcherMenu: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+  const [overrideUserThemePreference, setOverrideUserThemePreference] = useState<boolean>(true);
 
-type State = { isDarkMode: boolean; showTooltip: boolean; overrideUserThemePreference: boolean };
+  useEffect(() => {
+    updateState();
+  }, []);
 
-type StateProps = {};
-
-type DispatchProps = {};
-
-type Props = OwnProps & StateProps & DispatchProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {});
-
-class ThemeSwitcherMenuComponent extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    this.updateState();
-  }
-
-  updateTheme = () => {
+  const updateTheme = () => {
     toggleTheme();
-    this.updateState();
+    updateState();
   };
 
-  isDarkMode = () => {
+  const isDarkModeActive = (): boolean => {
     const systemTheme = LocalStorageRepository.getSystemThemePreference();
     const preferredTheme = LocalStorageRepository.getUserThemePreference();
     return (preferredTheme || systemTheme) === 'dark';
   };
 
-  updateState = () => {
-    this.setState({
-      isDarkMode: this.isDarkMode(),
-      overrideUserThemePreference: LocalStorageRepository.getUserThemePreference() ? false : true,
-    });
+  const updateState = () => {
+    setIsDarkMode(isDarkModeActive());
+    setOverrideUserThemePreference(!LocalStorageRepository.getUserThemePreference());
   };
 
-  getSystemTheme = (): string => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    } else {
-      return 'light';
-    }
+  const getSystemTheme = (): string => {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   };
 
-  handleInputChange = () => {
-    if (!this.state.overrideUserThemePreference) {
-      LocalStorageRepository.setSystemThemePreference(this.getSystemTheme());
+  const handleInputChange = () => {
+    if (!overrideUserThemePreference) {
+      LocalStorageRepository.setSystemThemePreference(getSystemTheme());
       LocalStorageRepository.removeUserThemePreference();
-      setTheme(this.getSystemTheme());
-      this.updateState();
+      setTheme(getSystemTheme());
+      updateState();
     } else {
-      this.setState({ overrideUserThemePreference: false });
-      LocalStorageRepository.setUserThemePreference(this.getSystemTheme());
+      setOverrideUserThemePreference(false);
+      LocalStorageRepository.setUserThemePreference(getSystemTheme());
     }
   };
 
-  onToggle = () => {
-    if (!this.state.showTooltip) {
-      this.setState({ showTooltip: true });
+  const onToggle = () => {
+    if (!showTooltip) {
+      setShowTooltip(true);
     } else {
-      if (this.isPopoverHovered()) {
-        this.setState({ showTooltip: true });
-        setTimeout(() => {
-          this.onToggle();
-        }, 500);
+      if (isPopoverHovered()) {
+        setShowTooltip(true);
+        setTimeout(onToggle, 500);
       } else {
-        this.setState({ showTooltip: false });
+        setShowTooltip(false);
       }
     }
   };
 
-  isPopoverHovered = () => {
+  const isPopoverHovered = (): boolean => {
     const elem = document.getElementById('tooltip-bottom');
-    if (elem?.parentElement?.querySelector(':hover') === elem) {
-      return true;
-    }
-    return false;
+    return elem?.parentElement?.querySelector(':hover') === elem;
   };
 
-  render() {
-    return (
-      <>
-        <OverlayTrigger
-          key="bottom"
-          placement="bottom-start"
-          show={this.state && this.state.showTooltip}
-          onToggle={() => {
-            this.onToggle();
-          }}
-          delay={{ show: 0, hide: 0 }}
-          overlay={
-            <Tooltip id="tooltip-bottom">
-              <div className="popover-content" id="theme-switch-popover-content">
-                <div className="head">
-                  ☾ <span>Dark Mode</span> ☾
-                </div>
-                <div className="switch-box">
-                  Sync with Operating System
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={this.state && this.state.overrideUserThemePreference}
-                      onChange={this.handleInputChange}
-                    />
-                    <span className="slider round" />
-                  </label>
-                </div>
-
-                {this.isDarkMode() && (
-                  <div className="description">
-                    <span>
-                      You can click this icon at any time to disable the dark mode if you experience problems.
-                    </span>
-                  </div>
-                )}
-                {!this.isDarkMode() && (
-                  <div className="description">
-                    <span>Try the dark mode and relieve your eyes.</span>
-                  </div>
-                )}
-              </div>
-            </Tooltip>
-          }
-        >
-          <div
-            onClick={() => {
-              this.updateTheme();
-            }}
-          >
-            <div className={'theme-toggle' + (this.state && this.state.isDarkMode ? ' dark' : '')} id="theme-toggle">
-              <ThemeSwitcherIcon />
+  return (
+    <OverlayTrigger
+      key="bottom"
+      placement="bottom-start"
+      show={showTooltip}
+      onToggle={onToggle}
+      delay={{ show: 0, hide: 0 }}
+      overlay={
+        <Tooltip id="tooltip-bottom">
+          <div className="popover-content" id="theme-switch-popover-content">
+            <div className="head">
+              ☾ <span>Dark Mode</span> ☾
             </div>
-          </div>
-        </OverlayTrigger>
-      </>
-    );
-  }
-}
+            <div className="switch-box">
+              Sync with Operating System
+              <label className="switch">
+                <input type="checkbox" checked={overrideUserThemePreference} onChange={handleInputChange} />
+                <span className="slider round" />
+              </label>
+            </div>
 
-export const ThemeSwitcherMenu = enhance(ThemeSwitcherMenuComponent);
+            {isDarkMode && (
+              <div className="description">
+                <span>You can click this icon at any time to disable the dark mode if you experience problems.</span>
+              </div>
+            )}
+            {!isDarkMode && (
+              <div className="description">
+                <span>Try the dark mode and relieve your eyes.</span>
+              </div>
+            )}
+          </div>
+        </Tooltip>
+      }
+    >
+      <div onClick={updateTheme}>
+        <div className={'theme-toggle' + (isDarkMode ? ' dark' : '')} id="theme-toggle">
+          <ThemeSwitcherIcon />
+        </div>
+      </div>
+    </OverlayTrigger>
+  );
+};

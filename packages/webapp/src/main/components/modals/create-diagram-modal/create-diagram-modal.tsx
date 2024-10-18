@@ -1,104 +1,103 @@
 import { UMLDiagramType } from '@ls1intum/apollon';
-import React, { Component, ComponentClass } from 'react';
-import { Badge, Button, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
-import { compose } from 'redux';
-import { withApollonEditor } from '../../apollon-editor-component/with-apollon-editor';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import React, { useState } from 'react';
+import { Badge, Button, Card, FormControl, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import posthog from 'posthog-js';
-
-type OwnProps = {} & ModalContentProps;
-
-type State = {
-  selectedDiagramType: string;
-  diagramTitle: string;
-  generatedTitle: boolean;
-};
-
-const getInitialState = (): State => {
-  return {
-    selectedDiagramType: UMLDiagramType.ClassDiagram,
-    diagramTitle: UMLDiagramType.ClassDiagram,
-    generatedTitle: true,
-  };
-};
-
-type DispatchProps = {
-  createDiagram: typeof DiagramRepository.createDiagram;
-};
-
-type StateProps = {};
-
-type Props = StateProps & DispatchProps & OwnProps;
-
-const enhance = compose<ComponentClass<OwnProps>>(
-  withApollonEditor,
-  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {
-    createDiagram: DiagramRepository.createDiagram,
-  }),
-);
+import { useAppDispatch } from '../../store/hooks';
+import { createDiagram } from '../../../services/diagram/diagramSlice';
+import { useNavigate } from 'react-router-dom';
 
 const diagramsInBeta: string[] = ['BPMN'];
 
-class CreateDiagramModalComponent extends Component<Props, State> {
-  state = getInitialState();
+const diagramNamesMap: { [key in UMLDiagramType]: string } = {
+  ClassDiagram: 'Class Diagram',
+  ObjectDiagram: 'Object Diagram',
+  ActivityDiagram: 'Activity Diagram',
+  UseCaseDiagram: 'Use Case Diagram',
+  CommunicationDiagram: 'Communication Diagram',
+  ComponentDiagram: 'Component Diagram',
+  DeploymentDiagram: 'Deployment Diagram',
+  PetriNet: 'Petri Net',
+  ReachabilityGraph: 'Reachability Graph',
+  SyntaxTree: 'Syntax Tree',
+  Flowchart: 'Flowchart',
+  BPMN: 'BPMN Diagram',
+};
 
-  constructor(props: Props) {
-    super(props);
-    this.createNewDiagram = this.createNewDiagram.bind(this);
-  }
+// Separating diagrams into Behavioral and Structural categories
+const behavioralDiagrams = [
+  'ActivityDiagram',
+  'UseCaseDiagram',
+  'CommunicationDiagram',
+  'PetriNet',
+  'ReachabilityGraph',
+  'BPMN',
+] as UMLDiagramType[];
 
-  select = (diagramType: UMLDiagramType) => {
-    const newState = { ...this.state, selectedDiagramType: diagramType };
-    if (this.state.generatedTitle || !this.state.diagramTitle) {
-      newState.diagramTitle = this.generateDiagramTitle(diagramType);
-      newState.generatedTitle = true;
-    }
-    this.setState(newState);
-  };
-  changeDiagramTitle = (event: any) => {
-    this.setState({ diagramTitle: event.target.value, generatedTitle: false });
-  };
+const structuralDiagrams = [
+  'ClassDiagram',
+  'ObjectDiagram',
+  'ComponentDiagram',
+  'DeploymentDiagram',
+  'Flowchart',
+  'SyntaxTree',
+] as UMLDiagramType[];
 
-  createNewDiagram() {
-    this.props.createDiagram(this.state.diagramTitle, this.state.selectedDiagramType as UMLDiagramType);
+export const CreateDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
+  const [selectedDiagramType, setSelectedDiagramType] = useState<UMLDiagramType>(UMLDiagramType.ClassDiagram);
+  const [title, setTitle] = useState<string>(diagramNamesMap[UMLDiagramType.ClassDiagram]);
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const createNewDiagram = (diagramType: UMLDiagramType) => {
+    dispatch(createDiagram({ title, diagramType }));
 
     posthog.capture('diagram_created', {
-      title: this.state.diagramTitle,
-      type: this.state.selectedDiagramType,
+      title,
+      type: selectedDiagramType,
     });
+    navigate('/');
 
-    this.props.close();
-  }
+    close();
+  };
 
-  generateDiagramTitle(type: UMLDiagramType): string {
-    return type;
-  }
-
-  render() {
-    return (
-      <>
-        <Modal.Header closeButton>
-          <Modal.Title>Create New Diagram</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <label htmlFor="diagram-title">Diagram Title</label>
-          <InputGroup className="mb-3">
-            <FormControl id="diagram-title" value={this.state.diagramTitle} onChange={this.changeDiagramTitle} />
-          </InputGroup>
-          <label htmlFor="diagram-type-list">Diagram Type</label>
-          <ListGroup id="diagram-type-list">
-            {Object.values(UMLDiagramType).map((value, index, array) => (
+  return (
+    <>
+      <Modal.Header closeButton>
+        <Modal.Title>Create New Diagram</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <label htmlFor="diagram-title" className="form-label">
+          Diagram Title
+        </label>
+        <InputGroup className="mb-3">
+          <FormControl
+            id="diagram-title"
+            placeholder="Enter diagram title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </InputGroup>
+        <label htmlFor="diagram-type-list" className="form-label mt-3">
+          Diagram Type
+        </label>
+        {/* Structural Diagrams */}
+        <Card className="mb-3">
+          <Card.Header as="h5">Structural Diagrams</Card.Header>
+          <ListGroup variant="flush">
+            {structuralDiagrams.map((diagramType) => (
               <ListGroup.Item
-                key={value}
+                key={diagramType}
                 action
-                onClick={(event: any) => this.select(value)}
-                active={this.state.selectedDiagramType ? this.state.selectedDiagramType === value : false}
+                onClick={() => setSelectedDiagramType(diagramType)}
+                onDoubleClick={() => {
+                  createNewDiagram(diagramType); // Automatically trigger diagram creation on double-click
+                }}
+                active={selectedDiagramType === diagramType}
               >
-                {value}
-                {diagramsInBeta.includes(value) && (
+                {diagramNamesMap[diagramType]}
+                {diagramsInBeta.includes(diagramType) && (
                   <Badge className="ml-1" bg="secondary">
                     Beta
                   </Badge>
@@ -106,18 +105,41 @@ class CreateDiagramModalComponent extends Component<Props, State> {
               </ListGroup.Item>
             ))}
           </ListGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.props.close}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={this.createNewDiagram} disabled={!this.state.selectedDiagramType}>
-            Create Diagram
-          </Button>
-        </Modal.Footer>
-      </>
-    );
-  }
-}
+        </Card>
 
-export const CreateDiagramModal = enhance(CreateDiagramModalComponent);
+        {/* Behavioral Diagrams */}
+        <Card className="mb-3">
+          <Card.Header as="h5">Behavioral Diagrams</Card.Header>
+          <ListGroup variant="flush">
+            {behavioralDiagrams.map((diagramType) => (
+              <ListGroup.Item
+                key={diagramType}
+                action
+                onClick={() => setSelectedDiagramType(diagramType)}
+                onDoubleClick={() => {
+                  createNewDiagram(diagramType);
+                }}
+                active={selectedDiagramType === diagramType}
+              >
+                {diagramNamesMap[diagramType]}
+                {diagramsInBeta.includes(diagramType) && (
+                  <Badge className="ml-1" bg="secondary">
+                    Beta
+                  </Badge>
+                )}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={close}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={() => createNewDiagram(selectedDiagramType)} disabled={!selectedDiagramType}>
+          Create Diagram
+        </Button>
+      </Modal.Footer>
+    </>
+  );
+};
