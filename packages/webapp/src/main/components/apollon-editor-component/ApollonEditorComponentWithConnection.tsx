@@ -48,16 +48,13 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
 
     clientRef.current = newClient;
 
-    // Wait for WebSocket connection to open
     await new Promise<void>((resolve, reject) => {
       clientRef.current!.onopen = () => {
-        console.log('WebSocket connection established');
-        resolve(); // Resolve the promise when connection opens
+        resolve();
       };
 
       clientRef.current!.onerror = (error) => {
-        console.error('WebSocket connection error:', error);
-        reject(error); // Reject the promise if an error occurs
+        reject(error);
       };
     });
     const collaborators = { name, color };
@@ -152,10 +149,8 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         }
 
         DiagramRepository.getDiagramFromServerByToken(token).then(async (diagram) => {
-          console.log('initializeEditor diagram ', JSON.stringify(diagram));
           if (diagram) {
             if (editorRef.current) {
-              console.log('initializeEditor DESTROOOOY ');
               await editorRef.current.nextRender;
               editorRef.current.destroy();
             }

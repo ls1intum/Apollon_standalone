@@ -1,5 +1,5 @@
-import { ApollonEditor, Patch, UMLModel } from '@ls1intum/apollon';
-import React, { useEffect, useRef, useMemo, useContext } from 'react';
+import { ApollonEditor, UMLModel } from '@ls1intum/apollon';
+import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { uuid } from '../../utils/uuid';
 

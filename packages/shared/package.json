@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@ls1intum/apollon": "3.3.14",
+    "@ls1intum/apollon": "3.3.15",
     "moment": "2.30.1",
     "ws": "8.17.1"
   },
