@@ -43,6 +43,9 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const [searchParams] = useSearchParams();
   const view = searchParams.get('view');
 
+  const selfElementId = document.getElementById(collaborationName + '_' + collaborationColor)!;
+  if (selfElementId) selfElementId.style.display = 'none';
+
   const establishCollaborationConnection = async (token: string, name: string, color: string) => {
     const newClient = new W3CWebSocket(`${WS_PROTOCOL}://${NO_HTTP_URL}`);
 
