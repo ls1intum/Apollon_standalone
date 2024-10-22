@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { ApollonEditor, SVG } from '@ls1intum/apollon';
 import { useFileDownload } from '../file-download/useFileDownload';
 
-
 export const useExportSVG = () => {
   const downloadFile = useFileDownload();
 
@@ -15,7 +14,7 @@ export const useExportSVG = () => {
 
       downloadFile({ file: fileToDownload, filename: fileName });
     },
-    [downloadFile]
+    [downloadFile],
   );
 
   return exportSVG;

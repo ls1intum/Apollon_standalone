@@ -7,16 +7,15 @@ export const useExportPNG = () => {
 
   const exportPNG = useCallback(
     async (editor: ApollonEditor, diagramTitle: string, setWhiteBackground: boolean) => {
-
       const apollonSVG: SVG = await editor.exportAsSVG();
       const pngBlob: Blob = await convertRenderedSVGToPNG(apollonSVG, setWhiteBackground);
       const fileName = `${diagramTitle}.png`;
-      
+
       const fileToDownload = new File([pngBlob], fileName, { type: 'image/png' });
 
       downloadFile({ file: fileToDownload, filename: fileName });
     },
-    [downloadFile]
+    [downloadFile],
   );
 
   return exportPNG;
@@ -37,7 +36,7 @@ function convertRenderedSVGToPNG(renderedSVG: SVG, whiteBackground: boolean): Pr
 
     image.onload = () => {
       const canvas = document.createElement('canvas');
-      const scale = 1.5;  // Adjust scale if necessary
+      const scale = 1.5; // Adjust scale if necessary
       canvas.width = width * scale;
       canvas.height = height * scale;
 
@@ -52,7 +51,7 @@ function convertRenderedSVGToPNG(renderedSVG: SVG, whiteBackground: boolean): Pr
       context.drawImage(image, 0, 0);
 
       canvas.toBlob((blob) => {
-        URL.revokeObjectURL(blobUrl);  // Cleanup the blob URL
+        URL.revokeObjectURL(blobUrl); // Cleanup the blob URL
         resolve(blob as Blob);
       });
     };

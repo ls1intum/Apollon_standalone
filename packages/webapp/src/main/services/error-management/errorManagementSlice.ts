@@ -26,7 +26,7 @@ const errorSlice = createSlice({
       }),
     },
 
-    dismissError: (state, action: PayloadAction<string >) => {
+    dismissError: (state, action: PayloadAction<string>) => {
       return state.filter((error) => error.id !== action.payload);
     },
   },

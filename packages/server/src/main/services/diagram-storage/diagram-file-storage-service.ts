@@ -8,7 +8,7 @@ import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-stor
 
 type SaveRequest = DiagramStorageRequest & {
   path: string;
-}
+};
 
 /**
  * Service for storing diagrams on the file system.
@@ -39,7 +39,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
   /**
    * The rate limiter for saving diagrams.
    */
-  private limiter: DiagramStorageRateLimiter<SaveRequest>
+  private limiter: DiagramStorageRateLimiter<SaveRequest>;
 
   constructor() {
     this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
