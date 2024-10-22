@@ -1,15 +1,14 @@
 import { UMLModel } from '@ls1intum/apollon';
-import { Moment } from 'moment';
 
 export class DiagramDTO {
   id: string;
   title: string;
   model: UMLModel;
-  lastUpdate: Moment;
+  lastUpdate: string;
   versions?: DiagramDTO[];
   description?: string;
 
-  constructor(id: string, title: string, model: UMLModel, lastUpdate: Moment, versions: DiagramDTO[]) {
+  constructor(id: string, title: string, model: UMLModel, lastUpdate: string, versions: DiagramDTO[]) {
     this.id = id;
     this.title = title;
     this.model = model;

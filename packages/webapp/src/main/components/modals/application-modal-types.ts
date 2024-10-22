@@ -22,5 +22,5 @@ export type ModalSize = 'sm' | 'lg' | 'xl' | undefined;
 
 export type ModalContentProps = {
   close: () => void;
-  onClosableChange?: (closable: boolean) => void;
+  onClosableChange: (closable: boolean) => void;
 };

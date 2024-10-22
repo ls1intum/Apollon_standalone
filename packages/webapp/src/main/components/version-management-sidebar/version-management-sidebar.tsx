@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
+import React from 'react';
 import styled from 'styled-components';
 import { Circle, Eye, Pencil, PlusLg, RecordCircle, Trash } from 'react-bootstrap-icons';
-import { VersionActionsMenu } from './menues/version-actions-menu';
-import { ModalRepository } from '../../services/modal/modal-repository';
 import { ModalContentType } from '../modals/application-modal-types';
-import { Diagram } from '../../services/diagram/diagram-types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { showModal } from '../../services/modal/modalSlice';
+import {
+  selectDisplaySidebar,
+  selectPreviewedDiagramIndex,
+  setPreviewedDiagramIndex,
+} from '../../services/version-management/versionManagementSlice';
+import { selectDiagram } from '../../services/diagram/diagramSlice';
 
 const TimelineContainer = styled.div`
   position: fixed;
@@ -119,7 +122,6 @@ const ActionButton = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    // background-color: #f3f3f3;
     border-radius: 0.25rem;
     transition: 0.2s ease-in;
   }
@@ -149,150 +151,111 @@ const PreviewActions = styled.div`
   }
 `;
 
-type OwnProps = {};
+export const VersionManagementSidebar: React.FC = () => {
+  const isVersionManagementSidebarOpen = useAppSelector(selectDisplaySidebar);
 
-type State = { previewedDiagramIndex: number };
-
-type StateProps = { diagram: Diagram | null };
-
-type DispatchProps = {
-  openModal: typeof ModalRepository.showModal;
-};
-
-type Props = OwnProps & StateProps & DispatchProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => {
-    return {
-      diagram: state.diagram,
-    };
-  },
-  {
-    openModal: ModalRepository.showModal,
-  },
-);
-
-const getInitialState = () => {
-  return {
-    previewedDiagramIndex: -1,
-  };
-};
-
-class VersionManagementSidebarComponent extends Component<Props, State> {
-  state = getInitialState();
-
-  previewVersion(index: number) {
-    // TODO
-    this.setState({ previewedDiagramIndex: index });
-  }
-
-  exitPreview() {
-    // TODO
-    this.setState({ previewedDiagramIndex: -1 });
-  }
-
-  formatLastUpdated(lastUpdated: Date) {
-    // TODO
+  const formatLastUpdated = (lastUpdated: Date) => {
     return `${lastUpdated.getMonth()}/${lastUpdated.getDate()}/${lastUpdated.getFullYear()} ${String(
       lastUpdated.getHours(),
     ).padStart(2, '0')}:${String(lastUpdated.getMinutes()).padStart(2, '0')}`;
+  };
+
+  const dispatch = useAppDispatch();
+  const diagram = useAppSelector(selectDiagram);
+  const previewedDiagramIndex = useAppSelector(selectPreviewedDiagramIndex);
+
+  if (!isVersionManagementSidebarOpen) {
+    return null;
   }
-
-  render() {
-    console.log(this.props.diagram);
-
-    return (
-      <TimelineContainer>
-        <TimelineHeader>
-          <div>Version History</div>
-          <NewVersionButton
-            onClick={() => {
-              this.props.openModal(ModalContentType.CreateVersionModal, 'lg');
-            }}
-          >
-            <PlusLg style={{ width: '18px', height: '18px' }} />
-          </NewVersionButton>
-        </TimelineHeader>
-        <div style={{ height: '100%' }}>
-          <Timeline>
-            <TimelineVersion>
-              <VersionPosition>
-                {this.props.diagram && this.props.diagram.versions && this.props.diagram.versions.length !== 0 && (
-                  <FirstVerticalLine />
-                )}
-                {this.state.previewedDiagramIndex === -1 ? <RecordCircle /> : <Circle />}
-              </VersionPosition>
-              <Version>
-                <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
-              </Version>
-            </TimelineVersion>
-            {(this.props.diagram?.versions ? this.props.diagram.versions : [])
-              .slice()
-              .reverse()
-              .map((version, index) => (
-                <TimelineVersion key={index}>
-                  <VersionPosition>
-                    {this.props.diagram &&
-                      this.props.diagram.versions &&
-                      index !== this.props.diagram.versions.length - 1 && <VerticalLine />}
-                    {index === this.state.previewedDiagramIndex ? <RecordCircle /> : <Circle />}
-                  </VersionPosition>
-                  <Version>
-                    <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
-                    <div style={{ fontWeight: 400, fontSize: '0.8rem' }}>{version.description}</div>
-                    <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                      {this.formatLastUpdated(version.lastUpdate.toDate())}
-                    </div>
-                    <VersionActions>
-                      <ActionButton
+  return (
+    <TimelineContainer>
+      <TimelineHeader>
+        <div>Version History</div>
+        <NewVersionButton
+          onClick={() => {
+            dispatch(showModal({ type: ModalContentType.CreateVersionModal, size: 'lg' }));
+          }}
+        >
+          <PlusLg style={{ width: '18px', height: '18px' }} />
+        </NewVersionButton>
+      </TimelineHeader>
+      <div style={{ height: '100%' }}>
+        <Timeline>
+          <TimelineVersion>
+            <VersionPosition>
+              {diagram && diagram.versions && diagram.versions.length !== 0 && <FirstVerticalLine />}
+              {previewedDiagramIndex === -1 ? <RecordCircle /> : <Circle />}
+            </VersionPosition>
+            <Version>
+              <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
+            </Version>
+          </TimelineVersion>
+          {(diagram.versions ? diagram.versions : [])
+            .slice()
+            .reverse()
+            .map((version, index) => (
+              <TimelineVersion key={index}>
+                <VersionPosition>
+                  {diagram.versions && index !== diagram.versions.length - 1 && <VerticalLine />}
+                  {index === previewedDiagramIndex ? <RecordCircle /> : <Circle />}
+                </VersionPosition>
+                <Version>
+                  <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
+                  <div style={{ fontWeight: 400, fontSize: '0.8rem' }}>{version.description}</div>
+                  <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                    {formatLastUpdated(new Date(version.lastUpdate))}
+                  </div>
+                  <VersionActions>
+                    <ActionButton
+                      onClick={() => {
+                        dispatch(showModal({ type: ModalContentType.EditVersionInfoModal, size: 'lg' }));
+                      }}
+                    >
+                      <Pencil />
+                    </ActionButton>
+                    <ActionButton
+                      onClick={() => {
+                        dispatch(
+                          showModal({
+                            type: ModalContentType.DeleteVersionModal,
+                            size: 'lg',
+                          }),
+                        );
+                      }}
+                    >
+                      <Trash />
+                    </ActionButton>
+                    <ActionButton
+                      onClick={() => {
+                        dispatch(setPreviewedDiagramIndex(index));
+                      }}
+                    >
+                      <Eye />
+                    </ActionButton>
+                  </VersionActions>
+                  {index === previewedDiagramIndex && (
+                    <PreviewActions>
+                      <div
                         onClick={() => {
-                          this.props.openModal(ModalContentType.EditVersionInfoModal, 'lg');
+                          dispatch(setPreviewedDiagramIndex(-1));
                         }}
                       >
-                        <Pencil />
-                      </ActionButton>
-                      <ActionButton
+                        Exit preview
+                      </div>
+                      <div
                         onClick={() => {
-                          this.props.openModal(ModalContentType.DeleteVersionModal, 'lg');
+                          dispatch(showModal({ type: ModalContentType.RestoreVersionModal, size: 'lg' }));
                         }}
                       >
-                        <Trash />
-                      </ActionButton>
-                      <ActionButton
-                        onClick={() => {
-                          this.previewVersion(index);
-                        }}
-                      >
-                        <Eye />
-                      </ActionButton>
-                    </VersionActions>
-                    {index === this.state.previewedDiagramIndex && (
-                      <PreviewActions>
-                        <div
-                          onClick={() => {
-                            this.exitPreview();
-                          }}
-                        >
-                          Exit preview
-                        </div>
-                        <div
-                          onClick={() => {
-                            this.props.openModal(ModalContentType.RestoreVersionModal, 'lg');
-                          }}
-                        >
-                          Restore version
-                        </div>
-                      </PreviewActions>
-                    )}
-                    {/* <VersionActionsMenu /> */}
-                  </Version>
-                </TimelineVersion>
-              ))}
-          </Timeline>
-        </div>
-      </TimelineContainer>
-    );
-  }
-}
-
-export const VersionManagementSidebar = enhance(VersionManagementSidebarComponent);
+                        Restore version
+                      </div>
+                    </PreviewActions>
+                  )}
+                </Version>
+              </TimelineVersion>
+            ))}
+        </Timeline>
+      </div>
+    </TimelineContainer>
+  );
+};

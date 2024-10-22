@@ -1,42 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
+import { Template, TemplateType } from '../template-types';
+import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { SoftwarePatternCategory, SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern-types';
-import { Template } from '../template-types';
 import { TemplateFactory } from '../template-factory';
 
 type Props = {
-  selectedTemplate: SoftwarePatternTemplate;
+  selectedTemplate: Template;
   selectTemplate: (template: Template) => void;
 };
-type State = {
-  selectedPatternCategory: SoftwarePatternCategory;
-};
 
-const getInitialState = (): State => {
-  return {
-    selectedPatternCategory: SoftwarePatternCategory.STRUCTURAL,
-  };
-};
-
-function patternTabComponentForCategory(
+const patternTabComponentForCategory = (
   softwarePatternTemplates: SoftwarePatternTemplate[],
   category: SoftwarePatternCategory,
-  selectedPattern: SoftwarePatternTemplate,
+  selectedPattern: Template,
   selectPattern: (pattern: SoftwarePatternTemplate) => void,
-) {
-  // BEHAVIORAL, STRUCTURAL, CREATIONAL
+) => {
   const categoryPatterns = softwarePatternTemplates.filter(
     (patternTemplate) => patternTemplate.softwarePatternCategory === category,
   );
+
   return (
     <Tab eventKey={category} title={category} tabClassName="ps-2 pe-2" className="mt-1">
       <ListGroup id="diagram-type-list">
-        {categoryPatterns.map((softwarePattern, index, array) => (
+        {categoryPatterns.map((softwarePattern) => (
           <ListGroup.Item
             key={softwarePattern.type}
             action
-            onClick={(event: any) => selectPattern(softwarePattern)}
-            active={selectedPattern ? selectedPattern.type === softwarePattern.type : false}
+            onClick={() => selectPattern(softwarePattern)}
+            active={selectedPattern?.type === softwarePattern.type}
           >
             {softwarePattern.type}
           </ListGroup.Item>
@@ -44,52 +36,39 @@ function patternTabComponentForCategory(
       </ListGroup>
     </Tab>
   );
-}
+};
 
-export class CreateFromSoftwarePatternModalTab extends Component<Props, State> {
-  state = getInitialState();
+export const CreateFromSoftwarePatternModalTab: React.FC<Props> = ({ selectedTemplate, selectTemplate }) => {
+  const [selectedPatternCategory, setSelectedPatternCategory] = useState<SoftwarePatternCategory>(
+    SoftwarePatternCategory.STRUCTURAL,
+  );
 
-  selectPattern = (pattern: SoftwarePatternTemplate) => {
-    this.props.selectTemplate(pattern);
+  const selectPattern = useCallback(
+    (pattern: SoftwarePatternTemplate) => {
+      selectTemplate(pattern);
+    },
+    [selectTemplate],
+  );
+
+  const allPatterns = Object.values(SoftwarePatternType).map((pattern) =>
+    TemplateFactory.createSoftwarePattern(pattern),
+  );
+
+  const handleCategorySelect = (patternCategory: SoftwarePatternCategory | null) => {
+    if (patternCategory) {
+      setSelectedPatternCategory(patternCategory);
+    }
   };
 
-  selectPatternCategory = (patternCategory: SoftwarePatternCategory) => {
-    const newState: State = { ...this.state, selectedPatternCategory: patternCategory };
-    this.setState(newState);
-  };
-
-  render() {
-    const allPatterns = Object.values(SoftwarePatternType).map((pattern) =>
-      TemplateFactory.createSoftwarePattern(pattern),
-    );
-
-    return (
-      <>
-        <Tabs
-          className="flex-row"
-          activeKey={this.state.selectedPatternCategory}
-          onSelect={(patternCategory) => this.selectPatternCategory(patternCategory as SoftwarePatternCategory)}
-        >
-          {patternTabComponentForCategory(
-            allPatterns,
-            SoftwarePatternCategory.STRUCTURAL,
-            this.props.selectedTemplate,
-            this.selectPattern,
-          )}
-          {patternTabComponentForCategory(
-            allPatterns,
-            SoftwarePatternCategory.BEHAVIORAL,
-            this.props.selectedTemplate,
-            this.selectPattern,
-          )}
-          {patternTabComponentForCategory(
-            allPatterns,
-            SoftwarePatternCategory.CREATIONAL,
-            this.props.selectedTemplate,
-            this.selectPattern,
-          )}
-        </Tabs>
-      </>
-    );
-  }
-}
+  return (
+    <Tabs
+      className="flex-row"
+      activeKey={selectedPatternCategory}
+      onSelect={(patternCategory) => handleCategorySelect(patternCategory as SoftwarePatternCategory)}
+    >
+      {patternTabComponentForCategory(allPatterns, SoftwarePatternCategory.STRUCTURAL, selectedTemplate, selectPattern)}
+      {patternTabComponentForCategory(allPatterns, SoftwarePatternCategory.BEHAVIORAL, selectedTemplate, selectPattern)}
+      {patternTabComponentForCategory(allPatterns, SoftwarePatternCategory.CREATIONAL, selectedTemplate, selectPattern)}
+    </Tabs>
+  );
+};
