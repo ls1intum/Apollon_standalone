@@ -48,6 +48,15 @@ class ShareModalComponent extends Component<Props, State> {
   state = getInitialState();
 
   getLinkForView = () => {
+    if (LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED) {
+      return (
+        `![${
+          this.props.diagram ? this.props.diagram.title : 'Diagram'
+        }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)` +
+        `\n[Edit a copy](${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${DiagramView.EDIT})`
+      );
+    }
+
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
@@ -62,6 +71,9 @@ class ShareModalComponent extends Component<Props, State> {
         break;
       case DiagramView.COLLABORATE:
         innerMessage = 'collaborate';
+        break;
+      case DiagramView.EMBED:
+        innerMessage = 'embed';
         break;
     }
     return `${innerMessage}`;
@@ -90,7 +102,7 @@ class ShareModalComponent extends Component<Props, State> {
           this.setState({ token }, () => {
             LocalStorageRepository.setLastPublishedToken(token);
             LocalStorageRepository.setLastPublishedType(this.state.view);
-            if (this.state.view === 'COLLABORATE') {
+            if (this.state.view === DiagramView.COLLABORATE) {
               window.location.href = this.getLinkForView() + '&notifyUser=true';
             }
             this.copyLink(true);
@@ -156,7 +168,7 @@ class ShareModalComponent extends Component<Props, State> {
 
             <div className="container mb-3">
               <div className="row">
-                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                <div className="col-sm-12 col-md-6 col-lg-4 p-1">
                   <button
                     type="button"
                     onClick={() => {
@@ -167,29 +179,7 @@ class ShareModalComponent extends Component<Props, State> {
                     Edit
                   </button>
                 </div>
-                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.shareDiagram(DiagramView.GIVE_FEEDBACK);
-                    }}
-                    className="btn btn-outline-secondary  w-100"
-                  >
-                    Give Feedback
-                  </button>
-                </div>
-                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      this.shareDiagram(DiagramView.SEE_FEEDBACK);
-                    }}
-                    className="btn btn-outline-secondary  w-100"
-                  >
-                    See Feedback
-                  </button>
-                </div>
-                <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+                <div className="col-sm-12 col-md-6 col-lg-4 p-1">
                   <button
                     type="button"
                     onClick={() => {
@@ -200,6 +190,39 @@ class ShareModalComponent extends Component<Props, State> {
                     Collaborate
                   </button>
                 </div>
+                <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.EMBED);
+                    }}
+                    className="btn btn-outline-secondary w-100"
+                  >
+                    Embed
+                  </button>
+                </div>
+                <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.GIVE_FEEDBACK);
+                    }}
+                    className="btn btn-outline-secondary  w-100"
+                  >
+                    Give Feedback
+                  </button>
+                </div>
+                <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      this.shareDiagram(DiagramView.SEE_FEEDBACK);
+                    }}
+                    className="btn btn-outline-secondary  w-100"
+                  >
+                    See Feedback
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -208,13 +231,18 @@ class ShareModalComponent extends Component<Props, State> {
                 <legend className="scheduler-border float-none w-auto">Recently shared Diagram:</legend>
                 <InputGroup>
                   {!this.state.token ? (
-                    <FormControl readOnly value={this.getLinkForView()} />
+                    <FormControl
+                      readOnly
+                      value={this.getLinkForView()}
+                      as={LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED ? 'textarea' : 'input'}
+                    />
                   ) : (
                     <a target="blank" href={this.getLinkForView()}>
                       <FormControl
                         style={{ cursor: 'pointer', textDecoration: 'underline' }}
                         readOnly
                         value={this.getLinkForView()}
+                        as={LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED ? 'textarea' : 'input'}
                       />
                     </a>
                   )}
