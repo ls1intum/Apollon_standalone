@@ -14,6 +14,7 @@ export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosa
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newName = e.currentTarget.value;
+
     setName(newName);
     if (newName.length > 0) {
       onClosableChange(true);
@@ -22,12 +23,18 @@ export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosa
     }
   };
 
-  const setCollaborationNameAndColor = (e: MouseEvent<HTMLButtonElement>) => {
+  const setCollaborationNameAndColor = () => {
     LocalStorageRepository.setCollaborationName(name);
     LocalStorageRepository.setCollaborationColor(color);
     dispatch(updateCollaborationData({ name, color }));
 
     close();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setCollaborationNameAndColor();
+    }
   };
 
   return (
@@ -39,14 +46,19 @@ export const CollaborationModal: React.FC<ModalContentProps> = ({ close, onClosa
         Please enter your name to highlight elements you are interacting with for other collaborators.
       </span>
       <Modal.Body>
-        <>
-          <InputGroup className="mb-3">
-            <FormControl className="w-75" isInvalid={!name} placeholder={name} onChange={handleChange} autoFocus />
-            <Button variant="outline-secondary" className="w-25" onClick={setCollaborationNameAndColor}>
-              Confirm
-            </Button>
-          </InputGroup>
-        </>
+        <InputGroup className="mb-3">
+          <FormControl
+            className="w-75"
+            isInvalid={!name}
+            placeholder={name}
+            onChange={handleChange}
+            autoFocus
+            onKeyDown={handleKeyDown}
+          />
+          <Button variant="outline-secondary" className="w-25" onClick={setCollaborationNameAndColor}>
+            Confirm
+          </Button>
+        </InputGroup>
       </Modal.Body>
     </>
   );

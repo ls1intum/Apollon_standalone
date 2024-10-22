@@ -38,14 +38,14 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return 'edit';
   };
 
-  const copyLink = (view: DiagramView, token?: string) => {
-    if (token) {
-      navigate(`/${token}?view=${view}`);
-    }
-    dispatch(setCreateNewEditor(true));
+  const copyLink = (view?: DiagramView) => {
+    const link = getLinkForView();
+    navigator.clipboard.writeText(link);
+    const viewUsedInMessage = view ? getMessageForView(view) : LocalStorageRepository.getLastPublishedType();
+
     toast.success(
       'The link has been copied to your clipboard and can be shared to ' +
-        getMessageForView(view) +
+        viewUsedInMessage +
         ', simply by pasting the link. You can re-access the link by going to share menu.',
       {
         autoClose: 10000,
@@ -54,7 +54,10 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const handleShareButtonPress = (view: DiagramView) => {
+    LocalStorageRepository.setLastPublishedType(view);
+
     if (tokenInUrl) {
+      copyLink(view);
       navigate(`/${tokenInUrl}?view=${view}`);
       close();
     } else {
@@ -67,8 +70,9 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
       DiagramRepository.publishDiagramOnServer(diagram)
         .then((token: string) => {
           LocalStorageRepository.setLastPublishedToken(token);
-          LocalStorageRepository.setLastPublishedType(view);
-          copyLink(view, token);
+          copyLink(view);
+          dispatch(setCreateNewEditor(true));
+          navigate(`/${token}?view=${view}`);
           close();
         })
         .catch((error) => {
@@ -168,21 +172,8 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
             <fieldset className="scheduler-border">
               <legend className="scheduler-border float-none w-auto">Recently shared Diagram:</legend>
               <InputGroup>
-                {!tokenInUrl ? (
-                  <FormControl readOnly value={getLinkForView()} />
-                ) : (
-                  <a target="blank" href={getLinkForView()}>
-                    <FormControl
-                      style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                      readOnly
-                      value={getLinkForView()}
-                    />
-                  </a>
-                )}
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => copyLink(LocalStorageRepository.getLastPublishedType() as DiagramView, tokenInUrl)}
-                >
+                <FormControl readOnly value={getLinkForView()} />
+                <Button variant="outline-secondary" onClick={() => copyLink()}>
                   Copy Link
                 </Button>
               </InputGroup>
