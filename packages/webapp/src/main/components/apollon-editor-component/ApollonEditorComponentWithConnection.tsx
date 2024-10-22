@@ -66,6 +66,9 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     clientRef.current.onmessage = async (message: any) => {
       const { originator, collaborators, diagram, patch, selection } = JSON.parse(message.data) as CollaborationMessage;
 
+      const selfElementId = document.getElementById(collaborationName + '_' + collaborationColor)!;
+      if (selfElementId) selfElementId.style.display = 'none';
+
       if (editorRef.current) {
         await editorRef.current.nextRender;
 
