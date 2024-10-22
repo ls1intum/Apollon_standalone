@@ -8,7 +8,7 @@ export type ModalState = {
 
 const initialState: ModalState = {
   type: null,
-  size: 'sm',
+  size: undefined,
 };
 
 const modalSlice = createSlice({
@@ -17,12 +17,11 @@ const modalSlice = createSlice({
   reducers: {
     showModal: (state, action: PayloadAction<{ type: ModalContentType; size?: ModalSize }>) => {
       state.type = action.payload.type;
-      state.size = action.payload.size ?? 'sm';
+      state.size = action.payload.size;
     },
 
     hideModal: (state) => {
       state.type = null;
-      state.size = 'sm';
     },
   },
 });
