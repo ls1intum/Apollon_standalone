@@ -3,9 +3,11 @@ import { useAppDispatch } from '../../components/store/hooks';
 import { uuid } from '../../utils/uuid';
 import { Diagram, loadDiagram } from '../diagram/diagramSlice';
 import { displayError } from '../error-management/errorManagementSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const useImportDiagram = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const importDiagram = useCallback((stringifiedJson: string) => {
     try {
@@ -13,13 +15,7 @@ export const useImportDiagram = () => {
       diagram.id = uuid();
 
       dispatch(loadDiagram(diagram));
-      // dispatch(updateDiagramThunk(diagram));
-      // if (diagram.model) {
-      //   dispatch(changeDiagramType(diagram.model.type));
-      // }
-      // if (editorContext?.editor && diagram.model) {
-      //   editorContext.editor.model = diagram.model;
-      // }
+      navigate('/', { relative: 'path' });
     } catch {
       dispatch(
         displayError('Import failed', 'Could not import selected file. Are you sure it contains a diagram.json?'),
