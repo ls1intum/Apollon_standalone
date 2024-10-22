@@ -17,6 +17,7 @@ import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateCollaborators } from '../../services/share/shareSlice';
 import { showModal } from '../../services/modal/modalSlice';
+import { toast } from 'react-toastify';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -157,6 +158,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
 
         DiagramRepository.getDiagramFromServerByToken(token).then(async (diagram) => {
           if (!diagram) {
+            toast.error('Diagram not found');
             navigate('/', { relative: 'path' });
             return;
           }
