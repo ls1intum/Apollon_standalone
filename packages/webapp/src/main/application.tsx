@@ -40,9 +40,10 @@ const getInitialStore = (): ApplicationState => {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
     diagram = { diagram: latestDiagram };
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
+    diagram.diagram.versions = latestDiagram.versions ? latestDiagram.versions : [];
   } else {
     diagram = {
-      diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment() },
+      diagram: { id: uuid(), title: 'UMLClassDiagram', model: undefined, lastUpdate: moment(), versions: [] },
     };
   }
 
@@ -61,8 +62,10 @@ const getInitialStore = (): ApplicationState => {
       collaborators: [],
       fromServer: false,
     },
-    sidebar: {
+    versionManagement: {
       displaySidebar: false,
+      previewedDiagramIndex: -1,
+      versions: [],
     },
   };
 };

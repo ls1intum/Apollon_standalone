@@ -4,6 +4,9 @@ import { ApplicationState } from '../store/application-state';
 import styled from 'styled-components';
 import { Circle, Eye, Pencil, PlusLg, RecordCircle, Trash } from 'react-bootstrap-icons';
 import { VersionActionsMenu } from './menues/version-actions-menu';
+import { ModalRepository } from '../../services/modal/modal-repository';
+import { ModalContentType } from '../modals/application-modal-types';
+import { Diagram } from '../../services/diagram/diagram-types';
 
 const TimelineContainer = styled.div`
   position: fixed;
@@ -148,67 +151,44 @@ const PreviewActions = styled.div`
 
 type OwnProps = {};
 
-type State = { currentlyViewedVersionIndex: number; versions: any };
+type State = { previewedDiagramIndex: number };
 
-type StateProps = {};
+type StateProps = { diagram: Diagram | null };
 
-type DispatchProps = {};
+type DispatchProps = {
+  openModal: typeof ModalRepository.showModal;
+};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(null, {});
+const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+  (state) => {
+    return {
+      diagram: state.diagram,
+    };
+  },
+  {
+    openModal: ModalRepository.showModal,
+  },
+);
 
 const getInitialState = () => {
   return {
-    currentlyViewedVersionIndex: -1,
-    versions: [
-      {
-        title: 'Test',
-        description: 'I added a single class and created a new version to see if this even works',
-        lastUpdated: new Date(),
-      },
-      { title: 'First draft', description: 'I created the first draft of my model', lastUpdated: new Date() },
-      { title: 'Feedback implemented', description: 'I have implemented feedback', lastUpdated: new Date() },
-      {
-        title: 'Second draft',
-        description: 'This is the second draft that will recieve feedback and be used in the documentation',
-        lastUpdated: new Date(),
-      },
-    ],
+    previewedDiagramIndex: -1,
   };
 };
 
 class VersionManagementSidebarComponent extends Component<Props, State> {
   state = getInitialState();
 
-  addNewVersion() {
-    // TODO
-    console.log('New Version Modal Opened!');
-  }
-
-  deleteVersion(index: number) {
-    // TODO
-    console.log(`Deleted Version: ${index}`);
-  }
-
-  restoreVersion(index: number) {
-    // TODO
-    console.log(`Restored Version: ${index}`);
-  }
-
-  editVersion(index: number) {
-    // TODO
-    console.log(`New Version Modal Opened for Version: ${index}`);
-  }
-
   previewVersion(index: number) {
     // TODO
-    this.setState({ currentlyViewedVersionIndex: index });
+    this.setState({ previewedDiagramIndex: index });
   }
 
   exitPreview() {
     // TODO
-    this.setState({ currentlyViewedVersionIndex: -1 });
+    this.setState({ previewedDiagramIndex: -1 });
   }
 
   formatLastUpdated(lastUpdated: Date) {
@@ -219,13 +199,15 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
   }
 
   render() {
+    console.log(this.props.diagram);
+
     return (
       <TimelineContainer>
         <TimelineHeader>
           <div>Version History</div>
           <NewVersionButton
             onClick={() => {
-              this.addNewVersion();
+              this.props.openModal(ModalContentType.CreateVersionModal, 'lg');
             }}
           >
             <PlusLg style={{ width: '18px', height: '18px' }} />
@@ -235,39 +217,43 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
           <Timeline>
             <TimelineVersion>
               <VersionPosition>
-                <FirstVerticalLine />
-                {this.state.currentlyViewedVersionIndex === -1 ? <RecordCircle /> : <Circle />}
+                {this.props.diagram && this.props.diagram.versions && this.props.diagram.versions.length !== 0 && (
+                  <FirstVerticalLine />
+                )}
+                {this.state.previewedDiagramIndex === -1 ? <RecordCircle /> : <Circle />}
               </VersionPosition>
               <Version>
                 <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
               </Version>
             </TimelineVersion>
-            {this.state.versions
+            {(this.props.diagram?.versions ? this.props.diagram.versions : [])
               .slice()
               .reverse()
               .map((version, index) => (
                 <TimelineVersion key={index}>
                   <VersionPosition>
-                    {index !== this.state.versions.length - 1 && <VerticalLine />}
-                    {index === this.state.currentlyViewedVersionIndex ? <RecordCircle /> : <Circle />}
+                    {this.props.diagram &&
+                      this.props.diagram.versions &&
+                      index !== this.props.diagram.versions.length - 1 && <VerticalLine />}
+                    {index === this.state.previewedDiagramIndex ? <RecordCircle /> : <Circle />}
                   </VersionPosition>
                   <Version>
                     <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
                     <div style={{ fontWeight: 400, fontSize: '0.8rem' }}>{version.description}</div>
                     <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
-                      {this.formatLastUpdated(version.lastUpdated)}
+                      {this.formatLastUpdated(version.lastUpdate.toDate())}
                     </div>
                     <VersionActions>
                       <ActionButton
                         onClick={() => {
-                          this.editVersion(index);
+                          this.props.openModal(ModalContentType.EditVersionInfoModal, 'lg');
                         }}
                       >
                         <Pencil />
                       </ActionButton>
                       <ActionButton
                         onClick={() => {
-                          this.deleteVersion(index);
+                          this.props.openModal(ModalContentType.DeleteVersionModal, 'lg');
                         }}
                       >
                         <Trash />
@@ -280,7 +266,7 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
                         <Eye />
                       </ActionButton>
                     </VersionActions>
-                    {index === this.state.currentlyViewedVersionIndex && (
+                    {index === this.state.previewedDiagramIndex && (
                       <PreviewActions>
                         <div
                           onClick={() => {
@@ -291,7 +277,7 @@ class VersionManagementSidebarComponent extends Component<Props, State> {
                         </div>
                         <div
                           onClick={() => {
-                            this.restoreVersion(index);
+                            this.props.openModal(ModalContentType.RestoreVersionModal, 'lg');
                           }}
                         >
                           Restore version

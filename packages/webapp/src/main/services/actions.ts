@@ -6,7 +6,7 @@ import { DiagramActions } from './diagram/diagram-types';
 import { ErrorActions } from './error-management/error-types';
 import { ModalActions } from './modal/modal-types';
 import { ShareActions } from './share/share-types';
-import { SidebarActions } from './sidebar/sidebar-types';
+import { VersionManagementActions } from './version-management/version-management-types';
 
 export type Actions =
   | LocalStorageActions
@@ -17,7 +17,7 @@ export type Actions =
   | ErrorActions
   | ModalActions
   | ShareActions
-  | SidebarActions;
+  | VersionManagementActions;
 
 export const enum StopActionType {
   STOP_ACTION = '@@stop_action',

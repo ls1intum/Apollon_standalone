@@ -15,7 +15,7 @@ import { ModalContentType } from '../modals/application-modal-types';
 import { ConnectClientsComponent } from './connected-clients-component';
 import { Collaborator } from 'shared/src/main/collaborator-dto';
 import { LayoutTextSidebarReverse, LayoutSidebarInsetReverse } from 'react-bootstrap-icons';
-import { SidebarRepository } from '../../services/sidebar/sidebar-repository';
+import { VersionManagementRepository } from '../../services/version-management/version-management-repository';
 
 type OwnProps = {};
 
@@ -41,7 +41,7 @@ const ApplicationVersion = styled.span`
 type DispatchProps = {
   updateDiagram: typeof DiagramRepository.updateDiagram;
   openModal: typeof ModalRepository.showModal;
-  toggleSidebar: typeof SidebarRepository.toggleSidebar;
+  toggleSidebar: typeof VersionManagementRepository.toggleSidebar;
 };
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -56,7 +56,7 @@ const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   {
     updateDiagram: DiagramRepository.updateDiagram,
     openModal: ModalRepository.showModal,
-    toggleSidebar: SidebarRepository.toggleSidebar,
+    toggleSidebar: VersionManagementRepository.toggleSidebar,
   },
 );
 

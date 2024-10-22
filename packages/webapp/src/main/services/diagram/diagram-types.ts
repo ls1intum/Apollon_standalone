@@ -7,6 +7,8 @@ export type Diagram = {
   title: string;
   model?: UMLModel;
   lastUpdate: Moment;
+  versions?: Diagram[];
+  description?: string;
 };
 
 export type DiagramActions = UpdateDiagramAction | CreateDiagramAction;

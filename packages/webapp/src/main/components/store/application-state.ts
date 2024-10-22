@@ -3,7 +3,7 @@ import { ApollonError } from '../../services/error-management/error-types';
 import { ModalState } from '../../services/modal/modal-types';
 import { Diagram } from '../../services/diagram/diagram-types';
 import { ShareState } from '../../services/share/share-types';
-import { SidebarState } from '../../services/sidebar/sidebar-types';
+import { VersionManagementState } from '../../services/version-management/version-management-types';
 
 export interface ApplicationState {
   diagram: Diagram | null;
@@ -11,5 +11,5 @@ export interface ApplicationState {
   errors: ApollonError[];
   modal: ModalState;
   share: ShareState;
-  sidebar: SidebarState;
+  versionManagement: VersionManagementState;
 }

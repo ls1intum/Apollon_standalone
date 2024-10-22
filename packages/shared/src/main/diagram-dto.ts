@@ -6,11 +6,14 @@ export class DiagramDTO {
   title: string;
   model: UMLModel;
   lastUpdate: Moment;
+  versions?: DiagramDTO[];
+  description?: string;
 
-  constructor(id: string, title: string, model: UMLModel, lastUpdate: Moment) {
+  constructor(id: string, title: string, model: UMLModel, lastUpdate: Moment, versions: DiagramDTO[]) {
     this.id = id;
     this.title = title;
     this.model = model;
     this.lastUpdate = lastUpdate;
+    this.versions = versions;
   }
 }

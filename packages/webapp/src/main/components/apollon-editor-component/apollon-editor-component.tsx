@@ -78,7 +78,7 @@ const enhance = compose<FunctionComponent<OwnProps>>(
       fromServer: state.share.fromServer,
       collaborationName: state.share.collaborationName,
       collaborationColor: state.share.collaborationColor,
-      displaySidebar: state.sidebar.displaySidebar,
+      displaySidebar: state.versionManagement.displaySidebar,
     }),
     {
       updateDiagram: DiagramRepository.updateDiagram,
