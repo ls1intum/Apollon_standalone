@@ -1,19 +1,15 @@
 import { RedisClientType } from 'redis';
 import { Operation } from 'fast-json-patch';
 
-
 /**
  * Converts a [JSONPointer](https://tools.ietf.org/html/rfc6901) to a Redis JSON path.
  * JSONPointer is the standard format for addressing various parts of a JSON document used by
  * [JSONPatch](https://jsonpatch.com).
- * @param jsonPointer 
- * @returns 
+ * @param jsonPointer
+ * @returns
  */
 export function convertJSONPointerToRedisJSONPath(jsonPointer: string): string {
-  return jsonPointer
-    .replace(/\//g, '.')
-    .replace(/~1/g, '/')
-    .replace(/~0/g, '~');
+  return jsonPointer.replace(/\//g, '.').replace(/~1/g, '/').replace(/~0/g, '~');
 }
 
 /**
@@ -31,7 +27,7 @@ export async function applyPatchToRedisValue(client: RedisClientType, key: strin
       switch (operation.op) {
         case 'add':
         case 'replace':
-            await client.json.set(key, path, operation.value);
+          await client.json.set(key, path, operation.value);
           break;
         case 'remove':
           await client.json.del(key, path);

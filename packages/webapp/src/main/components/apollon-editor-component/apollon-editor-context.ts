@@ -1,10 +1,11 @@
 import { ApollonEditor } from '@ls1intum/apollon';
 import { createContext } from 'react';
 
-export type ApollonEditorContext = {
+export type ApollonEditorContextType = {
   editor?: ApollonEditor;
   setEditor: (editor: ApollonEditor) => void;
 };
 
-export const { Consumer: ApollonEditorConsumer, Provider: ApollonEditorProvider } =
-  createContext<ApollonEditorContext | null>(null);
+export const ApollonEditorContext = createContext<ApollonEditorContextType | null>(null);
+
+export const { Consumer: ApollonEditorConsumer, Provider: ApollonEditorProvider } = ApollonEditorContext;
