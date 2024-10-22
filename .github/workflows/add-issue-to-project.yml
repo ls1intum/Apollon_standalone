@@ -15,11 +15,11 @@ jobs:
         if: github.event_name == 'issues'
         uses: actions/add-to-project@v1.0.2
         with:
-          project-url: https://github.com/orgs/ls1intum/projects/75/views/1
+          project-url: https://github.com/orgs/ls1intum/projects/75
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
       - name: Add pull request to project
         if: github.event_name == 'pull_request'
         uses: actions/add-to-project@v1.0.2
         with:
-          project-url: https://github.com/orgs/ls1intum/projects/75/views/1
+          project-url: https://github.com/orgs/ls1intum/projects/75
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
