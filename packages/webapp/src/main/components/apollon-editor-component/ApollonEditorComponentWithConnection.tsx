@@ -12,7 +12,7 @@ import { selectionDiff } from '../../utils/selection-diff';
 import { CollaborationMessage } from '../../utils/collaboration-message-type';
 
 import { selectCreatenewEditor, setCreateNewEditor, updateDiagramThunk } from '../../services/diagram/diagramSlice';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateCollaborators } from '../../services/share/shareSlice';
@@ -42,6 +42,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const setEditor = editorContext!.setEditor;
   const [searchParams] = useSearchParams();
   const view = searchParams.get('view');
+  const navigate = useNavigate();
 
   const selfElementId = document.getElementById(collaborationName + '_' + collaborationColor)!;
   if (selfElementId) selfElementId.style.display = 'none';
@@ -155,32 +156,35 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
         }
 
         DiagramRepository.getDiagramFromServerByToken(token).then(async (diagram) => {
-          if (diagram) {
-            if (editorRef.current) {
-              await editorRef.current.nextRender;
-              editorRef.current.destroy();
-            }
-            const editor = new ApollonEditor(containerRef.current!, editorOptions);
-            await editor.nextRender;
-            editorRef.current = editor;
-
-            await editorRef.current.nextRender;
-            editorRef.current.type = diagram.model.type;
-            await editorRef.current.nextRender;
-            editorRef.current.model = diagram.model;
-
-            editorRef.current.subscribeToModelChange((model: UMLModel) => {
-              const diagram = { ...reduxDiagram, model };
-              dispatch(updateDiagramThunk(diagram));
-            });
-
-            if (shouldConnectToServer) {
-              establishCollaborationConnection(token, collaborationName!, collaborationColor!);
-            }
-
-            setEditor(editorRef.current);
-            dispatch(setCreateNewEditor(false));
+          if (!diagram) {
+            navigate('/', { relative: 'path' });
+            return;
           }
+
+          if (editorRef.current) {
+            await editorRef.current.nextRender;
+            editorRef.current.destroy();
+          }
+          const editor = new ApollonEditor(containerRef.current!, editorOptions);
+          await editor.nextRender;
+          editorRef.current = editor;
+
+          await editorRef.current.nextRender;
+          editorRef.current.type = diagram.model.type;
+          await editorRef.current.nextRender;
+          editorRef.current.model = diagram.model;
+
+          editorRef.current.subscribeToModelChange((model: UMLModel) => {
+            const diagram = { ...reduxDiagram, model };
+            dispatch(updateDiagramThunk(diagram));
+          });
+
+          if (shouldConnectToServer) {
+            establishCollaborationConnection(token, collaborationName!, collaborationColor!);
+          }
+
+          setEditor(editorRef.current);
+          dispatch(setCreateNewEditor(false));
         });
       }
     };

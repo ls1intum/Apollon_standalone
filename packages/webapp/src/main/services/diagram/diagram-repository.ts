@@ -10,14 +10,18 @@ export const DiagramRepository = {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        // error occured or no diagram found
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          // error occured or no diagram found
+          return null;
+        }
+      })
+      .catch(() => {
         return null;
-      }
-    });
+      });
   },
   publishDiagramOnServer(diagram: Diagram): Promise<string> {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
