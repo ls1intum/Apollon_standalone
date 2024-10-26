@@ -4,16 +4,23 @@ import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import {
+  loadDiagram,
+  selectDiagram,
+  setCreateNewEditor,
+  updateDiagramThunk,
+} from '../../../services/diagram/diagramSlice';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const [title, setTitle] = useState<string>(diagram.title);
   const [description, setDescription] = useState<string>(diagram.description || '');
+  const navigate = useNavigate();
 
   const displayToast = () => {
     toast.success(`You have successfuly a new version ${diagram.title}`, {
@@ -35,13 +42,17 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     diagramCopy.title = title;
     diagramCopy.description = description;
 
-    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token).then((res) => {
-      dispatch(updateDiagramThunk(res.diagram));
-      dispatch(setCreateNewEditor(true));
-    });
-
-    displayToast();
-    close();
+    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
+      .then((res) => {
+        dispatch(loadDiagram(res.diagram));
+        LocalStorageRepository.setLastPublishedToken(res.token);
+        dispatch(setCreateNewEditor(true));
+        navigate(`/${res.token}`);
+      })
+      .finally(() => {
+        displayToast();
+        close();
+      });
   };
 
   return (
