@@ -12,15 +12,15 @@ import {
 } from '../../services/version-management/versionManagementSlice';
 import { selectDiagram } from '../../services/diagram/diagramSlice';
 
-const TimelineContainer = styled.div<{ isOpen: boolean }>`
+const TimelineContainer = styled.div<{ $isOpen: boolean }>`
   z-index: 1;
   position: fixed;
   top: 0;
   right: 0;
   height: 100%;
-  width: ${(props) => (props.isOpen ? '250px' : '0')}; /* 0 width when closed */
+  width: ${(props) => (props.$isOpen ? '250px' : '0')}; /* 0 width when closed */
   background-color: var(--apollon-background);
-  border-left: ${(props) => (props.isOpen ? '1px solid #e6e6e6' : 'none')};
+  border-left: ${(props) => (props.$isOpen ? '1px solid #e6e6e6' : 'none')};
   overflow: hidden;
   transition: width 0.3s ease;
 `;
@@ -171,7 +171,7 @@ export const VersionManagementSidebar: React.FC = () => {
     return null;
   }
   return (
-    <TimelineContainer isOpen={isVersionManagementSidebarOpen}>
+    <TimelineContainer $isOpen={isVersionManagementSidebarOpen}>
       <TimelineHeader>
         <div>Version History</div>
         <NewVersionButton

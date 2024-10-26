@@ -28,9 +28,9 @@ const ApplicationVersion = styled.span`
   margin-right: 10px;
 `;
 
-const MainContent = styled.div<{ isSidebarOpen: boolean }>`
+const MainContent = styled.div<{ $isSidebarOpen: boolean }>`
   transition: margin-right 0.3s ease;
-  margin-right: ${(props) => (props.isSidebarOpen ? '250px' : '0')}; /* Adjust based on sidebar width */
+  margin-right: ${(props) => (props.$isSidebarOpen ? '250px' : '0')}; /* Adjust based on sidebar width */
 `;
 
 export const ApplicationBar: React.FC = () => {
@@ -60,7 +60,7 @@ export const ApplicationBar: React.FC = () => {
   };
 
   return (
-    <MainContent isSidebarOpen={isSidebarOpen}>
+    <MainContent $isSidebarOpen={isSidebarOpen}>
       <Navbar className="navbar" variant="dark" expand="lg">
         <Navbar.Brand>
           <img alt="" src="images/logo.png" width="60" height="30" className="d-inline-block align-top" />{' '}
