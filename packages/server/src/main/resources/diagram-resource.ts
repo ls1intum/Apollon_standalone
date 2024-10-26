@@ -35,8 +35,8 @@ export class DiagramResource {
   publishDiagramVersion = (req: Request, res: Response) => {
     const diagram: DiagramDTO = req.body.diagram;
     const existingToken: string | undefined = req.body.token;
-    this.diagramService.saveDiagramVersion(diagram, existingToken).then((token: string) => {
-      res.status(200).send(token);
+    this.diagramService.saveDiagramVersion(diagram, existingToken).then((savedDiagram) => {
+      res.status(200).send(savedDiagram);
     });
   };
 
@@ -44,17 +44,18 @@ export class DiagramResource {
     const token: string = req.params.token;
     const versionIndex: number = req.body.versionIndex;
 
-    this.diagramService.deleteDiagramVersion(token, versionIndex).then(() => {
-      res.status(200).send(token);
+    this.diagramService.deleteDiagramVersion(token, versionIndex).then((deletedDiagramVersion) => {
+      res.status(200).send(deletedDiagramVersion);
     });
   };
 
   editDiagramVersion = (req: Request, res: Response) => {
     const token: string = req.params.token;
     const versionIndex: number = req.body.versionIndex;
-    const diagram: DiagramDTO = req.body.diagram;
-    this.diagramService.editDiagramVersion(token, versionIndex, diagram).then(() => {
-      res.status(200).send(token);
+    const title: string = req.body.title;
+    const description: string = req.body.description;
+    this.diagramService.editDiagramVersion(token, versionIndex, title, description).then((editedDiagram) => {
+      res.status(200).send(editedDiagram);
     });
   };
 

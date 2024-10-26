@@ -201,10 +201,5 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
 
   const key = reduxDiagram?.id || uuid();
 
-  return (
-    <ApollonContainer key={key} ref={containerRef}>
-      {/* This component should be in packages/webapp/src/main/application.tsx */}
-      <VersionManagementSidebar />
-    </ApollonContainer>
-  );
+  return <ApollonContainer key={key} ref={containerRef} />;
 };

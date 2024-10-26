@@ -3,21 +3,46 @@ import { Button, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { selectDiagram } from '../../../services/diagram/diagramSlice';
-import { useAppSelector } from '../../store/hooks';
+import { selectDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectVersionActionIndex } from '../../../services/version-management/versionManagementSlice';
+import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
+import { displayError } from '../../../services/error-management/errorManagementSlice';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 
 export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
+  const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
+  const versionActionIndex = useAppSelector(selectVersionActionIndex);
 
   const displayToast = () => {
-    toast.success(`You have successfuly restored the diagram version ${diagram.title}`, {
+    toast.success(`You have successfuly restored the chosen diagram version`, {
       autoClose: 10000,
     });
   };
 
   const restoreVersion = () => {
-    // TODO: Implement version restoring
+    const token = LocalStorageRepository.getLastPublishedToken();
+
+    if (token === null || !diagram.versions) {
+      dispatch(displayError('Restore failed', 'Can not restore version that is not published on the server.'));
+      close();
+
+      return;
+    }
+
+    // Restore version
+    const diagramCopy = Object.assign({}, diagram);
+    diagramCopy.model = diagram.versions[versionActionIndex].model;
+    diagramCopy.title = `Restored: ${diagram.title}`;
+
+    DiagramRepository.publishDiagramVersionOnServer(diagram, token).then((res) => {
+      dispatch(updateDiagramThunk(res.diagram));
+      dispatch(setCreateNewEditor(true));
+    });
+
     displayToast();
+    close();
   };
 
   return (

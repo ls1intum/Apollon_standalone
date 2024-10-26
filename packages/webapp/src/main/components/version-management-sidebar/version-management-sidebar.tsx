@@ -7,11 +7,13 @@ import { showModal } from '../../services/modal/modalSlice';
 import {
   selectDisplaySidebar,
   selectPreviewedDiagramIndex,
+  setVersionActionIndex,
   setPreviewedDiagramIndex,
 } from '../../services/version-management/versionManagementSlice';
 import { selectDiagram } from '../../services/diagram/diagramSlice';
 
 const TimelineContainer = styled.div`
+  z-index: 1;
   position: fixed;
   top: auto;
   bottom: auto;
@@ -208,6 +210,7 @@ export const VersionManagementSidebar: React.FC = () => {
                   <VersionActions>
                     <ActionButton
                       onClick={() => {
+                        dispatch(setVersionActionIndex(index));
                         dispatch(showModal({ type: ModalContentType.EditVersionInfoModal, size: 'lg' }));
                       }}
                     >
@@ -215,6 +218,7 @@ export const VersionManagementSidebar: React.FC = () => {
                     </ActionButton>
                     <ActionButton
                       onClick={() => {
+                        dispatch(setVersionActionIndex(index));
                         dispatch(
                           showModal({
                             type: ModalContentType.DeleteVersionModal,
@@ -244,6 +248,7 @@ export const VersionManagementSidebar: React.FC = () => {
                       </div>
                       <div
                         onClick={() => {
+                          dispatch(setVersionActionIndex(index));
                           dispatch(showModal({ type: ModalContentType.RestoreVersionModal, size: 'lg' }));
                         }}
                       >

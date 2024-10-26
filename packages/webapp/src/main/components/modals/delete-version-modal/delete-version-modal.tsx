@@ -3,21 +3,41 @@ import { Button, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAppSelector } from '../../store/hooks';
-import { selectDiagram } from '../../../services/diagram/diagramSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { selectDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import { displayError } from '../../../services/error-management/errorManagementSlice';
+import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
+import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { selectVersionActionIndex } from '../../../services/version-management/versionManagementSlice';
 
 export const DeleteVersionModal: React.FC<ModalContentProps> = ({ close }) => {
+  const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
+  const versionActionIndex = useAppSelector(selectVersionActionIndex);
 
   const displayToast = () => {
-    toast.success(`You have successfuly deleted the diagram version ${diagram.title}`, {
+    toast.success(`You have successfuly deleted the chosen diagram version`, {
       autoClose: 10000,
     });
   };
 
   const deleteVersion = () => {
-    // TODO: Implement version deleting
+    const token = LocalStorageRepository.getLastPublishedToken();
+
+    if (token === null) {
+      dispatch(displayError('Deleting failed', 'Can not delete version that is not published on the server.'));
+      close();
+
+      return;
+    }
+
+    DiagramRepository.deleteDiagramVersionOnServer(token, versionActionIndex).then((diagram) => {
+      dispatch(updateDiagramThunk({ versions: diagram.versions }));
+      dispatch(setCreateNewEditor(true));
+    });
+
     displayToast();
+    close();
   };
 
   return (

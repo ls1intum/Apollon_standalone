@@ -3,10 +3,19 @@ import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { uuid } from '../../utils/uuid';
 
-import { setCreateNewEditor, updateDiagramThunk, selectCreatenewEditor } from '../../services/diagram/diagramSlice';
+import {
+  setCreateNewEditor,
+  updateDiagramThunk,
+  selectCreatenewEditor,
+  changeReadonlyMode,
+} from '../../services/diagram/diagramSlice';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { VersionManagementSidebar } from '../version-management-sidebar/version-management-sidebar';
+import {
+  selectPreviewedDiagramIndex,
+  setPreviewedDiagramIndex,
+} from '../../services/version-management/versionManagementSlice';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -22,6 +31,7 @@ export const ApollonEditorComponent: React.FC = () => {
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
   const createNewEditor = useAppSelector(selectCreatenewEditor);
+  const previewedDiagramIndex = useAppSelector(selectPreviewedDiagramIndex);
   const editorContext = useContext(ApollonEditorContext);
   const setEditor = editorContext?.setEditor;
 
@@ -47,10 +57,31 @@ export const ApollonEditorComponent: React.FC = () => {
     initializeEditor();
   }, [containerRef.current, createNewEditor]);
 
+  useEffect(() => {
+    const previewDiagram = async () => {
+      if (
+        containerRef.current != null &&
+        editorRef.current &&
+        reduxDiagram.versions &&
+        reduxDiagram.versions.length > 0
+      ) {
+        dispatch(changeReadonlyMode(previewedDiagramIndex !== -1));
+        await editorRef.current?.nextRender;
+
+        if (previewedDiagramIndex === -1 && reduxDiagram.model) {
+          editorRef.current.model = reduxDiagram.model;
+        } else if (reduxDiagram.versions[previewedDiagramIndex].model) {
+          editorRef.current.model = reduxDiagram.versions[previewedDiagramIndex].model!;
+        }
+
+        setEditor!(editorRef.current);
+      }
+    };
+
+    previewDiagram();
+  }, [previewedDiagramIndex]);
+
   const key = reduxDiagram?.id || uuid();
 
-  return <ApollonContainer key={key} ref={containerRef} >
-    {/* This component should be in packages/webapp/src/main/application.tsx */}
-    <VersionManagementSidebar/>
-  </ApollonContainer>
+  return <ApollonContainer key={key} ref={containerRef} />;
 };

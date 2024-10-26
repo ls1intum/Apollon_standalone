@@ -67,12 +67,12 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
   const publishDiagram = (view: DiagramView) => {
     if (diagram && diagram.model && Object.keys(diagram.model.elements).length > 0) {
-      DiagramRepository.publishDiagramOnServer(diagram)
-        .then((token: string) => {
-          LocalStorageRepository.setLastPublishedToken(token);
+      DiagramRepository.publishDiagramVersionOnServer(diagram)
+        .then((res) => {
+          LocalStorageRepository.setLastPublishedToken(res.token);
           copyLink(view);
           dispatch(setCreateNewEditor(true));
-          navigate(`/${token}?view=${view}`);
+          navigate(`/${res.token}?view=${view}`);
           close();
         })
         .catch((error) => {

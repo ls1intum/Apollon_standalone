@@ -36,7 +36,7 @@ export function RoutedApplication() {
             <ApplicationModal />
 
             {/* This component should be here with absolute display */}
-            {/* <VersionManagementSidebar /> */}
+            <VersionManagementSidebar />
             {isFirefox && <FirefoxIncompatibilityHint />}
             <Routes>
               <Route path={'/:token'} element={<ApollonEditorComponentWithConnection />} />
