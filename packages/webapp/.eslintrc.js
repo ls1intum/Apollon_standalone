@@ -24,14 +24,17 @@ module.exports = {
       'error',
       'single',
       {
-        'avoidEscape': true,
-        'allowTemplateLiterals': true
-      }
-    ]
+        avoidEscape: true,
+        allowTemplateLiterals: true,
+      },
+    ],
   },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
     },
   ],
+  env: {
+    node: true,
+  },
 };
