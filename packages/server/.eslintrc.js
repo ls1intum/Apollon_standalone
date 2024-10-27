@@ -1,4 +1,3 @@
-/* eslint-env node */
 module.exports = {
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
@@ -19,11 +18,14 @@ module.exports = {
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-var-requires': 'off'
+    '@typescript-eslint/no-var-requires': 'off',
   },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
     },
   ],
+  env: {
+    node: true,
+  },
 };
