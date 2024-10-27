@@ -1,7 +1,7 @@
 import { ApollonEditor, ApollonMode, Patch, UMLModel } from '@ls1intum/apollon';
 import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
-import { DiagramView } from 'shared/src/main/diagram-view';
+import { DiagramView } from 'shared';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL, WS_PROTOCOL } from '../../constant';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';

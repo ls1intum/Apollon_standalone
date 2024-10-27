@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { DEPLOYMENT_URL } from '../../../constant';
-import { DiagramView } from 'shared/src/main/diagram-view';
+import { DiagramView } from 'shared';
 import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { toast } from 'react-toastify';

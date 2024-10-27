@@ -1,7 +1,7 @@
 import { randomString } from '../../utils';
 import { tokenLength } from '../../constants';
 import { DiagramStorageService } from '../diagram-storage/diagram-storage-service';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 
 export class DiagramService {
   private storageService: DiagramStorageService;
