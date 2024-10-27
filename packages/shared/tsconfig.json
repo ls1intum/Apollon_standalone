@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "declaration": true,
+    "rootDir": "src",
+    "typeRoots": ["../../node_modules/@types", "./node_modules/@types"],
+    "paths": {
+      "*": ["../../node_modules/*"]
+    },
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
