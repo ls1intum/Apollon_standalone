@@ -1,5 +1,5 @@
 import bodyParser from 'body-parser';
-import express, { Express, RequestHandler } from 'express';
+import express, { RequestHandler } from 'express';
 import * as Sentry from '@sentry/node';
 import { indexHtml, webappPath } from './constants';
 import { register } from './routes';
@@ -7,7 +7,7 @@ import { CollaborationService } from './services/collaboration-service/collabora
 
 const port = 8080;
 
-export const app: Express = express();
+const app = express();
 
 if (process.env.SENTRY_DSN) {
   Sentry.init({
