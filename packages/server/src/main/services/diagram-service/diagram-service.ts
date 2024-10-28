@@ -13,27 +13,35 @@ export class DiagramService {
   async saveDiagramVersion(
     diagramDTO: DiagramDTO,
     existingToken?: string,
-  ): Promise<{ token: string; diagram: DiagramDTO }> {
+  ): Promise<{ diagramToken: string; diagram: DiagramDTO }> {
     const diagramExists = existingToken !== undefined && (await this.storageService.diagramExists(existingToken));
-    const token = diagramExists ? existingToken : randomString(tokenLength);
-    const diagram = !diagramExists ? diagramDTO : await this.getDiagramByLink(token);
+    const diagramToken = diagramExists ? existingToken : randomString(tokenLength);
+    const diagram = !diagramExists ? diagramDTO : await this.getDiagramByLink(diagramToken);
+    const model = diagramDTO.model;
+    const title = diagramDTO.title;
+    const description = diagramDTO.description;
 
     if (diagram === undefined) {
-      throw Error(`Could not retrieve a saved diagram with the token ${token}`);
+      throw Error(`Could not retrieve a saved diagram with the token ${diagramToken}`);
     }
 
     if (diagram.versions === undefined) {
       diagram.versions = [];
     }
 
-    // versions of a diagram don't have their own versions
-    const { versions, ...diagramWithoutVersions } = diagramDTO;
+    diagram.model = model;
+    diagram.token = diagramToken;
+    diagram.title = title;
+    diagram.description = description;
+
+    // versions of a diagram don't have their own versions and a token
+    const { versions, token, ...diagramWithoutVersions } = diagramDTO;
     const newDiagramVersion = Object.assign({}, diagramWithoutVersions);
 
     diagram.versions.push(newDiagramVersion);
-    await this.storageService.saveDiagram(diagram, token);
+    await this.storageService.saveDiagram(diagram, diagramToken);
 
-    return { token, diagram };
+    return { diagramToken, diagram };
   }
 
   async deleteDiagramVersion(token: string, versionIndex: number): Promise<DiagramDTO> {

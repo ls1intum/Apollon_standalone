@@ -60,6 +60,14 @@ export const LocalStorageRepository = {
     window.localStorage.setItem(localStorageCollaborationColor, color);
   },
 
+  setIsDiagramPublished: (isPublished: boolean) => {
+    window.localStorage.setItem('is_diagram_published', isPublished ? 'true' : 'false');
+  },
+
+  getIsDiagramPublished: () => {
+    return window.localStorage.getItem('is_diagram_published') === 'true';
+  },
+
   setLastPublishedToken: (token: string) => {
     window.localStorage.setItem('last_published_token', token);
   },

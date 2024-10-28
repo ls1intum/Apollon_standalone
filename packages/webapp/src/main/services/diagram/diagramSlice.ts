@@ -12,6 +12,7 @@ export type Diagram = {
   lastUpdate: string;
   versions?: Diagram[];
   description?: string;
+  token?: string;
 };
 
 export type EditorOptions = {

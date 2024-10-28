@@ -13,31 +13,32 @@ import {
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { useNavigate } from 'react-router-dom';
 
 export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const [title, setTitle] = useState<string>(diagram.title);
   const [description, setDescription] = useState<string>(diagram.description || '');
-  const navigate = useNavigate();
 
   const displayToast = () => {
-    toast.success(`You have successfuly a new version ${diagram.title}`, {
+    toast.success(`You have successfuly published a new version`, {
       autoClose: 10000,
     });
   };
 
   const createNewVersion = () => {
-    const token = LocalStorageRepository.getLastPublishedToken();
-
-    if (token === null) {
-      dispatch(displayError('Creation failed', 'An unexpected error occured while creating a new version'));
-      close();
+    if (!diagram || !diagram.model || Object.keys(diagram.model.elements).length === 0) {
+      dispatch(
+        displayError(
+          'Publishing version fialed',
+          'You are trying to publish an empty diagram. Please insert at least one element to the canvas before publishing.',
+        ),
+      );
 
       return;
     }
 
+    const token = diagram.token;
     const diagramCopy = Object.assign({}, diagram);
     diagramCopy.title = title;
     diagramCopy.description = description;
@@ -45,9 +46,8 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
         dispatch(loadDiagram(res.diagram));
-        LocalStorageRepository.setLastPublishedToken(res.token);
-        dispatch(setCreateNewEditor(true));
-        navigate(`/${res.token}`);
+        dispatch(updateDiagramThunk(res.diagram));
+        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
       })
       .finally(() => {
         displayToast();

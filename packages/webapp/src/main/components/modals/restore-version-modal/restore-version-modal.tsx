@@ -3,17 +3,27 @@ import { Button, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { selectDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import {
+  loadDiagram,
+  selectDiagram,
+  setCreateNewEditor,
+  updateDiagramThunk,
+} from '../../../services/diagram/diagramSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectVersionActionIndex } from '../../../services/version-management/versionManagementSlice';
+import {
+  selectVersionActionIndex,
+  setPreviewedDiagramIndex,
+} from '../../../services/version-management/versionManagementSlice';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { useNavigate } from 'react-router-dom';
 
 export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const versionActionIndex = useAppSelector(selectVersionActionIndex);
+  const navigate = useNavigate();
 
   const displayToast = () => {
     toast.success(`You have successfuly restored the chosen diagram version`, {
@@ -22,9 +32,9 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const restoreVersion = () => {
-    const token = LocalStorageRepository.getLastPublishedToken();
+    const token = diagram.token;
 
-    if (token === null || !diagram.versions) {
+    if (token === undefined || !diagram.versions) {
       dispatch(displayError('Restore failed', 'Can not restore version that is not published on the server.'));
       close();
 
@@ -34,15 +44,19 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     // Restore version
     const diagramCopy = Object.assign({}, diagram);
     diagramCopy.model = diagram.versions[versionActionIndex].model;
-    diagramCopy.title = `Restored: ${diagram.title}`;
+    diagramCopy.title = `Restored: ${diagram.versions[versionActionIndex].title}`;
 
-    DiagramRepository.publishDiagramVersionOnServer(diagram, token).then((res) => {
-      dispatch(updateDiagramThunk(res.diagram));
-      dispatch(setCreateNewEditor(true));
-    });
-
-    displayToast();
-    close();
+    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
+      .then((res) => {
+        dispatch(loadDiagram(res.diagram));
+        dispatch(updateDiagramThunk(res.diagram));
+        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
+        dispatch(setPreviewedDiagramIndex(-1));
+      })
+      .finally(() => {
+        displayToast();
+        close();
+      });
   };
 
   return (

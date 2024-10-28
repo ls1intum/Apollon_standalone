@@ -1,4 +1,4 @@
-import { ApollonEditor, UMLModel } from '@ls1intum/apollon';
+import { ApollonEditor, ApollonMode, UMLModel } from '@ls1intum/apollon';
 import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { uuid } from '../../utils/uuid';
@@ -8,6 +8,7 @@ import {
   updateDiagramThunk,
   selectCreatenewEditor,
   changeReadonlyMode,
+  changeEditorMode,
 } from '../../services/diagram/diagramSlice';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -38,6 +39,10 @@ export const ApollonEditorComponent: React.FC = () => {
   useEffect(() => {
     const initializeEditor = async () => {
       if (containerRef.current != null && createNewEditor) {
+        if (editorRef.current) {
+          await editorRef.current.nextRender;
+          editorRef.current.destroy();
+        }
         editorRef.current = new ApollonEditor(containerRef.current, options);
         await editorRef.current?.nextRender;
 
@@ -63,18 +68,30 @@ export const ApollonEditorComponent: React.FC = () => {
         containerRef.current != null &&
         editorRef.current &&
         reduxDiagram.versions &&
-        reduxDiagram.versions.length > 0
+        reduxDiagram.versions.length > 0 &&
+        !createNewEditor
       ) {
-        dispatch(changeReadonlyMode(previewedDiagramIndex !== -1));
-        await editorRef.current?.nextRender;
+        let editorOptions = structuredClone(options);
+        editorOptions.readonly = previewedDiagramIndex !== -1;
+
+        await editorRef.current.nextRender;
+        editorRef.current.destroy();
+        const editor = new ApollonEditor(containerRef.current!, editorOptions);
+        await editor.nextRender;
+        editorRef.current = editor;
 
         if (previewedDiagramIndex === -1 && reduxDiagram.model) {
           editorRef.current.model = reduxDiagram.model;
+
+          editorRef.current.subscribeToModelChange((model: UMLModel) => {
+            const diagram = { ...reduxDiagram, model };
+            dispatch(updateDiagramThunk(diagram));
+          });
+
+          setEditor!(editorRef.current);
         } else if (reduxDiagram.versions[previewedDiagramIndex].model) {
           editorRef.current.model = reduxDiagram.versions[previewedDiagramIndex].model!;
         }
-
-        setEditor!(editorRef.current);
       }
     };
 

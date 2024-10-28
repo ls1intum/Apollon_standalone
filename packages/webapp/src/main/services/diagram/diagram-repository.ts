@@ -5,6 +5,7 @@ import { Diagram } from './diagramSlice';
 export const DiagramRepository = {
   getDiagramFromServerByToken(token: string): Promise<DiagramDTO | null> {
     const resourceUrl = `${BASE_URL}/diagrams/${token}`;
+    console.log('resource url:', resourceUrl);
     return fetch(resourceUrl, {
       method: 'GET',
       headers: {
@@ -12,6 +13,7 @@ export const DiagramRepository = {
       },
     })
       .then((response) => {
+        console.log(response);
         if (response.ok) {
           return response.json();
         } else {
@@ -23,7 +25,10 @@ export const DiagramRepository = {
         return null;
       });
   },
-  publishDiagramVersionOnServer(diagram: Diagram, token?: string): Promise<{ token: string; diagram: DiagramDTO }> {
+  publishDiagramVersionOnServer(
+    diagram: Diagram,
+    token?: string,
+  ): Promise<{ diagramToken: string; diagram: DiagramDTO }> {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
     const body = JSON.stringify({ diagram, token });
     return fetch(resourceUrl, {

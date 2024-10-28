@@ -11,7 +11,7 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
-import { setCreateNewEditor } from '../../../services/diagram/diagramSlice';
+import { loadDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
@@ -66,14 +66,28 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const publishDiagram = (view: DiagramView) => {
-    if (diagram && diagram.model && Object.keys(diagram.model.elements).length > 0) {
-      DiagramRepository.publishDiagramVersionOnServer(diagram)
+    if (!diagram.model || Object.keys(diagram.model.elements).length === 0) {
+      dispatch(
+        displayError(
+          'Sharing diagram failed',
+          'You are trying to share an empty diagram. Please insert at least one element to the canvas before sharing.',
+        ),
+      );
+      close();
+
+      return;
+    }
+
+    if (!diagram.versions || diagram.versions.length === 0) {
+      const diagramCopy = Object.assign({}, diagram);
+      diagramCopy.title = 'Initial version';
+      diagramCopy.description = 'Your shared diagram version';
+
+      DiagramRepository.publishDiagramVersionOnServer(diagramCopy)
         .then((res) => {
-          LocalStorageRepository.setLastPublishedToken(res.token);
-          copyLink(view);
-          dispatch(setCreateNewEditor(true));
-          navigate(`/${res.token}?view=${view}`);
-          close();
+          dispatch(loadDiagram(res.diagram));
+          dispatch(updateDiagramThunk(res.diagram));
+          LocalStorageRepository.setLastPublishedToken(res.diagramToken);
         })
         .catch((error) => {
           dispatch(
@@ -83,15 +97,12 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
           // tslint:disable-next-line:no-console
           console.error(error);
         });
-    } else {
-      dispatch(
-        displayError(
-          'Sharing diagram failed',
-          'You are trying to share an empty diagram. Please insert at least one element to the canvas before sharing.',
-        ),
-      );
-      close();
     }
+
+    copyLink(view);
+    dispatch(setCreateNewEditor(true));
+    navigate(`/${LocalStorageRepository.getLastPublishedToken()}?view=${view}`);
+    close();
   };
 
   const hasRecentlyPublished = () => {

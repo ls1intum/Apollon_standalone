@@ -166,10 +166,12 @@ export const VersionManagementSidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const previewedDiagramIndex = useAppSelector(selectPreviewedDiagramIndex);
+  const versions = diagram.versions ? diagram.versions : [];
 
   if (!isVersionManagementSidebarOpen) {
     return null;
   }
+
   return (
     <TimelineContainer $isOpen={isVersionManagementSidebarOpen}>
       <TimelineHeader>
@@ -186,21 +188,21 @@ export const VersionManagementSidebar: React.FC = () => {
         <Timeline>
           <TimelineVersion>
             <VersionPosition>
-              {diagram && diagram.versions && diagram.versions.length !== 0 && <FirstVerticalLine />}
+              {versions.length !== 0 && <FirstVerticalLine />}
               {previewedDiagramIndex === -1 ? <RecordCircle /> : <Circle />}
             </VersionPosition>
             <Version>
               <div style={{ fontWeight: 500, fontSize: '0.8rem' }}>Current Unpublished Version</div>
             </Version>
           </TimelineVersion>
-          {(diagram.versions ? diagram.versions : [])
+          {versions
             .slice()
             .reverse()
             .map((version, index) => (
               <TimelineVersion key={index}>
                 <VersionPosition>
-                  {diagram.versions && index !== diagram.versions.length - 1 && <VerticalLine />}
-                  {index === previewedDiagramIndex ? <RecordCircle /> : <Circle />}
+                  {index !== versions.length - 1 && <VerticalLine />}
+                  {versions.length - 1 - index === previewedDiagramIndex ? <RecordCircle /> : <Circle />}
                 </VersionPosition>
                 <Version>
                   <div style={{ fontWeight: 500, fontSize: '0.9rem' }}>{version.title}</div>
@@ -211,7 +213,7 @@ export const VersionManagementSidebar: React.FC = () => {
                   <VersionActions>
                     <ActionButton
                       onClick={() => {
-                        dispatch(setVersionActionIndex(index));
+                        dispatch(setVersionActionIndex(versions.length - 1 - index));
                         dispatch(showModal({ type: ModalContentType.EditVersionInfoModal, size: 'lg' }));
                       }}
                     >
@@ -219,7 +221,7 @@ export const VersionManagementSidebar: React.FC = () => {
                     </ActionButton>
                     <ActionButton
                       onClick={() => {
-                        dispatch(setVersionActionIndex(index));
+                        dispatch(setVersionActionIndex(versions.length - 1 - index));
                         dispatch(
                           showModal({
                             type: ModalContentType.DeleteVersionModal,
@@ -232,13 +234,13 @@ export const VersionManagementSidebar: React.FC = () => {
                     </ActionButton>
                     <ActionButton
                       onClick={() => {
-                        dispatch(setPreviewedDiagramIndex(index));
+                        dispatch(setPreviewedDiagramIndex(versions.length - 1 - index));
                       }}
                     >
                       <Eye />
                     </ActionButton>
                   </VersionActions>
-                  {index === previewedDiagramIndex && (
+                  {versions.length - 1 - index === previewedDiagramIndex && (
                     <PreviewActions>
                       <div
                         onClick={() => {
@@ -249,7 +251,7 @@ export const VersionManagementSidebar: React.FC = () => {
                       </div>
                       <div
                         onClick={() => {
-                          dispatch(setVersionActionIndex(index));
+                          dispatch(setVersionActionIndex(versions.length - 1 - index));
                           dispatch(showModal({ type: ModalContentType.RestoreVersionModal, size: 'lg' }));
                         }}
                       >
