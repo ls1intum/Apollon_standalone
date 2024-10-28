@@ -5,9 +5,9 @@
   "scripts": {
     "clean": "rm -rf ../../build/webapp",
     "start": "webpack serve --config ./webpack/webpack.dev.js",
-    "lint": "npm run lint:ts && npm run lint:css",
-    "lint:ts": "eslint -c .eslintrc.js ./src/main",
-    "lint:css": "stylelint 'src/**/*.ts'",
+    "lint": "eslint -c .eslintrc.js \"**/*.{ts,tsx}\"",
+    "lint:ts": "eslint -c .eslintrc.js \"/src/main\"",
+    "lint:css": "stylelint \"src/**/*.ts\"",
     "build": "npm run clean && webpack --config ./webpack/webpack.prod.js",
     "build:local": "npm run clean && DEPLOYMENT_URL=http://localhost:8080 webpack --config ./webpack/webpack.prod.js"
   },

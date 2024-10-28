@@ -41,7 +41,6 @@ const getInitialEditorOptions = (): EditorOptions => {
   if (latestId) {
     const latestDiagram: Diagram = JSON.parse(window.localStorage.getItem(localStorageDiagramPrefix + latestId)!);
     editorOptions.type = latestDiagram?.model?.type ? latestDiagram.model.type : editorOptions.type;
-  } else {
   }
 
   return editorOptions;

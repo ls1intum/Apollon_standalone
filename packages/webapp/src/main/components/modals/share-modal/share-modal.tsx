@@ -80,7 +80,6 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
             displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
           );
           close();
-          // tslint:disable-next-line:no-console
           console.error(error);
         });
     } else {

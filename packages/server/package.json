@@ -7,7 +7,8 @@
     "clean": "rm -rf ../../build/server",
     "start": "ts-node-dev src/main/server.ts",
     "build": "webpack --config webpack/webpack.config.js",
-    "lint": "eslint -c .eslintrc.js src/main"
+    "lint": "eslint -c .eslintrc.js \"**/*.{ts,tsx}\""
+
   },
   "engines": {
     "node": ">=18.17.0"

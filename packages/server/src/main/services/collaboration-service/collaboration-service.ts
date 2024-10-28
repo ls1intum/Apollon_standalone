@@ -21,7 +21,6 @@ export class CollaborationService {
           return ws.terminate();
         }
         ws.isAlive = false;
-        // tslint:disable-next-line:no-empty
         ws.ping(() => {});
       });
     }, 2000);

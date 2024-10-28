@@ -2,7 +2,7 @@ import ms from 'ms';
 import { Operation } from 'fast-json-patch';
 import { RedisClientType, createClient } from 'redis';
 
-import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-storage-rate-limiter';
 import { applyPatchToRedisValue } from './redis-patch';
