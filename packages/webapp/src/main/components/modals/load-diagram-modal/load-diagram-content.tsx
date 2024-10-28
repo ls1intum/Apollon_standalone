@@ -12,8 +12,8 @@ export const LoadDiagramContent = (props: Props) => {
   if (props.diagrams && props.diagrams.length > 0) {
     return (
       <ListGroup>
-        {props.diagrams.map((value, index, array) => (
-          <ListGroup.Item key={value.id} action onClick={(event: any) => props.onSelect(value.id)}>
+        {props.diagrams.map((value        ) => (
+          <ListGroup.Item key={value.id} action onClick={() => props.onSelect(value.id)}>
             <LoadDiagramItem item={value} />
           </ListGroup.Item>
         ))}

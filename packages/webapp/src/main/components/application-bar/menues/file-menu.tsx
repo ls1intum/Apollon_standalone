@@ -56,7 +56,7 @@ export const FileMenu: React.FC = () => {
       <NavDropdown.Item onClick={() => dispatch(showModal({ type: ModalContentType.LoadDiagramModal }))}>
         Load
       </NavDropdown.Item>
-      <NavDropdown.Item onClick={(event) => dispatch(showModal({ type: ModalContentType.ImportDiagramModal }))}>
+      <NavDropdown.Item onClick={() => dispatch(showModal({ type: ModalContentType.ImportDiagramModal }))}>
         Import
       </NavDropdown.Item>
       <Dropdown id="export-dropdown" drop="end">

@@ -14,22 +14,23 @@ module.exports = [
       '@typescript-eslint': typescriptEslintPlugin,
     },
     rules: {
-      'no-constant-condition': 'off',
-      'no-empty': 'off',
-      'no-extra-boolean-cast': 'off',
-      'no-prototype-builtins': 'off',
-      'no-useless-escape': 'off',
-      'prefer-const': 'off',
-      'no-case-declarations': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/ban-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-namespace': 'off',
-      '@typescript-eslint/no-this-alias': 'off',
-      '@typescript-eslint/no-unsafe-declaration-merging': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
+      'no-constant-condition': 'warn', 
+      'no-empty': 'warn', 
+      'prefer-const': 'warn',
+
+      '@typescript-eslint/no-explicit-any': 'warn', 
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' }
+      ],
+      '@typescript-eslint/ban-ts-comment': [
+        'warn',
+        { 'ts-ignore': 'allow-with-description' } 
+      ],
+
+      '@typescript-eslint/ban-types': 'off', 
+      '@typescript-eslint/no-namespace': 'off', 
     },
-    files: ['**/*.ts', '**/*.tsx'], 
+    files: ['**/*.ts', '**/*.tsx'],
   },
 ]

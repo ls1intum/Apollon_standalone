@@ -133,7 +133,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
       }
 
       if (token && APPLICATION_SERVER_VERSION && DEPLOYMENT_URL && containerRef.current && createNewEditor) {
-        let editorOptions = structuredClone(options);
+        const editorOptions = structuredClone(options);
 
         if (view) {
           switch (view) {
