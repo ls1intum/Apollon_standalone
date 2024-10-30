@@ -46,8 +46,6 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const view = searchParams.get('view');
   const navigate = useNavigate();
 
-  console.log('YEAH');
-
   const selfElementId = document.getElementById(collaborationName + '_' + collaborationColor)!;
   if (selfElementId) selfElementId.style.display = 'none';
 
@@ -159,8 +157,6 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
               break;
           }
         }
-
-        console.log('BEFORE MAKIGNM A ACLAL');
 
         DiagramRepository.getDiagramFromServerByToken(token).then(async (diagram) => {
           if (!diagram) {
