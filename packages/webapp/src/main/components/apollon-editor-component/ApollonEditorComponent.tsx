@@ -17,6 +17,8 @@ import {
   selectPreviewedDiagramIndex,
   setPreviewedDiagramIndex,
 } from '../../services/version-management/versionManagementSlice';
+import { DiagramRepository } from '../../services/diagram/diagram-repository';
+import { toast } from 'react-toastify';
 
 const ApollonContainer = styled.div`
   display: flex;
@@ -46,11 +48,25 @@ export const ApollonEditorComponent: React.FC = () => {
         editorRef.current = new ApollonEditor(containerRef.current, options);
         await editorRef.current?.nextRender;
 
-        if (reduxDiagram.model) {
-          editorRef.current.model = reduxDiagram.model;
+        let latestDiagram = reduxDiagram;
+
+        if (reduxDiagram.token) {
+          DiagramRepository.getDiagramFromServerByToken(reduxDiagram.token).then(async (diagram) => {
+            if (!diagram) {
+              toast.error('Diagram not found');
+              return;
+            }
+
+            latestDiagram = diagram;
+          });
         }
+
+        if (latestDiagram.model) {
+          editorRef.current.model = latestDiagram.model;
+        }
+
         editorRef.current.subscribeToModelChange((model: UMLModel) => {
-          const diagram = { ...reduxDiagram, model };
+          const diagram = { ...latestDiagram, model };
           dispatch(updateDiagramThunk(diagram));
         });
 

@@ -45,7 +45,6 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
 
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
-        dispatch(loadDiagram(res.diagram));
         dispatch(updateDiagramThunk(res.diagram));
         LocalStorageRepository.setLastPublishedToken(res.diagramToken);
       })
@@ -64,11 +63,16 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
         <>
           <label htmlFor="diagram-title">Diagram Title</label>
           <InputGroup className="mt-1 mb-3">
-            <FormControl id="diagram-title" onChange={(e) => setTitle(e.target.value)} />
+            <FormControl id="diagram-title" onChange={(e) => setTitle(e.target.value)} value={title} />
           </InputGroup>
           <label htmlFor="diagram-description">Diagram Description</label>
           <InputGroup className="mt-1">
-            <FormControl id="diagram-description" onChange={(e) => setDescription(e.target.value)} as={'textarea'} />
+            <FormControl
+              id="diagram-description"
+              onChange={(e) => setDescription(e.target.value)}
+              as={'textarea'}
+              value={description}
+            />
           </InputGroup>
         </>
       </Modal.Body>

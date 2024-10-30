@@ -24,7 +24,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
-  const getMessageForView = (view: DiagramView) => {
+  const getMessageForView = (view: string) => {
     switch (view) {
       case DiagramView.GIVE_FEEDBACK:
         return 'give feedback';
@@ -41,7 +41,10 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const copyLink = (view?: DiagramView) => {
     const link = getLinkForView();
     navigator.clipboard.writeText(link);
-    const viewUsedInMessage = view ? getMessageForView(view) : LocalStorageRepository.getLastPublishedType();
+    const lastPublishedTypeLocalStorage = LocalStorageRepository.getLastPublishedType();
+    const viewUsedInMessage = view
+      ? getMessageForView(view)
+      : getMessageForView(lastPublishedTypeLocalStorage || DiagramView.EDIT);
 
     toast.success(
       'The link has been copied to your clipboard and can be shared to ' +
@@ -58,7 +61,13 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
     if (tokenInUrl) {
       copyLink(view);
-      navigate(`/${tokenInUrl}?view=${view}`);
+
+      if (view === DiagramView.COLLABORATE) {
+        navigate(`/${tokenInUrl}?view=${view}`);
+      } else {
+        navigate(`/`);
+      }
+
       close();
     } else {
       publishDiagram(view);
@@ -78,31 +87,28 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
       return;
     }
 
-    if (!diagram.versions || diagram.versions.length === 0) {
-      const diagramCopy = Object.assign({}, diagram);
-      diagramCopy.title = 'Initial version';
-      diagramCopy.description = 'Your shared diagram version';
+    const diagramCopy = Object.assign({}, diagram);
+    diagramCopy.title = 'New shared version ';
+    diagramCopy.description = 'Your auto-generated version for sharing';
 
-      DiagramRepository.publishDiagramVersionOnServer(diagramCopy)
-        .then((res) => {
-          dispatch(loadDiagram(res.diagram));
-          dispatch(updateDiagramThunk(res.diagram));
-          LocalStorageRepository.setLastPublishedToken(res.diagramToken);
-        })
-        .catch((error) => {
-          dispatch(
-            displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
-          );
-          close();
-          // tslint:disable-next-line:no-console
-          console.error(error);
-        });
-    }
+    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
+      .then((res) => {
+        dispatch(updateDiagramThunk(res.diagram));
+        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
 
-    copyLink(view);
-    dispatch(setCreateNewEditor(true));
-    navigate(`/${LocalStorageRepository.getLastPublishedToken()}?view=${view}`);
-    close();
+        copyLink(view);
+        dispatch(setCreateNewEditor(true));
+        navigate(`/${res.diagramToken}?view=${view}`);
+        close();
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        close();
+        // tslint:disable-next-line:no-console
+        console.error(error);
+      });
   };
 
   const hasRecentlyPublished = () => {

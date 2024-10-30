@@ -22,9 +22,9 @@ export const DeleteVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const deleteVersion = () => {
-    const token = LocalStorageRepository.getLastPublishedToken();
+    const token = diagram.token;
 
-    if (token === null) {
+    if (!token || token === null) {
       dispatch(displayError('Deleting failed', 'Can not delete version that is not published on the server.'));
       close();
 

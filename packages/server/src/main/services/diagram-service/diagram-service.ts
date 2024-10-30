@@ -37,6 +37,7 @@ export class DiagramService {
     // versions of a diagram don't have their own versions and a token
     const { versions, token, ...diagramWithoutVersions } = diagramDTO;
     const newDiagramVersion = Object.assign({}, diagramWithoutVersions);
+    newDiagramVersion.lastUpdate = new Date().toISOString();
 
     diagram.versions.push(newDiagramVersion);
     await this.storageService.saveDiagram(diagram, diagramToken);
