@@ -3,12 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  loadDiagram,
-  selectDiagram,
-  setCreateNewEditor,
-  updateDiagramThunk,
-} from '../../../services/diagram/diagramSlice';
+import { selectDiagram, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   selectVersionActionIndex,
@@ -34,7 +29,7 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const restoreVersion = () => {
     const token = diagram.token;
 
-    if (token === undefined || !diagram.versions) {
+    if (!token || !diagram.versions) {
       dispatch(displayError('Restore failed', 'Can not restore version that is not published on the server.'));
       close();
 
@@ -48,13 +43,18 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
 
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
-        dispatch(loadDiagram(res.diagram));
         dispatch(updateDiagramThunk(res.diagram));
         LocalStorageRepository.setLastPublishedToken(res.diagramToken);
         dispatch(setPreviewedDiagramIndex(-1));
+        displayToast();
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        console.error(error);
       })
       .finally(() => {
-        displayToast();
         close();
       });
   };

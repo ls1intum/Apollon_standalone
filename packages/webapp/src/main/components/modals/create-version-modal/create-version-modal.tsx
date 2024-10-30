@@ -47,9 +47,15 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
         LocalStorageRepository.setLastPublishedToken(res.diagramToken);
+        displayToast();
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        console.error(error);
       })
       .finally(() => {
-        displayToast();
         close();
       });
   };

@@ -24,20 +24,28 @@ export const DeleteVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const deleteVersion = () => {
     const token = diagram.token;
 
-    if (!token || token === null) {
+    if (!token || !diagram.versions) {
       dispatch(displayError('Deleting failed', 'Can not delete version that is not published on the server.'));
       close();
 
       return;
     }
 
-    DiagramRepository.deleteDiagramVersionOnServer(token, versionActionIndex).then((diagram) => {
-      dispatch(updateDiagramThunk({ versions: diagram.versions }));
-      dispatch(setCreateNewEditor(true));
-    });
-
-    displayToast();
-    close();
+    DiagramRepository.deleteDiagramVersionOnServer(token, versionActionIndex)
+      .then((diagram) => {
+        dispatch(updateDiagramThunk({ versions: diagram.versions }));
+        dispatch(setCreateNewEditor(true));
+        displayToast();
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        console.error(error);
+      })
+      .finally(() => {
+        close();
+      });
   };
 
   return (

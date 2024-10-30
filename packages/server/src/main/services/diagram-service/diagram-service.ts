@@ -52,7 +52,11 @@ export class DiagramService {
       throw Error(`Could not retrieve a saved diagram with the token ${token}`);
     }
 
-    diagram.versions?.splice(versionIndex, 1);
+    if (!diagram.versions) {
+      throw Error(`Diagram with the token ${token} doesn't have any versions`);
+    }
+
+    diagram.versions.splice(versionIndex, 1);
     await this.storageService.saveDiagram(diagram, token);
 
     return diagram;
@@ -70,8 +74,12 @@ export class DiagramService {
       throw Error(`Could not retrieve a saved diagram with the token ${token}`);
     }
 
-    diagram.versions![versionIndex].title = title;
-    diagram.versions![versionIndex].description = description;
+    if (!diagram.versions) {
+      throw Error(`Diagram with the token ${token} doesn't have any versions`);
+    }
+
+    diagram.versions[versionIndex].title = title;
+    diagram.versions[versionIndex].description = description;
     await this.storageService.saveDiagram(diagram, token);
 
     return diagram;

@@ -75,7 +75,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const publishDiagram = (view: DiagramView) => {
-    if (!diagram.model || Object.keys(diagram.model.elements).length === 0) {
+    if (!diagram || !diagram.model || Object.keys(diagram.model.elements).length === 0) {
       dispatch(
         displayError(
           'Sharing diagram failed',
@@ -98,7 +98,6 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
         copyLink(view);
         dispatch(setCreateNewEditor(true));
-        navigate(`/${res.diagramToken}?view=${view}`);
         close();
       })
       .catch((error) => {

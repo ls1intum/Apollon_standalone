@@ -23,22 +23,30 @@ export const EditVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const editVersionInfo = () => {
-    const token = LocalStorageRepository.getLastPublishedToken();
+    const token = diagram.token;
 
-    if (token === null) {
+    if (!token || !diagram.versions) {
       dispatch(displayError('Editing failed', 'Can not edit version that is not published on the server.'));
       close();
 
       return;
     }
 
-    DiagramRepository.editDiagramVersionOnServer(token, versionActionIndex, title, description).then((diagram) => {
-      dispatch(updateDiagramThunk({ versions: diagram.versions }));
-      dispatch(setCreateNewEditor(true));
-    });
-
-    displayToast();
-    close();
+    DiagramRepository.editDiagramVersionOnServer(token, versionActionIndex, title, description)
+      .then((diagram) => {
+        dispatch(updateDiagramThunk({ versions: diagram.versions }));
+        dispatch(setCreateNewEditor(true));
+        displayToast();
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        console.error(error);
+      })
+      .finally(() => {
+        close();
+      });
   };
 
   return (
