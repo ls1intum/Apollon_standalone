@@ -12,8 +12,6 @@ import { ToastContainer } from 'react-toastify';
 import { PostHogProvider } from 'posthog-js/react';
 import { ApplicationStore } from './components/store/application-store';
 import { ApollonEditorComponentWithConnection } from './components/apollon-editor-component/ApollonEditorComponentWithConnection';
-import { useAppSelector } from './components/store/hooks';
-import { selectDisplaySidebar } from './services/version-management/versionManagementSlice';
 import { VersionManagementSidebar } from './components/version-management-sidebar/version-management-sidebar';
 
 const postHogOptions = {

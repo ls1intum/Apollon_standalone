@@ -3,20 +3,10 @@ import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { uuid } from '../../utils/uuid';
 
-import {
-  setCreateNewEditor,
-  updateDiagramThunk,
-  selectCreatenewEditor,
-  changeReadonlyMode,
-  changeEditorMode,
-} from '../../services/diagram/diagramSlice';
+import { setCreateNewEditor, updateDiagramThunk, selectCreatenewEditor } from '../../services/diagram/diagramSlice';
 import { ApollonEditorContext } from './apollon-editor-context';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { VersionManagementSidebar } from '../version-management-sidebar/version-management-sidebar';
-import {
-  selectPreviewedDiagramIndex,
-  setPreviewedDiagramIndex,
-} from '../../services/version-management/versionManagementSlice';
+import { selectPreviewedDiagramIndex } from '../../services/version-management/versionManagementSlice';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 import { toast } from 'react-toastify';
 

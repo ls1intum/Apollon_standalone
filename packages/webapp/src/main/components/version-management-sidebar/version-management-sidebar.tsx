@@ -21,7 +21,7 @@ const TimelineContainer = styled.div<{ $isOpen: boolean }>`
   width: ${(props) => (props.$isOpen ? '250px' : '0')}; /* 0 width when closed */
   background-color: var(--apollon-background);
   border-left: ${(props) => (props.$isOpen ? '1px solid #e6e6e6' : 'none')};
-  overflow: hidden;
+  overflow-y: auto;
   transition: width 0.3s ease;
 `;
 
@@ -50,9 +50,8 @@ const NewVersionButton = styled.div`
 `;
 
 const Timeline = styled.div`
-  overflow-y: auto;
   max-height: 100%;
-  margin: 1rem 0;
+  margin: 0.75rem 0;
 `;
 
 const TimelineVersion = styled.div`

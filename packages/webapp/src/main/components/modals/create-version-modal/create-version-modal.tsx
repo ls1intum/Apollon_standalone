@@ -18,7 +18,7 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const [title, setTitle] = useState<string>(diagram.title);
-  const [description, setDescription] = useState<string>(diagram.description || '');
+  const [description, setDescription] = useState<string>('');
 
   const displayToast = () => {
     toast.success(`You have successfuly published a new version`, {

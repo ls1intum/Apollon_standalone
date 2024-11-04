@@ -38,6 +38,8 @@ export const ApplicationBar: React.FC = () => {
   const { diagram } = useAppSelector((state) => state.diagram);
   const [diagramTitle, setDiagramTitle] = useState<string>(diagram?.title || '');
   const isSidebarOpen = useAppSelector(selectDisplaySidebar);
+  const urlPath = window.location.pathname;
+  const tokenInUrl = urlPath.substring(1); // This removes the leading "/"
 
   useEffect(() => {
     if (diagram?.title) {
@@ -85,6 +87,8 @@ export const ApplicationBar: React.FC = () => {
               onBlur={changeDiagramTitleApplicationState}
             />
           </Nav>
+        </Navbar.Collapse>
+        {!tokenInUrl && (
           <Nav.Item
             onClick={() => {
               dispatch(toggleSidebar());
@@ -94,8 +98,8 @@ export const ApplicationBar: React.FC = () => {
               <LayoutTextSidebarReverse size={20} color="#AEB1B5" />
             </div>
           </Nav.Item>
-          <ConnectClientsComponent />
-        </Navbar.Collapse>
+        )}
+        {tokenInUrl && <ConnectClientsComponent />}
         <ThemeSwitcherMenu />
       </Navbar>
     </MainContent>

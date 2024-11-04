@@ -18,7 +18,6 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateCollaborators } from '../../services/share/shareSlice';
 import { showModal } from '../../services/modal/modalSlice';
 import { toast } from 'react-toastify';
-import { VersionManagementSidebar } from '../version-management-sidebar/version-management-sidebar';
 
 const ApollonContainer = styled.div`
   display: flex;

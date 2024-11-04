@@ -11,17 +11,19 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
-import { loadDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import { setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import { selectDisplaySidebar, toggleSidebar } from '../../../services/version-management/versionManagementSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector((state) => state.diagram.diagram);
   const navigate = useNavigate();
+  const isSidebarDisplayed = useAppSelector(selectDisplaySidebar);
   const urlPath = window.location.pathname;
   const tokenInUrl = urlPath.substring(1); // This removes the leading "/"
 
-  const getLinkForView = () => {
-    return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
+  const getLinkForView = (token?: string) => {
+    return `${DEPLOYMENT_URL}/${token || LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
   const getMessageForView = (view: string) => {
@@ -38,8 +40,8 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return 'edit';
   };
 
-  const copyLink = (view?: DiagramView) => {
-    const link = getLinkForView();
+  const copyLink = (view?: DiagramView, token?: string) => {
+    const link = getLinkForView(token);
     navigator.clipboard.writeText(link);
     const lastPublishedTypeLocalStorage = LocalStorageRepository.getLastPublishedType();
     const viewUsedInMessage = view
@@ -57,24 +59,28 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const handleShareButtonPress = (view: DiagramView) => {
+    const token = tokenInUrl ? tokenInUrl : publishDiagram();
     LocalStorageRepository.setLastPublishedType(view);
 
-    if (tokenInUrl) {
-      copyLink(view);
+    if (token) {
+      LocalStorageRepository.setLastPublishedToken(token);
+    }
 
-      if (view === DiagramView.COLLABORATE) {
-        navigate(`/${tokenInUrl}?view=${view}`);
-      } else {
-        navigate(`/`);
+    copyLink(view, token);
+    close();
+
+    if (view === DiagramView.COLLABORATE) {
+      if (isSidebarDisplayed) {
+        dispatch(toggleSidebar());
       }
 
-      close();
-    } else {
-      publishDiagram(view);
+      navigate(`/${token || LocalStorageRepository.getLastPublishedToken()}?view=${view}`);
     }
+
+    dispatch(setCreateNewEditor(true));
   };
 
-  const publishDiagram = (view: DiagramView) => {
+  const publishDiagram = () => {
     if (!diagram || !diagram.model || Object.keys(diagram.model.elements).length === 0) {
       dispatch(
         displayError(
@@ -87,6 +93,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
       return;
     }
 
+    let token = diagram.token;
     const diagramCopy = Object.assign({}, diagram);
     diagramCopy.title = 'New shared version ';
     diagramCopy.description = 'Your auto-generated version for sharing';
@@ -94,20 +101,17 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
-        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
-
-        copyLink(view);
-        dispatch(setCreateNewEditor(true));
-        close();
+        token = res.diagramToken;
       })
       .catch((error) => {
         dispatch(
           displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
         );
-        close();
         // tslint:disable-next-line:no-console
         console.error(error);
       });
+
+    return token;
   };
 
   const hasRecentlyPublished = () => {
