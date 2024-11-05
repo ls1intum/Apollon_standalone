@@ -38,25 +38,12 @@ export const ApollonEditorComponent: React.FC = () => {
         editorRef.current = new ApollonEditor(containerRef.current, options);
         await editorRef.current?.nextRender;
 
-        let latestDiagram = reduxDiagram;
-
-        if (reduxDiagram.token) {
-          DiagramRepository.getDiagramFromServerByToken(reduxDiagram.token).then(async (diagram) => {
-            if (!diagram) {
-              toast.error('Diagram not found');
-              return;
-            }
-
-            latestDiagram = diagram;
-          });
-        }
-
-        if (latestDiagram.model) {
-          editorRef.current.model = latestDiagram.model;
+        if (reduxDiagram.model) {
+          editorRef.current.model = reduxDiagram.model;
         }
 
         editorRef.current.subscribeToModelChange((model: UMLModel) => {
-          const diagram = { ...latestDiagram, model };
+          const diagram = { ...reduxDiagram, model };
           dispatch(updateDiagramThunk(diagram));
         });
 
