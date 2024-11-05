@@ -21,11 +21,11 @@ export class DiagramService {
     const title = diagramDTO.title;
     const description = diagramDTO.description;
 
-    if (diagram === undefined) {
+    if (!diagram) {
       throw Error(`Could not retrieve a saved diagram with the token ${diagramToken}`);
     }
 
-    if (diagram.versions === undefined) {
+    if (!diagram.versions) {
       diagram.versions = [];
     }
 
@@ -51,7 +51,7 @@ export class DiagramService {
   async deleteDiagramVersion(token: string, versionIndex: number): Promise<DiagramDTO> {
     const diagram = await this.getDiagramByLink(token);
 
-    if (diagram === undefined) {
+    if (!diagram) {
       throw Error(`Could not retrieve a saved diagram with the token ${token}`);
     }
 
@@ -73,7 +73,7 @@ export class DiagramService {
   ): Promise<DiagramDTO> {
     const diagram = await this.getDiagramByLink(token);
 
-    if (diagram === undefined) {
+    if (!diagram) {
       throw Error(`Could not retrieve a saved diagram with the token ${token}`);
     }
 

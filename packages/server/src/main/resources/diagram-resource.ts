@@ -35,18 +35,30 @@ export class DiagramResource {
   publishDiagramVersion = (req: Request, res: Response) => {
     const diagram: DiagramDTO = req.body.diagram;
     const existingToken: string | undefined = req.body.token;
-    this.diagramService.saveDiagramVersion(diagram, existingToken).then((savedDiagram) => {
-      res.status(200).send(savedDiagram);
-    });
+    this.diagramService
+      .saveDiagramVersion(diagram, existingToken)
+      .then((savedDiagram) => {
+        res.status(200).send(savedDiagram);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while publishing');
+      });
   };
 
   deleteDiagramVersion = (req: Request, res: Response) => {
     const token: string = req.params.token;
     const versionIndex: number = req.body.versionIndex;
 
-    this.diagramService.deleteDiagramVersion(token, versionIndex).then((deletedDiagramVersion) => {
-      res.status(200).send(deletedDiagramVersion);
-    });
+    this.diagramService
+      .deleteDiagramVersion(token, versionIndex)
+      .then((deletedDiagramVersion) => {
+        res.status(200).send(deletedDiagramVersion);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while deleting version');
+      });
   };
 
   editDiagramVersion = (req: Request, res: Response) => {
@@ -54,9 +66,15 @@ export class DiagramResource {
     const versionIndex: number = req.body.versionIndex;
     const title: string = req.body.title;
     const description: string = req.body.description;
-    this.diagramService.editDiagramVersion(token, versionIndex, title, description).then((editedDiagram) => {
-      res.status(200).send(editedDiagram);
-    });
+    this.diagramService
+      .editDiagramVersion(token, versionIndex, title, description)
+      .then((editedDiagram) => {
+        res.status(200).send(editedDiagram);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while editing version');
+      });
   };
 
   convertSvgToPdf = (req: Request, res: Response) => {
