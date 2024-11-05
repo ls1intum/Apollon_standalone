@@ -39,8 +39,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
   const { diagram: reduxDiagram } = useAppSelector((state) => state.diagram);
   const options = useAppSelector((state) => state.diagram.editorOptions);
   const createNewEditor = useAppSelector(selectCreatenewEditor);
-  const editorContext = useContext(ApollonEditorContext);
-  const setEditor = editorContext!.setEditor;
+  const { setEditor } = useContext(ApollonEditorContext);
   const [searchParams] = useSearchParams();
   const view = searchParams.get('view');
   const navigate = useNavigate();
