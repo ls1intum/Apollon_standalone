@@ -1,5 +1,5 @@
 import { BASE_URL } from '../../constant';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { Diagram } from './diagramSlice';
 
 export const DiagramRepository = {

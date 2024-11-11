@@ -18,9 +18,12 @@ module.exports = merge(common, {
     static: path.join(__dirname, '../../build/webapp'),
     host: '0.0.0.0',
     port: 8888,
-    proxy: {
-      '/': 'http://localhost:8080',
-    },
+    proxy: [
+      {
+        context: ['/'],
+        target: 'http://localhost:8080',
+      },
+    ],
   },
 
   plugins: [

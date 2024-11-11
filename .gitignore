@@ -106,3 +106,4 @@ build
 
 /diagrams/
 .DS_Store
+.run/

@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
-import { Template, TemplateType } from '../template-types';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { Template} from '../template-types';
 import { SoftwarePatternCategory, SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern-types';
 import { TemplateFactory } from '../template-factory';
 

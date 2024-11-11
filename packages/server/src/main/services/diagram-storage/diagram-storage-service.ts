@@ -1,4 +1,4 @@
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { Operation } from 'fast-json-patch';
 
 /**

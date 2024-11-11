@@ -1,7 +1,7 @@
 import { applyPatch, Operation } from 'fast-json-patch';
 
 import { FileStorageService } from '../storage-service/file-storage-service';
-import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { diagramStoragePath } from '../../constants';
 import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-storage-rate-limiter';
