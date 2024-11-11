@@ -104,7 +104,6 @@ const diagramSlice = createSlice({
       state.createNewEditor = true;
       state.editorOptions.type = action.payload.model?.type ?? 'ClassDiagram';
     },
-
     setCreateNewEditor: (state, action: PayloadAction<boolean>) => {
       state.createNewEditor = action.payload;
     },
