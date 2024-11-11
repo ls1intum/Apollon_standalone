@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Collaborator } from 'shared/src/main/collaborator-dto';
+import { Collaborator } from 'shared';
 import { localStorageCollaborationName, localStorageCollaborationColor } from '../../constant';
 
 export type ShareState = {

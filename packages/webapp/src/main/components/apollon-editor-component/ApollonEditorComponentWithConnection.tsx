@@ -1,8 +1,8 @@
 import { ApollonEditor, ApollonMode, Patch, UMLModel } from '@ls1intum/apollon';
 import React, { useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
-import { DiagramView } from 'shared/src/main/diagram-view';
-import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import { DiagramView } from 'shared';
+import { IMessageEvent, w3cwebsocket as W3CWebSocket } from 'websocket';
 import { APPLICATION_SERVER_VERSION, DEPLOYMENT_URL, NO_HTTP_URL, WS_PROTOCOL } from '../../constant';
 import { DiagramRepository } from '../../services/diagram/diagram-repository';
 
@@ -65,8 +65,8 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
     const collaborators = { name, color };
     clientRef.current!.send(JSON.stringify({ token, collaborators }));
 
-    clientRef.current.onmessage = async (message: any) => {
-      const { originator, collaborators, diagram, patch, selection } = JSON.parse(message.data) as CollaborationMessage;
+    clientRef.current.onmessage = async (message: IMessageEvent) => {
+      const { originator, collaborators, diagram, patch, selection } = JSON.parse(message.data as string) as CollaborationMessage;
 
       const selfElementId = document.getElementById(collaborationName + '_' + collaborationColor)!;
       if (selfElementId) selfElementId.style.display = 'none';
@@ -133,7 +133,7 @@ export const ApollonEditorComponentWithConnection: React.FC = () => {
       }
 
       if (token && APPLICATION_SERVER_VERSION && DEPLOYMENT_URL && containerRef.current && createNewEditor) {
-        let editorOptions = structuredClone(options);
+        const editorOptions = structuredClone(options);
 
         if (view) {
           switch (view) {

@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import moment from 'moment';
 import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant';
 import { Diagram } from '../diagram/diagramSlice';
 import { useAppDispatch } from '../../components/store/hooks';

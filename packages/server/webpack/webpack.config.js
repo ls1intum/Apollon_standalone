@@ -1,5 +1,5 @@
 var path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: './src/main/server.ts',
@@ -24,18 +24,5 @@ module.exports = {
       },
     ],
   },
-  externals: {
-    canvas: 'commonjs ./canvas/canvas',
-    'utf-8-validate': 'utf-8-validate',
-  },
-  plugins: [
-    new CopyPlugin({
-      patterns: [
-        {
-          from: '../../node_modules/canvas/build/Release/',
-          to: 'canvas',
-        },
-      ],
-    }),
-  ],
+  externals: [nodeExternals()],
 };

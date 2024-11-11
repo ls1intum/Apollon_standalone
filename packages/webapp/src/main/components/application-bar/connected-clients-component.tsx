@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Collaborator } from 'shared/src/main/collaborator-dto';
 import { useAppSelector } from '../store/hooks';
 
 export const NameContainer = styled.div`

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, FormControl, InputGroup, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { DEPLOYMENT_URL } from '../../../constant';
-import { DiagramView } from 'shared/src/main/diagram-view';
+import { DiagramView } from 'shared';
 import { ModalContentProps } from '../application-modal-types';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { toast } from 'react-toastify';
@@ -80,7 +80,6 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
             displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
           );
           close();
-          // tslint:disable-next-line:no-console
           console.error(error);
         });
     } else {

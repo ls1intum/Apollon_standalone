@@ -9,7 +9,7 @@ import {
   localStorageUserThemePreference,
 } from '../../constant';
 import { Diagram } from '../diagram/diagramSlice';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
+import { UMLDiagramType } from '@ls1intum/apollon';
 
 type LocalDiagramEntry = {
   id: string;
