@@ -35,7 +35,6 @@ export const EditVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.editDiagramVersionOnServer(token, versionActionIndex, title, description)
       .then((diagram) => {
         dispatch(updateDiagramThunk({ versions: diagram.versions }));
-        dispatch(setCreateNewEditor(true));
         displayToast();
       })
       .catch((error) => {

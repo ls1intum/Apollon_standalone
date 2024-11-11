@@ -34,7 +34,6 @@ export const DeleteVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.deleteDiagramVersionOnServer(token, versionActionIndex)
       .then((diagram) => {
         dispatch(updateDiagramThunk({ versions: diagram.versions }));
-        dispatch(setCreateNewEditor(true));
         displayToast();
       })
       .catch((error) => {

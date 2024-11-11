@@ -76,8 +76,6 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
       navigate(`/${token || LocalStorageRepository.getLastPublishedToken()}?view=${view}`);
     }
-
-    dispatch(setCreateNewEditor(true));
   };
 
   const publishDiagram = () => {
