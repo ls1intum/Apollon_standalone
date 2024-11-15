@@ -22,7 +22,7 @@ const ActionsContainer = styled.div`
   }
 
   div:hover {
-    background-color: #e6e6e6;
+    background-color: var(--apollon-modal-bottom-border);
     cursor: pointer;
   }
 `;

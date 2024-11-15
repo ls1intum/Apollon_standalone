@@ -56,7 +56,9 @@ const VersionInfo = styled.div`
     flex-direction: column;
     align-items: start;
     justify-content: start;
-    background-color: #f3f3f3;
+    background-color: var(--apollon-background-variant);
+    color: var(--apollon-background-inverse);
+    border: 1px solid var(--apollon-modal-bottom-border);
     border-radius: 0.25rem;
     transition: 0.2s ease-in;
     width: 100%;

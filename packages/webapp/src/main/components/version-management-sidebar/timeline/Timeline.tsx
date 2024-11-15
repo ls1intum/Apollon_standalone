@@ -21,7 +21,7 @@ export const Timeline: React.FC = () => {
         <TimelineVersion
           index={-1}
           isOnlyUnpublishedVersion={versions.length === 0}
-          isPreviewedVersion={false}
+          isPreviewedVersion={previewedDiagramIndex === -1}
           isLastVersion={false}
         />
         {versions

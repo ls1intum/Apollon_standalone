@@ -69,11 +69,17 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
         <>
           <label htmlFor="diagram-title">Diagram Title</label>
           <InputGroup className="mt-1 mb-3">
-            <FormControl id="diagram-title" onChange={(e) => setTitle(e.target.value)} value={title} />
+            <FormControl
+              className="diagram-title"
+              id="diagram-title"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+            />
           </InputGroup>
           <label htmlFor="diagram-description">Diagram Description</label>
           <InputGroup className="mt-1">
             <FormControl
+              className="diagram-description"
               id="diagram-description"
               onChange={(e) => setDescription(e.target.value)}
               as={'textarea'}

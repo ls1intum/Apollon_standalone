@@ -177,7 +177,8 @@ legend.scheduler-border {
   color: #ffffff;
 }
 
-#diagram-title {
+.diagram-title,
+.diagram-description {
   background-color: var(--apollon-list-group-color);
   color: var(--apollon-background-inverse);
 }
