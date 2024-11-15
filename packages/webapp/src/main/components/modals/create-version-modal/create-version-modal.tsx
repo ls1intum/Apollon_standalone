@@ -4,15 +4,11 @@ import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  loadDiagram,
-  selectDiagram,
-  setCreateNewEditor,
-  updateDiagramThunk,
-} from '../../../services/diagram/diagramSlice';
+import { selectDiagram, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
+import { setDisplayUnpublishedVersion } from '../../../services/diagram/diagramSlice';
 
 export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
@@ -46,6 +42,7 @@ export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
+        dispatch(setDisplayUnpublishedVersion(false));
         LocalStorageRepository.setLastPublishedToken(res.diagramToken);
         displayToast();
       })

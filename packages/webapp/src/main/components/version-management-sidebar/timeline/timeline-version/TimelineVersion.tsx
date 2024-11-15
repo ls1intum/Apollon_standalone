@@ -4,6 +4,9 @@ import { Circle, RecordCircle } from 'react-bootstrap-icons';
 import { Diagram } from '../../../../services/diagram/diagramSlice';
 import { VersionActions } from './VersionActions';
 import { PreviewActions } from './PreviewActions';
+import { useAppSelector } from '../../../store/hooks';
+import { selectPreviewedDiagramIndex } from '../../../../services/version-management/versionManagementSlice';
+import { selectDisplayUnpublishedVersion } from '../../../../services/diagram/diagramSlice';
 
 const FirstVerticalLine = styled.div`
   width: 1px;
@@ -21,7 +24,6 @@ const VerticalLine = styled.div`
   background-color: #e6e6e6;
   position: absolute;
   z-index: -1;
-  top: 0;
 `;
 
 const Version = styled.div`
@@ -68,6 +70,7 @@ const VersionInfo = styled.div`
 
 type Props = {
   isPreviewedVersion: boolean;
+  isFirstVersion: boolean;
   isLastVersion: boolean;
   index: number;
   version?: Diagram;
@@ -75,6 +78,8 @@ type Props = {
 };
 
 export const TimelineVersion: React.FC<Props> = (props) => {
+  const displayUnpublishedVersion = useAppSelector(selectDisplayUnpublishedVersion);
+  const previewedDiagramIndex = useAppSelector(selectPreviewedDiagramIndex);
   const formatLastUpdated = (lastUpdated: Date) => {
     return `${lastUpdated.getMonth()}/${lastUpdated.getDate()}/${lastUpdated.getFullYear()} ${String(
       lastUpdated.getHours(),
@@ -86,7 +91,12 @@ export const TimelineVersion: React.FC<Props> = (props) => {
       <VersionPosition>
         {props.index === -1 && !props.isOnlyUnpublishedVersion && <FirstVerticalLine />}
         {!props.isLastVersion && props.index !== -1 && <VerticalLine />}
-        {props.isPreviewedVersion ? <RecordCircle /> : <Circle />}
+        {props.isPreviewedVersion ||
+        (!displayUnpublishedVersion && previewedDiagramIndex === -1 && props.isFirstVersion) ? (
+          <RecordCircle />
+        ) : (
+          <Circle />
+        )}
       </VersionPosition>
       {props.index === -1 && (
         <VersionInfo>

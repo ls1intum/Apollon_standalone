@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '../../store/hooks';
 import { selectPreviewedDiagramIndex } from '../../../services/version-management/versionManagementSlice';
+import { selectDisplayUnpublishedVersion } from '../../../services/diagram/diagramSlice';
 import { selectDiagram } from '../../../services/diagram/diagramSlice';
 import { TimelineVersion } from './timeline-version/TimelineVersion';
 
@@ -13,17 +14,21 @@ const TimelineVersions = styled.div`
 export const Timeline: React.FC = () => {
   const diagram = useAppSelector(selectDiagram);
   const previewedDiagramIndex = useAppSelector(selectPreviewedDiagramIndex);
+  const displayUnpublishedVersion = useAppSelector(selectDisplayUnpublishedVersion);
   const versions = diagram.versions ? diagram.versions : [];
 
   return (
     <div style={{ height: '100%' }}>
       <TimelineVersions>
-        <TimelineVersion
-          index={-1}
-          isOnlyUnpublishedVersion={versions.length === 0}
-          isPreviewedVersion={previewedDiagramIndex === -1}
-          isLastVersion={false}
-        />
+        {displayUnpublishedVersion && (
+          <TimelineVersion
+            index={-1}
+            isOnlyUnpublishedVersion={versions.length === 0}
+            isPreviewedVersion={previewedDiagramIndex === -1 && displayUnpublishedVersion}
+            isFirstVersion={false}
+            isLastVersion={false}
+          />
+        )}
         {versions
           .slice()
           .reverse()
@@ -33,6 +38,7 @@ export const Timeline: React.FC = () => {
               index={versions.length - 1 - index}
               version={version}
               isPreviewedVersion={versions.length - 1 - index === previewedDiagramIndex}
+              isFirstVersion={index === 0}
               isLastVersion={index === versions.length - 1}
             />
           ))}

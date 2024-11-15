@@ -178,7 +178,9 @@ legend.scheduler-border {
 }
 
 .diagram-title,
-.diagram-description {
+.diagram-title:focus,
+.diagram-description,
+.diagram-description:focus {
   background-color: var(--apollon-list-group-color);
   color: var(--apollon-background-inverse);
 }
