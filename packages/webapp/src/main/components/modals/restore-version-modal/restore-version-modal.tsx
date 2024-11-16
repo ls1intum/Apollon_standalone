@@ -44,6 +44,7 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     const diagramCopy = Object.assign({}, diagram);
     diagramCopy.model = diagram.versions[versionActionIndex].model;
     diagramCopy.title = `Restored: ${diagram.versions[versionActionIndex].title}`;
+    diagramCopy.description = diagram.versions[versionActionIndex].description;
 
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
