@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { selectDiagram, setCreateNewEditor, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
 import { selectVersionActionIndex } from '../../../services/version-management/versionManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 
 export const EditVersionModal: React.FC<ModalContentProps> = ({ close }) => {

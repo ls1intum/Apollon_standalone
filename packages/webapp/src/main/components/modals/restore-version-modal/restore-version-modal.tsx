@@ -3,7 +3,11 @@ import { Button, Modal } from 'react-bootstrap';
 import { ModalContentProps } from '../application-modal-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { selectDiagram, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import {
+  selectDiagram,
+  setDisplayUnpublishedVersion,
+  updateDiagramThunk,
+} from '../../../services/diagram/diagramSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   selectVersionActionIndex,
@@ -44,8 +48,9 @@ export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, token)
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
-        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
         dispatch(setPreviewedDiagramIndex(-1));
+        dispatch(setDisplayUnpublishedVersion(false));
+        LocalStorageRepository.setLastPublishedToken(res.diagramToken);
         displayToast();
       })
       .catch((error) => {
