@@ -40,7 +40,6 @@ export const Timeline: React.FC = () => {
               isPreviewedVersion={versions.length - 1 - index === previewedDiagramIndex}
               isFirstVersion={index === 0}
               isLastVersion={index === versions.length - 1}
-              isOnlyOnePublishedVersion={versions.length === 1}
             />
           ))}
       </TimelineVersions>

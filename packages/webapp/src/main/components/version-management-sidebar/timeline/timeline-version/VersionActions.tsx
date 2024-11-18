@@ -11,7 +11,6 @@ import {
 
 type Props = {
   index: number;
-  isOnlyOnePublishedVersion?: boolean;
 };
 
 const ActionButton = styled.div`
@@ -58,9 +57,7 @@ export const VersionActions: React.FC<Props> = (props) => {
       </ActionButton>
       <ActionButton
         onClick={() => {
-          if (!props.isOnlyOnePublishedVersion) {
-            dispatch(setPreviewedDiagramIndex(props.index));
-          }
+          dispatch(setPreviewedDiagramIndex(props.index));
         }}
       >
         <Eye />

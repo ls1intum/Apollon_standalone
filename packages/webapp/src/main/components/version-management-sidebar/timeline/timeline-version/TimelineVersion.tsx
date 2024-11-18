@@ -75,7 +75,6 @@ type Props = {
   index: number;
   version?: Diagram;
   isOnlyUnpublishedVersion?: boolean;
-  isOnlyOnePublishedVersion?: boolean;
 };
 
 export const TimelineVersion: React.FC<Props> = (props) => {
@@ -111,7 +110,7 @@ export const TimelineVersion: React.FC<Props> = (props) => {
           <div style={{ fontWeight: 300, fontSize: '0.8rem', marginTop: '0.25rem' }}>
             {formatLastUpdated(new Date(props.version!.lastUpdate))}
           </div>
-          <VersionActions index={props.index} isOnlyOnePublishedVersion={props.isOnlyOnePublishedVersion} />
+          <VersionActions index={props.index} />
           {props.isPreviewedVersion && <PreviewActions index={props.index} />}
         </VersionInfo>
       )}
