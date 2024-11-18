@@ -1,8 +1,7 @@
 import WebSocket from 'ws';
 import { randomString } from '../../utils';
 import { DiagramStorageFactory, DiagramStorageService } from '../diagram-storage';
-import { Collaborator } from 'shared/src/main/collaborator-dto';
-import { SelectionChange } from 'shared/src/main/selection-dto';
+import { Collaborator, SelectionChange } from 'shared';
 import { Patch } from '@ls1intum/apollon';
 
 type Client = { token: string; collaborator: Collaborator };
@@ -22,7 +21,6 @@ export class CollaborationService {
           return ws.terminate();
         }
         ws.isAlive = false;
-        // tslint:disable-next-line:no-empty
         ws.ping(() => {});
       });
     }, 2000);

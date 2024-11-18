@@ -1,10 +1,7 @@
 import React from 'react';
 import { LocalStorageDiagramListItem } from '../../../services/local-storage/local-storage-types';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../../store/application-state';
-import { Locale } from '@ls1intum/apollon';
-import { longDate } from '../../../constant';
+import { useAppSelector } from '../../store/hooks';
 
 const SubTitle = styled.span`
   display: block;
@@ -12,37 +9,22 @@ const SubTitle = styled.span`
   color: #9e9e9e;
 `;
 
-type OwnProps = {
+type Props = {
   item: LocalStorageDiagramListItem;
 };
 
-type StateProps = {
-  locale: Locale;
-};
-
-type DispatchProps = {};
-
-type Props = OwnProps & StateProps & DispatchProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>((state) => {
-  return {
-    locale: state.editorOptions.locale,
-  };
-});
-
-const LoadDiagramItemComponent = (props: Props) => {
+export const LoadDiagramItem: React.FC<Props> = ({ item }) => {
+  const locale = useAppSelector((state) => state.diagram.editorOptions.locale);
   return (
     <div className="d-flex justify-content-between align-items-center">
       <div className="text-truncate pr-1">
-        <span>{props.item.title}</span>
-        <SubTitle>{props.item.type}</SubTitle>
+        <span>{item.title}</span>
+        <SubTitle>{item.type}</SubTitle>
       </div>
       <div className="flex-shrink-0">
         <SubTitle>last updated:</SubTitle>
-        <SubTitle>{props.item.lastUpdate.locale(props.locale).format(longDate)}</SubTitle>
+        <SubTitle>{new Date(item.lastUpdate).toLocaleTimeString(locale)}</SubTitle>
       </div>
     </div>
   );
 };
-
-export const LoadDiagramItem = enhance(LoadDiagramItemComponent);

@@ -1,8 +1,7 @@
 import { Operation } from 'fast-json-patch';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { debounceTime, from, groupBy, mergeMap, Observable, Subject, switchMap } from 'rxjs';
 import { auditDebounceTime } from 'audit-debounce';
-
 
 /**
  * Request for saving or patching a diagram.
@@ -78,15 +77,17 @@ export interface DiagramStorageRateLimiterConfig {
  * Denotes a function that can save a diagram. Return an observable when each operation
  * can be cancelled, so that the limiter cancels pending operations before initiating a new one.
  */
-export type SaveDiagramFunction<T extends DiagramStorageRequest> =
-  (request: T & DiagramSaveRequest) => Promise<void> | Observable<void>;
+export type SaveDiagramFunction<T extends DiagramStorageRequest> = (
+  request: T & DiagramSaveRequest,
+) => Promise<void> | Observable<void>;
 
 /**
  * Denotes a function that can patch a diagram. Return an observable when each operation
  * can be cancelled, so that the limiter cancels pending operations before initiating a new one.
  */
-export type PatchDiagramFunction<T extends DiagramStorageRequest> =
-  (request: T & DiagramPatchRequest) => Promise<void> | Observable<void>;
+export type PatchDiagramFunction<T extends DiagramStorageRequest> = (
+  request: T & DiagramPatchRequest,
+) => Promise<void> | Observable<void>;
 
 /**
  * A rate limiter for saving diagrams. This limiter ensures that persistence requests
@@ -113,7 +114,7 @@ export class DiagramStorageRateLimiter<T extends DiagramStorageRequest> {
   constructor(
     saveDiagram: SaveDiagramFunction<T>,
     patchDiagram: PatchDiagramFunction<T>,
-    readonly config: DiagramStorageRateLimiterConfig
+    readonly config: DiagramStorageRateLimiterConfig,
   ) {
     //
     // I do realize complex rxjs pipelines are not the easiest to read.
@@ -180,7 +181,7 @@ export class DiagramStorageRateLimiter<T extends DiagramStorageRequest> {
    * Request to save or patch a diagram. The limiter will
    * schedule this operation according to previous and subsequent requests,
    * ensuring that the storage system is not overloaded.
-  */
+   */
   request(request: T) {
     this.router.next(request);
   }
