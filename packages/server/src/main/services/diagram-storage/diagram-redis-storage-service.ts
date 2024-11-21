@@ -85,7 +85,7 @@ export class DiagramRedisStorageService implements DiagramStorageService {
     );
   }
 
-  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
+  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = true): Promise<string> {
     const key = this.getKeyForToken(token);
     const exists = await this.diagramExists(key);
 

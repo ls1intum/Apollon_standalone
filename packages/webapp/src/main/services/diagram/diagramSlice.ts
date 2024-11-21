@@ -11,6 +11,9 @@ export type Diagram = {
   title: string;
   model?: UMLModel;
   lastUpdate: string;
+  versions?: Diagram[];
+  description?: string;
+  token?: string;
 };
 
 export type EditorOptions = {
@@ -65,12 +68,13 @@ const initialState = {
   loading: false,
   error: null,
   createNewEditor: true,
+  displayUnpublishedVersion: true,
 };
 
 export const updateDiagramThunk = createAsyncThunk(
   'diagram/updateWithLocalStorage',
   async (diagram: Partial<Diagram>, { dispatch }) => {
-    await dispatch(updateDiagram(diagram));
+    dispatch(updateDiagram(diagram));
   },
 );
 
@@ -81,6 +85,10 @@ const diagramSlice = createSlice({
     updateDiagram: (state, action: PayloadAction<Partial<Diagram>>) => {
       if (state.diagram) {
         state.diagram = { ...state.diagram, ...action.payload };
+      }
+
+      if (!state.displayUnpublishedVersion) {
+        state.displayUnpublishedVersion = true;
       }
     },
     createDiagram: (
@@ -101,7 +109,6 @@ const diagramSlice = createSlice({
       state.createNewEditor = true;
       state.editorOptions.type = action.payload.model?.type ?? 'ClassDiagram';
     },
-
     setCreateNewEditor: (state, action: PayloadAction<boolean>) => {
       state.createNewEditor = action.payload;
     },
@@ -113,6 +120,9 @@ const diagramSlice = createSlice({
     },
     changeReadonlyMode: (state, action: PayloadAction<boolean>) => {
       state.editorOptions.readonly = action.payload;
+    },
+    setDisplayUnpublishedVersion(state, action: PayloadAction<boolean>) {
+      state.displayUnpublishedVersion = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -127,6 +137,7 @@ const diagramSlice = createSlice({
   selectors: {
     selectDiagram: (state) => state.diagram,
     selectCreatenewEditor: (state) => state.createNewEditor,
+    selectDisplayUnpublishedVersion: (state) => state.displayUnpublishedVersion,
   },
 });
 
@@ -138,7 +149,9 @@ export const {
   changeDiagramType,
   createDiagram,
   loadDiagram,
+  setDisplayUnpublishedVersion,
 } = diagramSlice.actions;
-export const { selectDiagram, selectCreatenewEditor } = diagramSlice.selectors;
+
+export const { selectDiagram, selectCreatenewEditor, selectDisplayUnpublishedVersion } = diagramSlice.selectors;
 
 export const diagramReducer = diagramSlice.reducer;

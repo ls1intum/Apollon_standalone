@@ -23,9 +23,12 @@ export const DiagramRepository = {
         return null;
       });
   },
-  publishDiagramOnServer(diagram: Diagram): Promise<string> {
+  publishDiagramVersionOnServer(
+    diagram: Diagram,
+    token?: string,
+  ): Promise<{ diagramToken: string; diagram: DiagramDTO }> {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
-    const body = JSON.stringify(diagram);
+    const body = JSON.stringify({ diagram, token });
     return fetch(resourceUrl, {
       method: 'POST',
       headers: {
@@ -34,10 +37,55 @@ export const DiagramRepository = {
       body,
     }).then((response: Response) => {
       if (response.ok) {
-        return response.text();
+        return response.json();
       } else {
         // error occured or no diagram found
         throw Error('Publish of diagram failed');
+      }
+    });
+  },
+  editDiagramVersionOnServer(
+    token: string,
+    versionIndex: number,
+    title: string,
+    description: string,
+  ): Promise<DiagramDTO> {
+    const resourceUrl = `${BASE_URL}/diagrams/${token}`;
+    const body = JSON.stringify({
+      versionIndex,
+      title,
+      description,
+    });
+    return fetch(resourceUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response: Response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error('Editing the diagram failed');
+      }
+    });
+  },
+  deleteDiagramVersionOnServer(token: string, versionIndex: number): Promise<DiagramDTO> {
+    const resourceUrl = `${BASE_URL}/diagrams/${token}`;
+    const body = JSON.stringify({
+      versionIndex,
+    });
+    return fetch(resourceUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response: Response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error('Deleting the diagram version failed');
       }
     });
   },

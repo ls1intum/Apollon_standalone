@@ -18,7 +18,9 @@ export const register = (app: express.Application) => {
   // routes
 
   router.get('/diagrams/:token', (req, res) => diagramResource.getDiagram(req, res));
-  router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagram(req, res));
+  router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagramVersion(req, res));
+  router.delete('/diagrams/:token', (req, res) => diagramResource.deleteDiagramVersion(req, res));
+  router.post('/diagrams/:token', (req, res) => diagramResource.editDiagramVersion(req, res));
   router.post('/diagrams/pdf', (req, res) => diagramResource.convertSvgToPdf(req, res));
   app.use('/api', router);
 };

@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import { PostHogProvider } from 'posthog-js/react';
 import { ApplicationStore } from './components/store/application-store';
 import { ApollonEditorComponentWithConnection } from './components/apollon-editor-component/ApollonEditorComponentWithConnection';
+import { VersionManagementSidebar } from './components/version-management-sidebar/VersionManagementSidebar';
 
 const postHogOptions = {
   api_host: POSTHOG_HOST,
@@ -31,6 +32,7 @@ export function RoutedApplication() {
           <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
             <ApplicationBar />
             <ApplicationModal />
+            <VersionManagementSidebar />
             {isFirefox && <FirefoxIncompatibilityHint />}
             <Routes>
               <Route path={'/:token'} element={<ApollonEditorComponentWithConnection />} />

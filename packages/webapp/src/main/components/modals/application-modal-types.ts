@@ -9,6 +9,10 @@ export const ModalContentType = {
   CreateDiagramFromTemplateModal: 'CreateDiagramFromTemplateModal',
   ShareModal: 'ShareModal',
   CollaborationModal: 'CollaborationModal',
+  DeleteVersionModal: 'DeleteVersionModal',
+  RestoreVersionModal: 'RestoreVersionModal',
+  EditVersionInfoModal: 'EditVersionInfoModal',
+  CreateVersionModal: 'CreateVersionModal',
 } as const;
 
 /**
