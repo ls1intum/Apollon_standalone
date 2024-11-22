@@ -1,37 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { ApplicationState } from '../store/application-state';
-import { ApollonError } from '../../services/error-management/error-types';
+import styled from 'styled-components';
+
 import { ErrorMessage } from './error-message';
-import { ErrorRepository } from '../../services/error-management/error-repository';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { dismissError } from '../../services/error-management/errorManagementSlice';
+import { selectDisplaySidebar } from '../../services/version-management/versionManagementSlice';
 
-type OwnProps = {};
+const MainContent = styled.div<{ $isSidebarOpen: boolean }>`
+  transition: margin-right 0.3s ease;
+  margin-right: ${(props) => (props.$isSidebarOpen ? '250px' : '0')}; /* Adjust based on sidebar width */
+`;
 
-type DispatchProps = { dismissError: typeof ErrorRepository.dismissError };
-
-type StateProps = { errors: ApollonError[] };
-
-type Props = StateProps & DispatchProps & OwnProps;
-
-const enhance = connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => ({
-    errors: state.errors,
-  }),
-  { dismissError: ErrorRepository.dismissError },
-);
-
-function ErrorPanelComponent(props: Props) {
+export const ErrorPanel: React.FC = () => {
+  const errors = useAppSelector((state) => state.errors);
+  const isSidebarOpen = useAppSelector(selectDisplaySidebar);
+  const dispatch = useAppDispatch();
   return (
-    <>
-      {props.errors.map((error, index) => (
-        <ErrorMessage
-          error={error}
-          onClose={(apollonError: ApollonError) => props.dismissError(apollonError.id)}
-          key={index}
-        />
+    <MainContent $isSidebarOpen={isSidebarOpen}>
+      {errors.map((error, index) => (
+        <ErrorMessage error={error} onClose={(apollonError) => dispatch(dismissError(apollonError.id))} key={index} />
       ))}
-    </>
+    </MainContent>
   );
-}
-
-export const ErrorPanel = enhance(ErrorPanelComponent);
+};

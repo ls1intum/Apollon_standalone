@@ -1,52 +1,33 @@
-import { ApplicationState } from './application-state';
-import React, { Component, PropsWithChildren } from 'react';
-import {
-  applyMiddleware,
-  combineReducers,
-  compose,
-  createStore,
-  Dispatch,
-  PreloadedState,
-  Reducer,
-  Store,
-  StoreEnhancer,
-} from 'redux';
-import { Actions } from '../../services/actions';
-import { reducers } from '../../services/reducer';
+import React from 'react';
 import { Provider } from 'react-redux';
-import { createEpicMiddleware, EpicMiddleware } from 'redux-observable';
-import epics from '../../services/epics';
+import { configureStore } from '@reduxjs/toolkit';
+import { diagramReducer } from '../../services/diagram/diagramSlice';
 
-type OwnProps = PropsWithChildren<{
-  initialState: PreloadedState<ApplicationState>;
-}>;
+import { errorReducer } from '../../services/error-management/errorManagementSlice';
+import { modalReducer } from '../../services/modal/modalSlice';
+import { shareReducer } from '../../services/share/shareSlice';
+import { versionManagementReducer } from '../../services/version-management/versionManagementSlice';
 
-type Props = OwnProps;
+const store = configureStore({
+  reducer: {
+    diagram: diagramReducer,
+    errors: errorReducer,
+    modal: modalReducer,
+    share: shareReducer,
+    versionManagement: versionManagementReducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in non-production environments
+});
 
-const getInitialState = (
-  initialState: PreloadedState<ApplicationState>,
-): { store: Store<ApplicationState, Actions> } => {
-  const reducer: Reducer<ApplicationState, Actions> = combineReducers<ApplicationState, Actions>(reducers);
-  const epicMiddleware: EpicMiddleware<Actions, Actions, ApplicationState> = createEpicMiddleware();
+interface Props {
+  children: React.ReactNode;
+}
 
-  const middleware: StoreEnhancer<{ dispatch: Dispatch }, {}> = applyMiddleware(epicMiddleware);
-
-  const composeEnhancers: typeof compose = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const enhancer = composeEnhancers(middleware);
-
-  const store: Store<ApplicationState, Actions> = createStore(reducer, initialState, enhancer);
-
-  epicMiddleware.run(epics);
-
-  return { store };
+export const ApplicationStore: React.FC<Props> = ({ children }) => {
+  return <Provider store={store}>{children}</Provider>;
 };
 
-type State = ReturnType<typeof getInitialState>;
+export type AppDispatch = typeof store.dispatch;
 
-export class ApplicationStore extends Component<Props, State> {
-  state = getInitialState(this.props.initialState);
-
-  render() {
-    return <Provider store={this.state.store}>{this.props.children}</Provider>;
-  }
-}
+export type RootState = ReturnType<typeof store.getState>;

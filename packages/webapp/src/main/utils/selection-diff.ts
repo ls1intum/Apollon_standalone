@@ -1,5 +1,5 @@
 import { Selection } from '@ls1intum/apollon';
-import { SelectionChangeType } from 'shared/src/main/selection-dto';
+import { SelectionChangeType } from 'shared';
 
 export function selectionDiff(src: Selection, dest: Selection): SelectionChangeType {
   const selected = new Set<string>();

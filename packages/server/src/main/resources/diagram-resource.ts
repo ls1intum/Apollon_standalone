@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
-// @ts-ignore
-import pdfMake from 'pdfmake/build/pdfmake.min';
-// @ts-ignore
+import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramStorageFactory } from '../services/diagram-storage';
 import { ConversionService } from '../services/conversion-service/conversion-service';
@@ -45,11 +43,49 @@ export class DiagramResource {
     }
   };
 
-  publishDiagram = (req: Request, res: Response) => {
-    const diagram: DiagramDTO = req.body;
-    this.diagramService.saveDiagramAndGenerateTokens(diagram).then((token: string) => {
-      res.status(200).send(token);
-    });
+  publishDiagramVersion = (req: Request, res: Response) => {
+    const diagram: DiagramDTO = req.body.diagram;
+    const existingToken: string | undefined = req.body.token;
+    this.diagramService
+      .saveDiagramVersion(diagram, existingToken)
+      .then((savedDiagram) => {
+        res.status(200).send(savedDiagram);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while publishing');
+      });
+  };
+
+  deleteDiagramVersion = (req: Request, res: Response) => {
+    const token: string = req.params.token;
+    const versionIndex: number = req.body.versionIndex;
+
+    this.diagramService
+      .deleteDiagramVersion(token, versionIndex)
+      .then((deletedDiagramVersion) => {
+        res.status(200).send(deletedDiagramVersion);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while deleting version');
+      });
+  };
+
+  editDiagramVersion = (req: Request, res: Response) => {
+    const token: string = req.params.token;
+    const versionIndex: number = req.body.versionIndex;
+    const title: string = req.body.title;
+    const description: string = req.body.description;
+    this.diagramService
+      .editDiagramVersion(token, versionIndex, title, description)
+      .then((editedDiagram) => {
+        res.status(200).send(editedDiagram);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(503).send('Error occurred while editing version');
+      });
   };
 
   convertSvgToPdf = (req: Request, res: Response) => {

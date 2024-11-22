@@ -1,14 +1,14 @@
 import { applyPatch, Operation } from 'fast-json-patch';
 
 import { FileStorageService } from '../storage-service/file-storage-service';
-import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { diagramStoragePath } from '../../constants';
 import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-storage-rate-limiter';
 
 type SaveRequest = DiagramStorageRequest & {
   path: string;
-}
+};
 
 /**
  * Service for storing diagrams on the file system.
@@ -39,7 +39,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
   /**
    * The rate limiter for saving diagrams.
    */
-  private limiter: DiagramStorageRateLimiter<SaveRequest>
+  private limiter: DiagramStorageRateLimiter<SaveRequest>;
 
   constructor() {
     this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
@@ -69,7 +69,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
     );
   }
 
-  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
+  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = true): Promise<string> {
     const path = this.getFilePathForToken(token);
     const exists = await this.diagramExists(path);
 

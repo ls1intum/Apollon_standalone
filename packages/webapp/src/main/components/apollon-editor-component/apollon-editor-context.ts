@@ -1,10 +1,16 @@
 import { ApollonEditor } from '@ls1intum/apollon';
 import { createContext } from 'react';
 
-export type ApollonEditorContext = {
+export type ApollonEditorContextType = {
   editor?: ApollonEditor;
   setEditor: (editor: ApollonEditor) => void;
 };
 
-export const { Consumer: ApollonEditorConsumer, Provider: ApollonEditorProvider } =
-  createContext<ApollonEditorContext | null>(null);
+// Provide a default no-op function for `setEditor`
+export const ApollonEditorContext = createContext<ApollonEditorContextType>({
+  setEditor: () => {
+    throw new Error("setEditor is not defined. Make sure to wrap your component within ApollonEditorProvider.");
+  },
+});
+
+export const { Consumer: ApollonEditorConsumer, Provider: ApollonEditorProvider } = ApollonEditorContext;

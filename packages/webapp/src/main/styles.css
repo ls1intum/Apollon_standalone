@@ -98,6 +98,10 @@ legend.scheduler-border {
   border-color: var(--apollon-alert-warning-border);
 }
 
+.sidebar-toggle {
+  cursor: pointer;
+}
+
 .theme-toggle {
   cursor: pointer;
 }
@@ -173,7 +177,10 @@ legend.scheduler-border {
   color: #ffffff;
 }
 
-#diagram-title {
+.diagram-title,
+.diagram-title:focus,
+.diagram-description,
+.diagram-description:focus {
   background-color: var(--apollon-list-group-color);
   color: var(--apollon-background-inverse);
 }

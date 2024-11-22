@@ -1,48 +1,55 @@
-import { LoadAction, LocalStorageActionTypes, LocalStorageDiagramListItem, StoreAction } from './local-storage-types';
-import { Diagram } from '../diagram/diagram-types';
+import { LocalStorageDiagramListItem } from './local-storage-types';
 import {
   localStorageCollaborationColor,
   localStorageCollaborationName,
+  localStorageDiagramPrefix,
   localStorageDiagramsList,
+  localStorageLatest,
   localStorageSystemThemePreference,
   localStorageUserThemePreference,
 } from '../../constant';
-import moment from 'moment';
+import { Diagram } from '../diagram/diagramSlice';
+import { UMLDiagramType } from '@ls1intum/apollon';
+
+type LocalDiagramEntry = {
+  id: string;
+  title: string;
+  type: UMLDiagramType;
+  lastUpdate: string;
+};
 
 export const LocalStorageRepository = {
-  load: (id: string): LoadAction => ({
-    type: LocalStorageActionTypes.LOAD,
-    payload: {
-      id,
-    },
-  }),
+  storeDiagram: (diagram: Diagram) => {
+    localStorage.setItem(localStorageDiagramPrefix + diagram.id, JSON.stringify(diagram));
+    localStorage.setItem(localStorageLatest, diagram.id);
 
-  store: (diagram: Diagram): StoreAction => ({
-    type: LocalStorageActionTypes.STORE,
-    payload: {
-      diagram,
-    },
-  }),
+    const localDiagramEntry: LocalDiagramEntry = {
+      id: diagram.id,
+      title: diagram.title,
+      type: diagram.model?.type ?? 'ClassDiagram',
+      lastUpdate: new Date().toISOString(),
+    };
+
+    const localStorageListJson = localStorage.getItem(localStorageDiagramsList);
+    let localDiagrams: LocalDiagramEntry[] = localStorageListJson ? JSON.parse(localStorageListJson) : [];
+
+    localDiagrams = localDiagrams.filter((entry) => entry.id !== diagram.id);
+    localDiagrams.push(localDiagramEntry);
+
+    localStorage.setItem(localStorageDiagramsList, JSON.stringify(localDiagrams));
+  },
 
   getStoredDiagrams: () => {
     const localStorageDiagramList = window.localStorage.getItem(localStorageDiagramsList);
     let localDiagrams: LocalStorageDiagramListItem[] = [];
     if (localStorageDiagramList) {
       localDiagrams = JSON.parse(localStorageDiagramList);
-      // create full moment dates
-      localDiagrams.forEach((diagram) => (diagram.lastUpdate = moment(diagram.lastUpdate)));
-      // sort desc to lastUpdate -> * -1
       localDiagrams.sort(
         (first: LocalStorageDiagramListItem, second: LocalStorageDiagramListItem) =>
-          (first.lastUpdate.valueOf() - second.lastUpdate.valueOf()) * -1,
+          (new Date(first.lastUpdate).getTime() - new Date(second.lastUpdate).getTime()) * -1,
       );
     }
     return localDiagrams;
-  },
-
-  getCollaborationName: () => {
-    const collaborationName: string = window.localStorage.getItem(localStorageCollaborationName) ?? '';
-    return collaborationName;
   },
 
   setCollaborationName: (name: string) => {

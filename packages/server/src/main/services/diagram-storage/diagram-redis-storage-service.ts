@@ -2,15 +2,14 @@ import ms from 'ms';
 import { Operation } from 'fast-json-patch';
 import { RedisClientType, createClient } from 'redis';
 
-import { DiagramDTO } from '../../../../../shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
 import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramStorageRateLimiter, DiagramStorageRequest } from './diagram-storage-rate-limiter';
 import { applyPatchToRedisValue } from './redis-patch';
 
 type SaveRequest = DiagramStorageRequest & {
   key: string;
-}
-
+};
 
 /**
  * Options for the Redis storage service.
@@ -31,7 +30,6 @@ export interface RedisStorageOptions {
    */
   ttl?: string;
 }
-
 
 /**
  * Diagram storage service that uses Redis as a storage backend.
@@ -87,7 +85,7 @@ export class DiagramRedisStorageService implements DiagramStorageService {
     );
   }
 
-  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
+  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = true): Promise<string> {
     const key = this.getKeyForToken(token);
     const exists = await this.diagramExists(key);
 
@@ -121,7 +119,7 @@ export class DiagramRedisStorageService implements DiagramStorageService {
     const key = this.getKeyForToken(token);
     const client = await this.redisClient;
 
-    return await client.exists(key) > 0;
+    return (await client.exists(key)) > 0;
   }
 
   async getDiagramByLink(token: string): Promise<DiagramDTO | undefined> {
@@ -147,7 +145,7 @@ export class DiagramRedisStorageService implements DiagramStorageService {
       await client.expire(key, ms(this.options.ttl) / 1000);
     }
   }
-  
+
   /**
    * Returns the redis key to use for a diagram with given token.
    */

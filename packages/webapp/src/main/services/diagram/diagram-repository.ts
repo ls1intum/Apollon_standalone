@@ -1,23 +1,8 @@
-import { CreateDiagramAction, Diagram, DiagramActionTypes, UpdateDiagramAction } from './diagram-types';
-import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import { BASE_URL } from '../../constant';
-import { DiagramDTO } from 'shared/src/main/diagram-dto';
+import { DiagramDTO } from 'shared';
+import { Diagram } from './diagramSlice';
 
 export const DiagramRepository = {
-  createDiagram: (diagramTitle: string, diagramType: UMLDiagramType, template?: UMLModel): CreateDiagramAction => ({
-    type: DiagramActionTypes.CREATE_DIAGRAM,
-    payload: {
-      diagramType,
-      diagramTitle,
-      template,
-    },
-  }),
-  updateDiagram: (values: Partial<Diagram & { diagramType: UMLDiagramType }>): UpdateDiagramAction => ({
-    type: DiagramActionTypes.UPDATE_DIAGRAM,
-    payload: {
-      values,
-    },
-  }),
   getDiagramFromServerByToken(token: string): Promise<DiagramDTO | null> {
     const resourceUrl = `${BASE_URL}/diagrams/${token}`;
     return fetch(resourceUrl, {
@@ -25,18 +10,25 @@ export const DiagramRepository = {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        // error occured or no diagram found
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          // error occured or no diagram found
+          return null;
+        }
+      })
+      .catch(() => {
         return null;
-      }
-    });
+      });
   },
-  publishDiagramOnServer(diagram: Diagram): Promise<string> {
+  publishDiagramVersionOnServer(
+    diagram: Diagram,
+    token?: string,
+  ): Promise<{ diagramToken: string; diagram: DiagramDTO }> {
     const resourceUrl = `${BASE_URL}/diagrams/publish`;
-    const body = JSON.stringify(diagram);
+    const body = JSON.stringify({ diagram, token });
     return fetch(resourceUrl, {
       method: 'POST',
       headers: {
@@ -45,10 +37,55 @@ export const DiagramRepository = {
       body,
     }).then((response: Response) => {
       if (response.ok) {
-        return response.text();
+        return response.json();
       } else {
         // error occured or no diagram found
         throw Error('Publish of diagram failed');
+      }
+    });
+  },
+  editDiagramVersionOnServer(
+    token: string,
+    versionIndex: number,
+    title: string,
+    description: string,
+  ): Promise<DiagramDTO> {
+    const resourceUrl = `${BASE_URL}/diagrams/${token}`;
+    const body = JSON.stringify({
+      versionIndex,
+      title,
+      description,
+    });
+    return fetch(resourceUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response: Response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error('Editing the diagram failed');
+      }
+    });
+  },
+  deleteDiagramVersionOnServer(token: string, versionIndex: number): Promise<DiagramDTO> {
+    const resourceUrl = `${BASE_URL}/diagrams/${token}`;
+    const body = JSON.stringify({
+      versionIndex,
+    });
+    return fetch(resourceUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    }).then((response: Response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error('Deleting the diagram version failed');
       }
     });
   },

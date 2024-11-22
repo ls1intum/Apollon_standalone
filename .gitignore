@@ -105,3 +105,5 @@ build
 /.idea/
 
 /diagrams/
+.DS_Store
+.run/

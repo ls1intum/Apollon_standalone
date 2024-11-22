@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import { ApollonError } from '../../services/error-management/error-types';
+import { ApollonError } from '../../services/error-management/errorManagementSlice';
 
 type Props = {
   error: ApollonError;

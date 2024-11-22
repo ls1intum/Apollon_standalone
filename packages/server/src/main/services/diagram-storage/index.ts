@@ -4,7 +4,6 @@ import { DiagramStorageService } from './diagram-storage-service';
 import { DiagramRedisStorageService } from './diagram-redis-storage-service';
 import { DiagramFileStorageService } from './diagram-file-storage-service';
 
-
 /**
  * Factory for creating a diagram storage service. Will determine
  * the correct service to use based on the environment.
