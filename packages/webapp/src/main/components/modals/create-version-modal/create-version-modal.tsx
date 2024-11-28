@@ -10,8 +10,6 @@ import { displayError } from '../../../services/error-management/errorManagement
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
 import { setDisplayUnpublishedVersion } from '../../../services/diagram/diagramSlice';
 
-console.log('yes');
-
 export const CreateVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
