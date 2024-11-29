@@ -69,7 +69,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
     );
   }
 
-  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = false): Promise<string> {
+  async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = true): Promise<string> {
     const path = this.getFilePathForToken(token);
     const exists = await this.diagramExists(path);
 

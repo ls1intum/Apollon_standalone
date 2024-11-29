@@ -6,6 +6,7 @@ import { diagramReducer } from '../../services/diagram/diagramSlice';
 import { errorReducer } from '../../services/error-management/errorManagementSlice';
 import { modalReducer } from '../../services/modal/modalSlice';
 import { shareReducer } from '../../services/share/shareSlice';
+import { versionManagementReducer } from '../../services/version-management/versionManagementSlice';
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     errors: errorReducer,
     modal: modalReducer,
     share: shareReducer,
+    versionManagement: versionManagementReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
   devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in non-production environments

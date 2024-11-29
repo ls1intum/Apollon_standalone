@@ -11,20 +11,22 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
-import { setCreateNewEditor } from '../../../services/diagram/diagramSlice';
+import { setDisplayUnpublishedVersion, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import { selectDisplaySidebar, toggleSidebar } from '../../../services/version-management/versionManagementSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector((state) => state.diagram.diagram);
   const navigate = useNavigate();
+  const isSidebarDisplayed = useAppSelector(selectDisplaySidebar);
   const urlPath = window.location.pathname;
   const tokenInUrl = urlPath.substring(1); // This removes the leading "/"
 
-  const getLinkForView = () => {
-    return `${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
+  const getLinkForView = (token?: string) => {
+    return `${DEPLOYMENT_URL}/${token || LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
-  const getMessageForView = (view: DiagramView) => {
+  const getMessageForView = (view: string) => {
     switch (view) {
       case DiagramView.GIVE_FEEDBACK:
         return 'give feedback';
@@ -38,10 +40,13 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     return 'edit';
   };
 
-  const copyLink = (view?: DiagramView) => {
-    const link = getLinkForView();
+  const copyLink = (view?: DiagramView, token?: string) => {
+    const link = getLinkForView(token);
     navigator.clipboard.writeText(link);
-    const viewUsedInMessage = view ? getMessageForView(view) : LocalStorageRepository.getLastPublishedType();
+    const lastPublishedTypeLocalStorage = LocalStorageRepository.getLastPublishedType();
+    const viewUsedInMessage = view
+      ? getMessageForView(view)
+      : getMessageForView(lastPublishedTypeLocalStorage || DiagramView.EDIT);
 
     toast.success(
       'The link has been copied to your clipboard and can be shared to ' +
@@ -54,35 +59,27 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   };
 
   const handleShareButtonPress = (view: DiagramView) => {
+    const token = tokenInUrl ? tokenInUrl : publishDiagram();
     LocalStorageRepository.setLastPublishedType(view);
 
-    if (tokenInUrl) {
-      copyLink(view);
-      navigate(`/${tokenInUrl}?view=${view}`);
-      close();
-    } else {
-      publishDiagram(view);
+    if (token) {
+      LocalStorageRepository.setLastPublishedToken(token);
+    }
+
+    copyLink(view, token);
+    close();
+
+    if (view === DiagramView.COLLABORATE) {
+      if (isSidebarDisplayed) {
+        dispatch(toggleSidebar());
+      }
+
+      navigate(`/${token || LocalStorageRepository.getLastPublishedToken()}?view=${view}`);
     }
   };
 
-  const publishDiagram = (view: DiagramView) => {
-    if (diagram && diagram.model && Object.keys(diagram.model.elements).length > 0) {
-      DiagramRepository.publishDiagramOnServer(diagram)
-        .then((token: string) => {
-          LocalStorageRepository.setLastPublishedToken(token);
-          copyLink(view);
-          dispatch(setCreateNewEditor(true));
-          navigate(`/${token}?view=${view}`);
-          close();
-        })
-        .catch((error) => {
-          dispatch(
-            displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
-          );
-          close();
-          console.error(error);
-        });
-    } else {
+  const publishDiagram = () => {
+    if (!diagram || !diagram.model || Object.keys(diagram.model.elements).length === 0) {
       dispatch(
         displayError(
           'Sharing diagram failed',
@@ -90,7 +87,30 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
         ),
       );
       close();
+
+      return;
     }
+
+    let token = diagram.token;
+    const diagramCopy = Object.assign({}, diagram);
+    diagramCopy.title = 'New shared version ';
+    diagramCopy.description = 'Your auto-generated version for sharing';
+
+    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
+      .then((res) => {
+        dispatch(updateDiagramThunk(res.diagram));
+        dispatch(setDisplayUnpublishedVersion(false));
+        token = res.diagramToken;
+      })
+      .catch((error) => {
+        dispatch(
+          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+        );
+        // tslint:disable-next-line:no-console
+        console.error(error);
+      });
+
+    return token;
   };
 
   const hasRecentlyPublished = () => {

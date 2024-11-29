@@ -1,6 +1,6 @@
 {
   "name": "apollon_standalone",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "repository": "git@github.com:ls1intum/Apollon_standalone.git",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "url": "https://ase.cit.tum.de/krusche"
   },
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=22.10.0"
   },
   "workspaces": [
     "packages/shared",
@@ -45,18 +45,18 @@
     "@ls1intum/apollon": "3.3.15"
   },
   "devDependencies": {
-    "concurrently": "8.2.2",
+    "concurrently": "9.1.0",
     "typescript": "5.6.3",
-    "eslint": "9.13.0",
+    "eslint": "9.15.0",
     "prettier": "3.3.3",
-    "@typescript-eslint/eslint-plugin": "8.11.0",
-    "@typescript-eslint/parser": "8.11.0",
+    "@typescript-eslint/eslint-plugin": "8.15.0",
+    "@typescript-eslint/parser": "8.15.0",
     "stylelint": "16.3.1",
-    "stylelint-config-recommended": "14.0.0",
+    "stylelint-config-recommended": "14.0.1",
     "style-loader": "4.0.0",
-    "css-loader": "7.1.0",
+    "css-loader": "7.1.2",
     "ts-loader": "9.5.1",
-    "webpack": "5.95.0",
+    "webpack": "5.96.1",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "5.1.0",
     "webpack-merge": "6.0.1"
