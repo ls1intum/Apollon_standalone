@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis/redis-stack-server:7.4.0-v1
+    container_name: apollon-redis
+    volumes:
+      - ./redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - apollon-network
+
+  apollon_standalone:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+      args:
+        - DEPLOYMENT_URL=${DEPLOYMENT_URL}
+    container_name: apollon-standalone
+    environment:
+      - APOLLON_REDIS_URL=redis://apollon_redis:6379
+      - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
+      - DEPLOYMENT_URL=${DEPLOYMENT_URL}
+    restart: unless-stopped
+    expose:
+      - "8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - apollon-network
+
+networks:
+  apollon-network:
+    driver: bridge
