@@ -1,0 +1,75 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    outputs:
+      apollon_standalone_image_tag: 
+        description: "The tag of the apollon standalone image that was built"
+        value: ${{ jobs.build.outputs.apollon_standalone_image_tag }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./Dockerfile.redis
+            image: ghcr.io/ls1intum/Apollon_standalone/apollon-standalone
+            context: .
+            path: apollon-standalone
+    outputs:
+      apollon_standalone_image_tag: "${{ steps.output-tag-apollon-standalone.outputs.apollon_standalone_image_tag }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: Install Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Build and push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - id: output-tag-apollon-standalone
+        run: |
+          if [[ "${{ matrix.path }}" == "apollon-standalone" ]] && [[ "${{ steps.changed-files.outputs.any_changed }}" == "true" ]]; then
+            echo "apollon_standalone_image_tag=${{ steps.meta.outputs.version }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ matrix.path }}" == "server" ]]; then
+            echo "apollon_standalone_image_tag=latest" >> "$GITHUB_OUTPUT"
+          fi
