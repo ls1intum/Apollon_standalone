@@ -16,11 +16,7 @@ services:
       - apollon-network
 
   apollon_standalone:
-    build:
-      context: .
-      dockerfile: Dockerfile.redis
-      args:
-        - DEPLOYMENT_URL=${DEPLOYMENT_URL}
+    image: "ghcr.io/ls1intum/Apollon_standalone/apollon-standalone:${APOLLON_STANDALONE_IMAGE_TAG}"
     container_name: apollon-standalone
     environment:
       - APOLLON_REDIS_URL=redis://apollon_redis:6379

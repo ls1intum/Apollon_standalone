@@ -7,11 +7,10 @@ jobs:
   build-dev-container:
     uses: ./.github/workflows/build-and-push-docker.yml
     secrets: inherit
-  # deploy-dev-container:
-  #   needs: build-dev-container
-  #   uses: ./.github/workflows/deploy_docker.yml
-  #   secrets: inherit
-  #   with:
-  #     environment: Dev
-  #     server_image_tag: "${{ needs.build-dev-container.outputs.server_image_tag }}"
-  #     client_image_tag: "${{ needs.build-dev-container.outputs.client_image_tag }}"
+  deploy-dev-container:
+    needs: build-dev-container
+    uses: ./.github/workflows/deploy-docker.yml
+    secrets: inherit
+    with:
+      environment: Dev
+      apollon_standalone_image_tag: "${{ needs.build-dev-container.outputs.apollon_standalone_image_tag }}"
