@@ -8,7 +8,6 @@
     "start": "ts-node-dev src/main/server.ts",
     "build": "webpack --config webpack/webpack.config.js",
     "lint": "eslint -c .eslintrc.js \"**/*.{ts,tsx}\""
-
   },
   "engines": {
     "node": ">=22.10.0"
@@ -17,6 +16,7 @@
     "@sentry/node": "8.38.0",
     "audit-debounce": "0.1.1",
     "body-parser": "1.20.3",
+    "canvas": "2.11.2",
     "cors": "2.8.5",
     "express": "4.21.1",
     "fast-json-patch": "3.1.1",
@@ -32,8 +32,8 @@
     "@types/ms": "0.7.34",
     "@types/node": "22.9.0",
     "@types/pdfmake": "0.2.9",
+    "copy-webpack-plugin": "12.0.2",
     "ts-node": "10.9.2",
-    "ts-node-dev": "2.0.0",
-    "webpack-node-externals": "^3.0.0"
+    "ts-node-dev": "2.0.0"
   }
 }
