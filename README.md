@@ -297,7 +297,7 @@ mkdir diagrams
 # start webpack dev server
 npm start
 
-# accessible via localhost:8888 (webpack dev server with proxy to application server)
+# accessible via localhost:8080 (webpack dev server with proxy to application server)
 # accesible via localhost:8080 (application server with static files)
 ```
 
