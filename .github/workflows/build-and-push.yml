@@ -1,12 +1,18 @@
 name: Build Docker Image
 
 on:
-  push:
+  workflow_call:
+    outputs:
+      image-tag:
+        description: "The tag of the pushed image"
+        value: ${{ jobs.build-and-push-workflow.outputs.image-tag }}
 
 jobs:
   build-and-push-workflow:
-    uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
+    name: Build and Push Docker Image
+    # uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
+    uses: ./.github/workflows/build-and-push-tmp.yml
     with:
-      image-name: Apollon_standalone/apollon-standalone
+      image-name:  ls1intum/Apollon_standalone
       docker-file: Dockerfile.redis
     secrets: inherit

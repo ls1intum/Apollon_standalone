@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-dev-container:
-    uses: ./.github/workflows/build-and-push-docker.yml
+    uses: ./.github/workflows/build-and-push.yml
     secrets: inherit
   deploy-dev-container:
     needs: build-dev-container
@@ -13,4 +13,5 @@ jobs:
     secrets: inherit
     with:
       environment: Dev
-      apollon_standalone_image_tag: "${{ needs.build-dev-container.outputs.apollon_standalone_image_tag }}"
+      image-name: ls1intum/Apollon_standalone
+      image-tag: "${{ needs.build-dev-container.outputs.image-tag }}"

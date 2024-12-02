@@ -6,9 +6,14 @@ on:
       environment:
         required: true
         type: string
-      apollon_standalone_image_tag:
+      image-name:
+        type: string
+        default: ${{ github.repository }}
+        description: "The name for the docker image (Default: Repository name)"
+      image-tag:
         default: "latest"
         type: string
+        description: "The tag for the docker image (Default: latest)"
 
 jobs:
   deploy:
@@ -64,7 +69,7 @@ jobs:
             echo "DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}" > .env.prod
             echo "APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}" >> .env.prod
 
-            echo "APOLLON_STANDALONE_IMAGE_TAG=${{ inputs.apollon_standalone_image_tag }}" >> .env.prod
+            echo "IMAGE_TAG=${{ inputs.image-tag }}" >> .env.prod
 
       - name: SSH to VM and Execute Docker-Compose Up
         uses: appleboy/ssh-action@v1.0.3
