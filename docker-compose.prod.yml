@@ -19,7 +19,7 @@ services:
     image: "ghcr.io/ls1intum/apollon_standalone:${IMAGE_TAG}"
     container_name: apollon-standalone
     environment:
-      - APOLLON_REDIS_URL=redis://apollon_redis:6379
+      - APOLLON_REDIS_URL=redis://apollon-redis:6379
       - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
       - DEPLOYMENT_URL=${DEPLOYMENT_URL}
     restart: unless-stopped
