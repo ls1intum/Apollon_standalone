@@ -13,6 +13,6 @@ jobs:
     # uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
     uses: ./.github/workflows/build-and-push-tmp.yml
     with:
-      image-name:  ls1intum/Apollon_standalone
+      image-name:  ls1intum/apollon_standalone
       docker-file: Dockerfile.redis
     secrets: inherit

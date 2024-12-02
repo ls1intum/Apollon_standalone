@@ -14,5 +14,5 @@ jobs:
     secrets: inherit
     with:
       environment: Dev
-      image-name: ls1intum/Apollon_standalone
+      image-name: ls1intum/apollon_standalone
       image-tag: "${{ needs.build-dev-container.outputs.image-tag }}"
