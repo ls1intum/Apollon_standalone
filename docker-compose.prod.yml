@@ -15,8 +15,8 @@ services:
     networks:
       - apollon-network
 
-  apollon_standalone:
-    image: "ghcr.io/ls1intum/Apollon_standalone/apollon-standalone:${IMAGE_TAG}"
+  apollon-standalone:
+    image: "ghcr.io/ls1intum/apollon_standalone:${IMAGE_TAG}"
     container_name: apollon-standalone
     environment:
       - APOLLON_REDIS_URL=redis://apollon_redis:6379
