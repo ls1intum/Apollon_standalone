@@ -22,7 +22,7 @@ jobs:
       name: ${{ inputs.environment }}
       url: 'https://${{ vars.SERVER_HOST }}'
     steps:
-      - name: SSH to VM and Execute Docker-Compose Down
+      - name: SSH to VM and Execute Docker-Compose Down (if exists)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ vars.VM_HOST }}
@@ -33,7 +33,25 @@ jobs:
           proxy_key: ${{ secrets.DEPLOYMENT_GATEWAY_SSH_KEY }}
           proxy_port: ${{ vars.DEPLOYMENT_GATEWAY_PORT }}
           script: |
-            docker compose down --remove-orphans --rmi all
+            #!/bin/bash
+            set -e  # Exit immediately if a command exits with a non-zero status
+
+            COMPOSE_FILE="docker-compose.prod.yml"
+            ENV_FILE=".env.prod"
+
+            # Check if docker-compose.prod.yml exists
+            if [ -f "$COMPOSE_FILE" ]; then
+              echo "$COMPOSE_FILE found."
+              
+              # Check if .env.prod exists
+              if [ -f "$ENV_FILE" ]; then
+                docker compose -f "$COMPOSE_FILE" --env-file="$ENV_FILE" down --remove-orphans --rmi all
+              else
+                docker compose -f "$COMPOSE_FILE" down --remove-orphans --rmi all
+              fi
+            else
+              echo "$COMPOSE_FILE does not exist. Skipping docker compose down."
+            fi
 
       - name: checkout
         uses: actions/checkout@v4

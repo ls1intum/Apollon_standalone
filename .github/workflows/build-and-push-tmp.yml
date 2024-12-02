@@ -90,3 +90,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: ${{ inputs.build-args }}
           push: true
+          cache-from: type=gha,scope=${{ inputs.image-name }}
+          cache-to: type=gha,scope=${{ inputs.image-name }},mode=max
