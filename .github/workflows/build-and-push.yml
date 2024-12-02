@@ -1,0 +1,12 @@
+name: Build Docker Image
+
+on:
+  push:
+
+jobs:
+  build-and-push-workflow:
+    uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
+    with:
+      image-name: apollon-standalone
+      docker-file: Dockerfile.redis
+    secrets: inherit
