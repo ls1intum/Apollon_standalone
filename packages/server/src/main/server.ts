@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import bodyParser from 'body-parser';
 import express, { RequestHandler } from 'express';
 import * as Sentry from '@sentry/node';
@@ -18,6 +20,15 @@ if (process.env.SENTRY_DSN) {
 
   Sentry.setTag('package', 'server');
 }
+
+// Replace http://localhost:8080 with the actual process.env.DEPLOYMENT_URL
+const jsFiles = fs.readdirSync(webappPath).filter((file) => file.endsWith('.js'));
+jsFiles.forEach((file) => {
+  const filePath = path.join(webappPath, file);
+  const content = fs.readFileSync(filePath, 'utf8')
+      .replace(/http:\/\/localhost:8080/g, process.env.DEPLOYMENT_URL || 'http://localhost:8080');
+  fs.writeFileSync(filePath, content);
+});
 
 app.use('/', express.static(webappPath));
 app.use(bodyParser.json() as RequestHandler);
