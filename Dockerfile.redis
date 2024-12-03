@@ -21,5 +21,5 @@ WORKDIR /app/build/server
 
 EXPOSE 8080
 
-ENTRYPOINT [ "sed", "-i", "s|http://localhost:8080|${DEPLOYMENT_URL}|g", "/app/build/webapp/*.js" ]
+ENTRYPOINT [ "sed", "-i", "s|http://localhost:8080|${DEPLOYMENT_URL}|g", "../webapp/*.js" ]
 CMD [ "node", "bundle.js" ]
