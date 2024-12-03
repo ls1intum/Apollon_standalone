@@ -52,9 +52,10 @@ To do that, all they have to do is click on `File > Start from Template` and sel
 Users can share the diagram in Apollon Standalone in four different types.
 
 - `Edit`: In this mode of sharing, the user will be able to make changes to the shared diagram.
+- `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
+- `Embed`: In this mode of sharing, the user embeds the diagram in a Git issue/pull request. The embedding displays the latest version of the diagram.
 - `Give Feedback`: In this mode of sharing, the user will not be able to make changes to the shared diagram, but can only provide feedback to it.
 - `See Feedback`: In this mode of sharing, the user can view feedback provided to the shared diagram.
-- `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
 
 ![Real-time collaboration](/docs/images/ShareDialog.png 'Real-time collaboration')
 
