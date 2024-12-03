@@ -22,6 +22,10 @@ module.exports = {
         use: 'ts-loader',
         test: /\.ts?$/,
       },
+      {
+        use: 'node-loader',
+        test: /\.node$/,
+      },
     ],
   },
   externals: {
