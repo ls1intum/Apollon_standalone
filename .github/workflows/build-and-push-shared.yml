@@ -75,6 +75,8 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
             type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha,prefix=,format=long
 
       - name: Set image tag output
         id: set-tag

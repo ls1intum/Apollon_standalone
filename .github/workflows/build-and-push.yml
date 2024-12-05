@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-push-workflow:
     name: Build and Push Docker Image
-    # uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
+    # TODO: uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
     uses: ./.github/workflows/build-and-push-shared.yml
     with:
       image-name:  ls1intum/apollon_standalone
