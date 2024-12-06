@@ -15,14 +15,14 @@ jobs:
         id: retrieve-image-tag
         run: |
           if [ -n "${{ inputs.image-tag }}" ]; then
-            echo "::set-output name=image-tag::${{ inputs.image-tag }}"
+            echo "image-tag=${{ inputs.image-tag }}" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           REF=$(echo "${{ github.event.ref.ref }}" | sed -n 's#^refs/heads/##p')
           # If ref = main
           if [ "$REF" = "main" ]; then
-            echo "::set-output name=image-tag::latest"
+            echo "image-tag=latest" >> $GITHUB_OUTPUT
           fi
 
           PULLS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${REF}")
@@ -33,7 +33,7 @@ jobs:
             exit 1
           else
             echo "PR #$PR_NUMBER found for branch $REF."
-            echo "::set-output name=image-tag::pr-$PR_NUMBER"
+            echo "image-tag=pr-$PR_NUMBER" >> $GITHUB_OUTPUT
           fi
 
       - name: Check if image exists
