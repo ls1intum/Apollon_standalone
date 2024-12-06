@@ -10,6 +10,8 @@ on:
 jobs:
   check-if-image-exists:
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.retrieve-image-tag.outputs.image-tag }}
     steps:
       - name: Retrieve Image Tag
         id: retrieve-image-tag
@@ -60,7 +62,7 @@ jobs:
     with:
       environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
-      image-tag: ${{ needs.retrieve-image-tag.outputs.image-tag }}
+      image-tag: ${{ needs.check-if-image-exists.outputs.image-tag }}
       env-vars: |
         DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
         APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
