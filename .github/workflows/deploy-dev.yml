@@ -1,22 +1,18 @@
-name: Deploy Docker Compose
+name: Deploy Dev
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      environment:
-        required: true
-        type: string
       image-tag:
-        default: "latest"
         type: string
-        description: "The tag for the docker images (Default: latest)"
-
+        description: "The tag of the docker images to deploy"
+        required: true
 jobs:
   deploy:
     # TODO: uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
     uses: ./.github/workflows/deploy-docker-compose-shared.yml
     with:
-      environment: ${{ inputs.environment }}
+      environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
       image-tag: ${{ inputs.image-tag }}
       env-vars: |
