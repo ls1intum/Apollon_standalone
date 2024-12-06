@@ -101,7 +101,13 @@ jobs:
             # Check if docker-compose.prod.yml exists
             if [ -f "$COMPOSE_FILE" ]; then
               echo "$COMPOSE_FILE found."
-              docker compose -f "$COMPOSE_FILE" down --remove-orphans --rmi all
+          
+              # Check if .env exists
+              if [ -f ".env" ]; then
+                docker compose -f "$COMPOSE_FILE" --env-file=".env" down --remove-orphans --rmi all
+              else
+                docker compose -f "$COMPOSE_FILE" down --remove-orphans --rmi all
+              fi
             else
               echo "$COMPOSE_FILE does not exist. Skipping docker compose down."
             fi
