@@ -36,12 +36,15 @@ jobs:
         id: retrieve-image-tag
         run: |
           if [ -n "${{ inputs.image-tag }}" ]; then
+            echo "Use image-tag input ${{ inputs.image-tag }} for deployment."
             echo "image-tag-to-deploy=${{ inputs.image-tag }}" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           REF=$(echo "${{ github.event.ref }}" | sed -n 's#^refs/heads/##p')
+          echo "Check if $REF is the default branch (${{ github.event.repository.default_branch }})."
           if [ "$REF" = "${{ github.event.repository.default_branch }}" ]; then
+            echo "Use latest for deployment."
             echo "image-tag-to-deploy=latest" >> $GITHUB_OUTPUT
           fi
 
@@ -53,6 +56,7 @@ jobs:
             exit 1
           else
             echo "PR #$PR_NUMBER found for branch $REF."
+            echo "Use image-tag pr-$PR_NUMBER for deployment."
             echo "image-tag-to-deploy=pr-$PR_NUMBER" >> $GITHUB_OUTPUT
           fi
 
