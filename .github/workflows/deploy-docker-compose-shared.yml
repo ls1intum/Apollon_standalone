@@ -46,6 +46,7 @@ jobs:
           if [ "$REF" = "${{ github.event.repository.default_branch }}" ]; then
             echo "Use latest for deployment."
             echo "image-tag-to-deploy=latest" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
           PULLS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${REF}")
