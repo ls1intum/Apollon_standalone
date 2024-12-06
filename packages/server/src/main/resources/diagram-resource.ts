@@ -4,9 +4,11 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { DiagramDTO } from 'shared';
 import { DiagramService } from '../services/diagram-service/diagram-service';
 import { DiagramStorageFactory } from '../services/diagram-storage';
+import { ConversionService } from '../services/conversion-service/conversion-service';
 
 export class DiagramResource {
   diagramService: DiagramService = new DiagramService(DiagramStorageFactory.getStorageService());
+  conversionService: ConversionService = new ConversionService();
 
   getDiagram = (req: Request, res: Response) => {
     const tokenValue: string = req.params.token;
@@ -17,12 +19,23 @@ export class DiagramResource {
     if (/^[a-zA-Z0-9]+$/.test(tokenValue)) {
       this.diagramService
         .getDiagramByLink(tokenValue)
-        .then((diagram: DiagramDTO | undefined) => {
+        .then(async (diagram: DiagramDTO | undefined) => {
           if (diagram) {
-            res.json(diagram);
-          } else {
-            res.status(404).send('Diagram not found');
+            if (req.query.type === 'svg') {
+              const diagramSvg = (await this.conversionService.convertToSvg(diagram.model)).svg;
+              const diagramSvgWhiteBackground = diagramSvg.replace(
+                /<svg([^>]*)>/,
+                '<svg$1 style="background-color: white;">',
+              );
+
+              res.setHeader('Content-Type', 'image/svg+xml');
+              return res.send(diagramSvgWhiteBackground);
+            }
+
+            return res.json(diagram);
           }
+
+          return res.status(404).send('Diagram not found');
         })
         .catch(() => res.status(503).send('Error occurred'));
     } else {

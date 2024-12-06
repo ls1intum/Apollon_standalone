@@ -24,6 +24,8 @@
     "pdfmake": "0.2.15",
     "redis": "4.7.0",
     "rxjs": "7.8.1",
+    "global-jsdom": "9.2.0",
+    "jsdom": "23.2.0",
     "shared": "*"
   },
   "devDependencies": {

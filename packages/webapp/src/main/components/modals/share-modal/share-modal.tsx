@@ -11,7 +11,11 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
-import { setDisplayUnpublishedVersion, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import {
+  setCreateNewEditor,
+  setDisplayUnpublishedVersion,
+  updateDiagramThunk,
+} from '../../../services/diagram/diagramSlice';
 import { selectDisplaySidebar, toggleSidebar } from '../../../services/version-management/versionManagementSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
@@ -23,6 +27,15 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
   const tokenInUrl = urlPath.substring(1); // This removes the leading "/"
 
   const getLinkForView = (token?: string) => {
+    if (LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED) {
+      return (
+        `![${
+          diagram ? diagram.title : 'Diagram'
+        }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)` +
+        `\n[Edit a copy](${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${DiagramView.EDIT})`
+      );
+    }
+
     return `${DEPLOYMENT_URL}/${token || LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
   };
 
@@ -36,6 +49,9 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
       case DiagramView.COLLABORATE:
         return 'collaborate';
+
+      case DiagramView.EMBED:
+        return 'embed';
     }
     return 'edit';
   };
@@ -99,6 +115,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
+        dispatch(setCreateNewEditor(true));
         dispatch(setDisplayUnpublishedVersion(false));
         token = res.diagramToken;
       })
@@ -140,7 +157,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
           <div className="container mb-3">
             <div className="row">
-              <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+              <div className="col-sm-12 col-md-6 col-lg-4 p-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -151,29 +168,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                   Edit
                 </button>
               </div>
-              <div className="col-sm-12 col-md-6 col-lg-3 p-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleShareButtonPress(DiagramView.GIVE_FEEDBACK);
-                  }}
-                  className="btn btn-outline-secondary  w-100"
-                >
-                  Give Feedback
-                </button>
-              </div>
-              <div className="col-sm-12 col-md-6 col-lg-3 p-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleShareButtonPress(DiagramView.SEE_FEEDBACK);
-                  }}
-                  className="btn btn-outline-secondary  w-100"
-                >
-                  See Feedback
-                </button>
-              </div>
-              <div className="col-sm-12 col-md-6 col-lg-3 p-1">
+              <div className="col-sm-12 col-md-6 col-lg-4 p-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -184,6 +179,39 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
                   Collaborate
                 </button>
               </div>
+              <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleShareButtonPress(DiagramView.EMBED);
+                  }}
+                  className="btn btn-outline-secondary w-100"
+                >
+                  Embed
+                </button>
+              </div>
+              <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleShareButtonPress(DiagramView.GIVE_FEEDBACK);
+                  }}
+                  className="btn btn-outline-secondary  w-100"
+                >
+                  Give Feedback
+                </button>
+              </div>
+              <div className="col-sm-12 col-md-6 col-lg-4 p-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleShareButtonPress(DiagramView.SEE_FEEDBACK);
+                  }}
+                  className="btn btn-outline-secondary  w-100"
+                >
+                  See Feedback
+                </button>
+              </div>
             </div>
           </div>
 
@@ -191,9 +219,13 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
             <fieldset className="scheduler-border">
               <legend className="scheduler-border float-none w-auto">Recently shared Diagram:</legend>
               <InputGroup>
-                <FormControl readOnly value={getLinkForView()} />
+                <FormControl
+                  readOnly
+                  value={getLinkForView()}
+                  as={LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED ? 'textarea' : 'input'}
+                />
                 <Button variant="outline-secondary" onClick={() => copyLink()}>
-                  Copy Link
+                  {LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED ? 'Copy Embed' : 'Copy Link'}
                 </Button>
               </InputGroup>
             </fieldset>
