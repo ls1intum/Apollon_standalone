@@ -12,6 +12,11 @@ jobs:
   check-if-image-exists:
     runs-on: ubuntu-latest
     steps:
+      - name: Log workflow_dispatch payload
+        run: |
+          echo "Workflow Dispatch Payload:"
+          echo "${{ toJson(github.event) }}" | jq
+
       - name: Check if image exists
         run: |
           IMAGE_NAME=ls1intum/apollon_standalone
