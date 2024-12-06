@@ -5,7 +5,7 @@ on:
     inputs:
       image-tag:
         type: string
-        description: "The tag of the docker images to deploy (default: pr-<number> of branch or latest)"
+        description: "Image tag to deploy (default: pr-<number> if PR exists, latest for main)"
 
 jobs:
   prepare-deploy:
