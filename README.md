@@ -3,6 +3,7 @@
 Apollon Standalone is the Standalone version of the [Apollon Editor](https://github.com/ls1intum/Apollon)
 
 There are two variants how you can use this editor:
+
 1. As web application which only runs in the users environment (modeling functionality).
 2. With an application server which enables some extra features, like sharing of diagrams.
 
@@ -20,42 +21,43 @@ All you have to do is go to the [URL](https://apollon.ase.in.tum.de/) and start 
 The user interface of Apollon is simple to use.
 It works just like any other office and drawing tool that most users are familiar with.
 
--   Select the diagram type you want to draw by clicking on the `File > New` menu. This selection determines the availability of elements that the user can use while drawing their diagram, making it easier for users who are newly introduced to modeling.
--   Adding the element is as easy as dragging it from the elements menu and dropping it to the canvas. So is drawing the connection between them, simply drag and connect two or multiple elements.
--   The layout of the connection is drawn automatically by the editor. If you want to manually layout it, use the existing waypoints features.
--   Edit or style the text or change the colors of any elements by double-clicking on them. An easy-to-use menu will allow you to do so.
--   Use keyboard shortcuts to copy, paste, delete and move the elements throughout the canvas.
--   Change the theme of the editor by clicking on the dark/light mode switch.
+- Select the diagram type you want to draw by clicking on the `File > New` menu. This selection determines the availability of elements that the user can use while drawing their diagram, making it easier for users who are newly introduced to modeling.
+- Adding the element is as easy as dragging it from the elements menu and dropping it to the canvas. So is drawing the connection between them, simply drag and connect two or multiple elements.
+- The layout of the connection is drawn automatically by the editor. If you want to manually layout it, use the existing waypoints features.
+- Edit or style the text or change the colors of any elements by double-clicking on them. An easy-to-use menu will allow you to do so.
+- Use keyboard shortcuts to copy, paste, delete and move the elements throughout the canvas.
+- Change the theme of the editor by clicking on the dark/light mode switch.
 
 ### Import and Export your diagrams
 
 Users can easily import the existing Apollon diagram to any editor that uses the Apollon library and continue editing.
 
-![Import Diagram](/docs/images/Import.gif "Import Diagram")
+![Import Diagram](/docs/images/Import.gif 'Import Diagram')
 
-Exporting the diagrams is as easy as importing them. 
+Exporting the diagrams is as easy as importing them.
 Click on `File > Export` and select the format of the diagram to be exported as.
 Currently, Apollon standalone supports five different formats: `SVG`, `PNG (White Background)`, `PNG (Transparent Background)`, `JSON`, and `PDF`.
 
-![Export Diagram](/docs/images/Export.png "Export Diagram")
+![Export Diagram](/docs/images/Export.png 'Export Diagram')
 
 ### Create diagram from template
 
-Users in Apollon Standalone can also create a diagram from a template if they do not want to draw a diagram from scratch. 
+Users in Apollon Standalone can also create a diagram from a template if they do not want to draw a diagram from scratch.
 To do that, all they have to do is click on `File > Start from Template` and select one of the templates from the list of available templates.
 
-![Start from Template](/docs/images/StartFromTemplate.gif "Start from Template")
+![Start from Template](/docs/images/StartFromTemplate.gif 'Start from Template')
 
 ### Share your diagram with others
 
 Users can share the diagram in Apollon Standalone in four different types.
 
--   `Edit`: In this mode of sharing, the user will be able to make changes to the shared diagram.
--   `Give Feedback`: In this mode of sharing, the user will not be able to make changes to the shared diagram, but can only provide feedback to it.
--   `See Feedback`: In this mode of sharing, the user can view feedback provided to the shared diagram.
--   `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
+- `Edit`: In this mode of sharing, the user will be able to make changes to the shared diagram.
+- `Collaborate`: In this mode of sharing, users joining the collaboration session will be able to work on the diagram collaboratively with other users.
+- `Embed`: In this mode of sharing, the user embeds the diagram in a Git issue/pull request. The embedding displays the latest version of the diagram.
+- `Give Feedback`: In this mode of sharing, the user will not be able to make changes to the shared diagram, but can only provide feedback to it.
+- `See Feedback`: In this mode of sharing, the user can view feedback provided to the shared diagram.
 
-![Real-time collaboration](/docs/images/ShareDialog.png "Real-time collaboration")
+![Real-time collaboration](/docs/images/ShareDialog.png 'Real-time collaboration')
 
 ### Collaborate in real-time
 
@@ -63,7 +65,7 @@ Apollon Standalone can be used as a collaborative modeling canvas, where multipl
 Any changes made by one user will be visible throughout the canvas of all other users that are in collaboration sessions in real-time.
 Active elements that are interacted with by users in a session are highlighted in the canvas.
 
-![Real-time collaboration](/docs/images/RealTimeCollaboration.gif "Real-time collaboration")
+![Real-time collaboration](/docs/images/RealTimeCollaboration.gif 'Real-time collaboration')
 
 ## Build the application
 
@@ -94,16 +96,17 @@ page application will be loaded.
 ### Web application + application server
 
 There are two variants to set this up:
+
 1. Manual on a linux vm
 2. In a docker container
-
 
 #### Manual setup (Installation of application server on linux machine)
 
 > [!IMPORTANT]  
 > Please make sure if there is any requirements regarding additional dependencies to build the node canvas package for
-your operating system! You can find instructions for installing these dependencies here:
+> your operating system! You can find instructions for installing these dependencies here:
 > https://github.com/Automattic/node-canvas#compiling
+
 ```
 # clone the repository
 git clone https://github.com/ls1intum/Apollon_standalone
@@ -141,16 +144,17 @@ chown apollon_standalone path/to/diagrams
 ```
 
 Add the path to the created directory to:
+
 - the cronjob in delete-stale-diagrams.cronjob.txt
 - in packages/server/src/main/constants.ts
 
 #### Install as a service
 
-Configure the apollon_standalone.service file so that the paths 
+Configure the apollon_standalone.service file so that the paths
 match the paths to your installation folder
 
 ```
-# After adjusting the service file, copy the service file apollon_standalone.service 
+# After adjusting the service file, copy the service file apollon_standalone.service
 # into the /etc/systemd/system directory service apollon_standalone start
 cp apollon_standalone.service /etc/systemd/system/
 
@@ -158,7 +162,7 @@ cp apollon_standalone.service /etc/systemd/system/
 cd path/to/application/build/server
 chmod +x server.js
 
-# Start the service 
+# Start the service
 sudo service apollon_standalone start
 
 # Status of the service
@@ -166,6 +170,7 @@ service apollon_standalone status
 ```
 
 Error codes on server start:
+
 - (code=exited, status=217/USER) -> apollon_standalone user does not exist
 - (code=exited, status=203/USER) -> script not executable
 
@@ -201,7 +206,7 @@ git clone https://github.com/ls1intum/Apollon_standalone
 # build docker container
 docker build -t apollon_standalone .
 
-run docker container 
+run docker container
 docker run -d --name apollon_standalone -p 8080:8080 apollon_standalone
 
 # build the web application and the application server
@@ -224,7 +229,6 @@ To use Redis, set the environment variable `APOLLON_REDIS_URL` to the URL of the
 
 > [!IMPORTANT]
 > Apollon Standalone requires the Redis JSON module to be enabled. [Read the documents](https://redis.io/docs/latest/develop/data-types/json/) to learn how to enable the JSON module.
-
 
 ```bash
 APOLLON_REDIS_URL=redis://[[username]:[password]@][host][:port]
@@ -314,15 +318,15 @@ npm run update
 While developing the Standalone project, it is often required to make changes in the Apollon project.
 This can be achieved by executing the following workflow.
 
-1.  In the *Apollon* project: Generate a symlink by executing `npm link` command.
-2.  In the *Standalone* project: Link the generated symlink of Apollon *(from step 1)* by executing `npm link "@ls1intum/apollon"` command.
+1.  In the _Apollon_ project: Generate a symlink by executing `npm link` command.
+2.  In the _Standalone_ project: Link the generated symlink of Apollon _(from step 1)_ by executing `npm link "@ls1intum/apollon"` command.
 
 For more information please refer to the [documentation](https://docs.npmjs.com/cli/v9/commands/npm-link) of npm.
 
-> ***Note***: While making changes in the *Apollon* project, for the changes to get reflected in *Standalone*, execute the following workflow:
+> **_Note_**: While making changes in the _Apollon_ project, for the changes to get reflected in _Standalone_, execute the following workflow:
 >
-> -   Recompile the Apollon project by executing `npm run prepare`
-> -   Rebuild the Standalone project by executing `npm run build`
+> - Recompile the Apollon project by executing `npm run prepare`
+> - Rebuild the Standalone project by executing `npm run build`
 
 ### Using Redis in Development
 
