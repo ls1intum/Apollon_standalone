@@ -11,7 +11,11 @@ import { InfoCircle } from 'react-bootstrap-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { useNavigate } from 'react-router-dom';
-import { setDisplayUnpublishedVersion, updateDiagramThunk } from '../../../services/diagram/diagramSlice';
+import {
+  setCreateNewEditor,
+  setDisplayUnpublishedVersion,
+  updateDiagramThunk,
+} from '../../../services/diagram/diagramSlice';
 import { selectDisplaySidebar, toggleSidebar } from '../../../services/version-management/versionManagementSlice';
 
 export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
@@ -99,6 +103,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
       .then((res) => {
         dispatch(updateDiagramThunk(res.diagram));
+        dispatch(setCreateNewEditor(true));
         dispatch(setDisplayUnpublishedVersion(false));
         token = res.diagramToken;
       })
