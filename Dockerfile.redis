@@ -7,11 +7,9 @@ RUN apk add --no-cache \
   pango-dev \
   giflib-dev
 
-
-ARG DEPLOYMENT_URL="http://localhost:8080"
-
-ENV APOLLON_REDIS_URL=""
-ENV DEPLOYMENT_URL=${DEPLOYMENT_URL}
+ENV DEPLOYMENT_URL="http://localhost:8080"
+ENV APOLLON_REDIS_URL="redis://localhost:6379"
+ENV APOLLON_REDIS_DIAGRAM_TTL="30d"
 
 WORKDIR /app
 

@@ -1,0 +1,21 @@
+name: Deploy Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      image-tag:
+        type: string
+        description: "The tag of the docker images to deploy"
+        required: true
+jobs:
+  deploy:
+    # TODO: uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
+    uses: ./.github/workflows/deploy-docker-compose-shared.yml
+    with:
+      environment: Dev
+      docker-compose-file: "./docker-compose.prod.yml"
+      image-tag: ${{ inputs.image-tag }}
+      env-vars: |
+        DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
+        APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
+    secrets: inherit
