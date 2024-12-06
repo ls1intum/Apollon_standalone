@@ -5,32 +5,36 @@ on:
     inputs:
       image-tag:
         type: string
-        description: "The tag of the docker images to deploy"
-        required: true
+        description: "The tag of the docker images to deploy (default: pr-<number> of branch or latest)"
 
 jobs:
   check-if-image-exists:
     runs-on: ubuntu-latest
     steps:
-      - name: Log workflow_dispatch payload
+      - name: Retrieve PR number
+        id: pr-number
         run: |
-          echo "Workflow Dispatch Payload:"
-          echo "${{ toJson(github.event) }}" | jq
+          REF=$(echo "${{ github.event.ref.ref }}" | sed -n 's#^refs/heads/##p')
+          PULLS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${REF}")
+          PR_NUMBER=$(echo "$PULLS" | jq -r '.[0].number')
+          echo "::set-output name=pr-number::$PR_NUMBER"
 
       - name: Check if image exists
         run: |
           IMAGE_NAME=ls1intum/apollon_standalone
+          IMAGE_TAG=${{ inputs.image-tag }} || "pr-${{ steps.pr-number.outputs.pr-number }}"
 
           ENCODED_TOKEN=$(echo -n "${{ secrets.GITHUB_TOKEN }}" | base64)
           TAG_EXISTS=$(curl -s -H "Authorization: Bearer ${ENCODED_TOKEN}" \
             https://ghcr.io/v2/${IMAGE_NAME}/tags/list \
-            | jq -r --arg TAG "${{ inputs.image-tag }}" '.tags[] | select(. == $TAG)')
+            | jq -r --arg TAG "${IMAGE_TAG}" '.tags[] | select(. == $TAG)')
           
           if [ -z "$TAG_EXISTS" ]; then
-            echo "Image ${IMAGE_NAME}:${{ inputs.image-tag }} does not exist."
+            echo "Image ${IMAGE_NAME}:${IMAGE_TAG} does not exist."
             exit 1
           else
-            echo "Image ${IMAGE_NAME}:${{ inputs.image-tag }} exists."
+            echo "Image ${IMAGE_NAME}:${IMAGE_TAG} exists."
+            echo "::set-output name=image-tag::$IMAGE_TAG"}"
           fi
 
   deploy:
@@ -40,7 +44,7 @@ jobs:
     with:
       environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
-      image-tag: ${{ inputs.image-tag }}
+      image-tag: ${{ needs.check-if-image-exists.outputs.image-tag }}
       env-vars: |
         DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
         APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
