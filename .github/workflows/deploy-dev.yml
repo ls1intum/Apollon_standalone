@@ -10,6 +10,7 @@ on:
 jobs:
   check-if-image-exists:
     runs-on: ubuntu-latest
+    environment: Dev
     outputs:
       image-tag: ${{ steps.retrieve-image-tag.outputs.image-tag }}
     steps:
