@@ -8,18 +8,16 @@ on:
         description: "The tag of the docker images to deploy (default: pr-<number> of branch or latest)"
 
 jobs:
-  check-if-image-exists:
+  prepare-deploy:
     runs-on: ubuntu-latest
     environment: Dev
     outputs:
       image-tag: ${{ steps.retrieve-image-tag.outputs.image-tag }}
+      env-vars: |
+        DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
+        APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
+    
     steps:
-      - name: Debug Environment Variables
-        run: |
-          echo "DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}"
-          echo "APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}"
-
-
       - name: Retrieve Image Tag
         id: retrieve-image-tag
         run: |
@@ -63,14 +61,12 @@ jobs:
           fi
 
   deploy:
-    needs: check-if-image-exists
+    needs: prepare-deploy
     # TODO: uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
     uses: ./.github/workflows/deploy-docker-compose-shared.yml
     with:
       environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
-      image-tag: ${{ needs.check-if-image-exists.outputs.image-tag }}
-      env-vars: |
-        DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
-        APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
+      image-tag: ${{ needs.prepare-deploy.outputs.image-tag }}
+      env-vars: ${{ needs.prepare-deploy.outputs.env-vars }}
     secrets: inherit
