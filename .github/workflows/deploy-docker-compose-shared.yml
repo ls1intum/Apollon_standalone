@@ -32,14 +32,6 @@ jobs:
       image-tag-to-deploy: ${{ steps.retrieve-image-tag.outputs.image-tag }}
     
     steps:
-      - name: Log env vars
-        run: |
-          echo "ENVIRONMENT=${{ inputs.environment }}"
-          echo "DOCKER_COMPOSE_FILE=${{ inputs.docker-compose-file }}"
-          echo "MAIN_IMAGE_NAME=${{ inputs.main-image-name }}"
-          echo "IMAGE_TAG=${{ inputs.image-tag }}"
-          echo "ENV_VARS=${{ inputs.env-vars }}"
-
       - name: Retrieve image tag to deploy
         id: retrieve-image-tag
         run: |
