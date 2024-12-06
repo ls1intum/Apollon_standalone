@@ -12,9 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: Dev
     outputs:
-      env-vars: |
-        DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
-        APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
+      env-vars: ${{ steps.set-env.outputs.env-vars }}
+    steps:
+      - name: Set env
+        id: set-env
+        run: |
+          echo "DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}" >> $GITHUB_OUTPUT
+          echo "APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}" >> $GITHUB_OUTPUT
 
   deploy:
     needs: prepare-env
