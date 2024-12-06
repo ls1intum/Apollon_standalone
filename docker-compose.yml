@@ -13,12 +13,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.redis
-      args:
-        - DEPLOYMENT_URL=${DEPLOYMENT_URL}
     container_name: apollon_standalone
     environment:
       - APOLLON_REDIS_URL=redis://apollon_redis:6379
       - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
+      - APOLLON_REDIS_MIGRATE_FROM_FILE=true
       - DEPLOYMENT_URL=${DEPLOYMENT_URL}
     volumes:
       - ./diagrams:/app/diagrams
