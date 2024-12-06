@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Dev
     outputs:
-      image-tag-to-deploy: ${{ steps.retrieve-image-tag.outputs.image-tag }}
+      image-tag-to-deploy: ${{ steps.retrieve-image-tag.outputs.image-tag-to-deploy }}
     
     steps:
       - name: Retrieve image tag to deploy
