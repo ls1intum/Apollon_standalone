@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   redis:
     image: redis/redis-stack-server:7.4.0-v1
@@ -22,6 +20,8 @@ services:
       - APOLLON_REDIS_URL=redis://apollon-redis:6379
       - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
       - DEPLOYMENT_URL=${DEPLOYMENT_URL}
+    volumes:
+      - /opt/apollon/diagrams:/app/diagrams
     restart: unless-stopped
     ports:
       - "8080:8080"

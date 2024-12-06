@@ -80,7 +80,7 @@ jobs:
 
       - name: Set image tag output
         id: set-tag
-        run: echo "::set-output name=image-tag::${{ steps.meta.outputs.version }}"    
+        run: echo "image-tag=${{ steps.meta.outputs.version }}" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker Image
         uses: docker/build-push-action@v6

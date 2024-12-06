@@ -20,6 +20,8 @@ services:
       - APOLLON_REDIS_URL=redis://apollon_redis:6379
       - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
       - DEPLOYMENT_URL=${DEPLOYMENT_URL}
+    volumes:
+      - ./diagrams:/app/diagrams
     restart: always
     networks:
       - apollon_network
