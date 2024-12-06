@@ -19,6 +19,7 @@ services:
     environment:
       - APOLLON_REDIS_URL=redis://apollon-redis:6379
       - APOLLON_REDIS_DIAGRAM_TTL=${APOLLON_REDIS_DIAGRAM_TTL}
+      - APOLLON_REDIS_MIGRATE_FROM_FILE=true
       - DEPLOYMENT_URL=${DEPLOYMENT_URL}
     volumes:
       - /opt/apollon/diagrams:/app/diagrams
