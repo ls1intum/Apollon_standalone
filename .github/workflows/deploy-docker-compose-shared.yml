@@ -27,13 +27,6 @@ jobs:
     environment: 
       name: ${{ inputs.environment }}
     steps:
-      - name: Log inputs
-        run: |
-          echo "Environment: ${{ inputs.environment }}"
-          echo "Docker Compose File: ${{ inputs.docker-compose-file }}"
-          echo "Image Tag: ${{ inputs.image-tag }}"
-          echo "Environment Variables: ${{ inputs.env-vars }}"
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -56,13 +49,7 @@ jobs:
             # Check if docker-compose.prod.yml exists
             if [ -f "$COMPOSE_FILE" ]; then
               echo "$COMPOSE_FILE found."
-              
-              # Check if .env exists
-              if [ -f ".env" ]; then
-                docker compose -f "$COMPOSE_FILE" --env-file=".env" down --remove-orphans --rmi all
-              else
-                docker compose -f "$COMPOSE_FILE" down --remove-orphans --rmi all
-              fi
+              docker compose -f "$COMPOSE_FILE" down --remove-orphans --rmi all
             else
               echo "$COMPOSE_FILE does not exist. Skipping docker compose down."
             fi
