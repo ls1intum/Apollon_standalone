@@ -19,7 +19,7 @@ jobs:
             exit 0
           fi
 
-          REF=$(echo "${{ github.event.ref.ref }}" | sed -n 's#^refs/heads/##p')
+          REF=$(echo "${{ github.event.ref }}" | sed -n 's#^refs/heads/##p')
           # If ref = main
           if [ "$REF" = "main" ]; then
             echo "image-tag=latest" >> $GITHUB_OUTPUT
