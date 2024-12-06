@@ -11,18 +11,35 @@ jobs:
   check-if-image-exists:
     runs-on: ubuntu-latest
     steps:
-      - name: Retrieve PR number
-        id: pr-number
+      - name: Retrieve Image Tag
+        id: retrieve-image-tag
         run: |
+          if [ -n "${{ inputs.image-tag }}" ]; then
+            echo "::set-output name=image-tag::${{ inputs.image-tag }}"
+            exit 0
+          fi
+
           REF=$(echo "${{ github.event.ref.ref }}" | sed -n 's#^refs/heads/##p')
+          # If ref = main
+          if [ "$REF" = "main" ]; then
+            echo "::set-output name=image-tag::latest"
+          fi
+
           PULLS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${REF}")
           PR_NUMBER=$(echo "$PULLS" | jq -r '.[0].number')
-          echo "::set-output name=pr-number::$PR_NUMBER"
+
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No PR found for branch $REF."
+            exit 1
+          else
+            echo "PR #$PR_NUMBER found for branch $REF."
+            echo "::set-output name=image-tag::pr-$PR_NUMBER"
+          fi
 
       - name: Check if image exists
         run: |
           IMAGE_NAME=ls1intum/apollon_standalone
-          IMAGE_TAG=${{ inputs.image-tag }} || "pr-${{ steps.pr-number.outputs.pr-number }}"
+          IMAGE_TAG="${{ steps.retrieve-image-tag.outputs.image-tag }}"
 
           ENCODED_TOKEN=$(echo -n "${{ secrets.GITHUB_TOKEN }}" | base64)
           TAG_EXISTS=$(curl -s -H "Authorization: Bearer ${ENCODED_TOKEN}" \
@@ -34,7 +51,6 @@ jobs:
             exit 1
           else
             echo "Image ${IMAGE_NAME}:${IMAGE_TAG} exists."
-            echo "::set-output name=image-tag::$IMAGE_TAG"}"
           fi
 
   deploy:
@@ -44,7 +60,7 @@ jobs:
     with:
       environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
-      image-tag: ${{ needs.check-if-image-exists.outputs.image-tag }}
+      image-tag: ${{ needs.retrieve-image-tag.outputs.image-tag }}
       env-vars: |
         DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
         APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
