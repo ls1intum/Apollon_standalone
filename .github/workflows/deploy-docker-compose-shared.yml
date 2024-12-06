@@ -27,6 +27,13 @@ jobs:
     environment: 
       name: ${{ inputs.environment }}
     steps:
+      - name: Log inputs
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Docker Compose File: ${{ inputs.docker-compose-file }}"
+          echo "Image Tag: ${{ inputs.image-tag }}"
+          echo "Environment Variables: ${{ inputs.env-vars }}"
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
