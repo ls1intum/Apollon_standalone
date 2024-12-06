@@ -13,6 +13,12 @@ jobs:
     outputs:
       image-tag: ${{ steps.retrieve-image-tag.outputs.image-tag }}
     steps:
+      - name: Debug Environment Variables
+        run: |
+          echo "DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}"
+          echo "APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}"
+
+
       - name: Retrieve Image Tag
         id: retrieve-image-tag
         run: |
