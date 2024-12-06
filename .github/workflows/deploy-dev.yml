@@ -1,4 +1,4 @@
-name: Deploy Dev
+name: Deploy to Dev
 
 on:
   workflow_dispatch:
@@ -7,8 +7,29 @@ on:
         type: string
         description: "The tag of the docker images to deploy"
         required: true
+
 jobs:
+  check-if-image-exists:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if image exists
+        run: |
+          IMAGE_NAME=ls1intum/apollon_standalone
+
+          ENCODED_TOKEN=$(echo -n "${{ secrets.GITHUB_TOKEN }}" | base64)
+          TAG_EXISTS=$(curl -s -H "Authorization: Bearer ${ENCODED_TOKEN}" \
+            https://ghcr.io/v2/${IMAGE_NAME}/tags/list \
+            | jq -r --arg TAG "${{ inputs.image-tag }}" '.tags[] | select(. == $TAG)')
+          
+          if [ -z "$TAG_EXISTS" ]; then
+            echo "Image ${IMAGE_NAME}:${{ inputs.image-tag }} does not exist."
+            exit 1
+          else
+            echo "Image ${IMAGE_NAME}:${{ inputs.image-tag }} exists."
+          fi
+
   deploy:
+    needs: check-if-image-exists
     # TODO: uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
     uses: ./.github/workflows/deploy-docker-compose-shared.yml
     with:
