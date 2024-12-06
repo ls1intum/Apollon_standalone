@@ -5,68 +5,25 @@ on:
     inputs:
       image-tag:
         type: string
-        description: "Image tag to deploy (default: pr-<number> if PR exists, latest for main)"
+        description: "Image tag to deploy (default: pr-<number> if PR exists, latest for default branch)"
 
-jobs:
-  prepare-deploy:
+jobs:  
+  prepare-env:
     runs-on: ubuntu-latest
     environment: Dev
     outputs:
-      image-tag: ${{ steps.retrieve-image-tag.outputs.image-tag }}
       env-vars: |
         DEPLOYMENT_URL=${{ vars.DEPLOYMENT_URL }}
         APOLLON_REDIS_DIAGRAM_TTL=${{ vars.APOLLON_REDIS_DIAGRAM_TTL }}
-    
-    steps:
-      - name: Retrieve Image Tag
-        id: retrieve-image-tag
-        run: |
-          if [ -n "${{ inputs.image-tag }}" ]; then
-            echo "image-tag=${{ inputs.image-tag }}" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          REF=$(echo "${{ github.event.ref }}" | sed -n 's#^refs/heads/##p')
-          # If ref = main
-          if [ "$REF" = "main" ]; then
-            echo "image-tag=latest" >> $GITHUB_OUTPUT
-          fi
-
-          PULLS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${REF}")
-          PR_NUMBER=$(echo "$PULLS" | jq -r '.[0].number')
-
-          if [ -z "$PR_NUMBER" ]; then
-            echo "No PR found for branch $REF."
-            exit 1
-          else
-            echo "PR #$PR_NUMBER found for branch $REF."
-            echo "image-tag=pr-$PR_NUMBER" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Check if image exists
-        run: |
-          IMAGE_NAME=ls1intum/apollon_standalone
-          IMAGE_TAG="${{ steps.retrieve-image-tag.outputs.image-tag }}"
-
-          ENCODED_TOKEN=$(echo -n "${{ secrets.GITHUB_TOKEN }}" | base64)
-          TAG_EXISTS=$(curl -s -H "Authorization: Bearer ${ENCODED_TOKEN}" \
-            https://ghcr.io/v2/${IMAGE_NAME}/tags/list \
-            | jq -r --arg TAG "${IMAGE_TAG}" '.tags[] | select(. == $TAG)')
-          
-          if [ -z "$TAG_EXISTS" ]; then
-            echo "Image ${IMAGE_NAME}:${IMAGE_TAG} does not exist."
-            exit 1
-          else
-            echo "Image ${IMAGE_NAME}:${IMAGE_TAG} exists."
-          fi
 
   deploy:
-    needs: prepare-deploy
+    needs: prepare-env
     # TODO: uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
     uses: ./.github/workflows/deploy-docker-compose-shared.yml
     with:
       environment: Dev
       docker-compose-file: "./docker-compose.prod.yml"
-      image-tag: ${{ needs.prepare-deploy.outputs.image-tag }}
-      env-vars: ${{ needs.prepare-deploy.outputs.env-vars }}
+      main-image-name: ls1intum/apollon_standalone
+      image-tag: ${{ inputs.image-tag }}
+      env-vars: ${{ needs.prepare-env.outputs.env-vars }}
     secrets: inherit
