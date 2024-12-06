@@ -17,7 +17,7 @@ module.exports = merge(common, {
   devServer: {
     static: path.join(__dirname, '../../build/webapp'),
     host: '0.0.0.0',
-    port: 8888,
+    port: 8080,
     proxy: [
       {
         context: ['/'],
