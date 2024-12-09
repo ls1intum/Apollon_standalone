@@ -28,7 +28,12 @@ export class DiagramResource {
                 '<svg$1 style="background-color: white;">',
               );
 
-              res.setHeader('Content-Type', 'image/svg+xml');
+              res.set({
+                'Content-Type': 'image/svg+xml',
+                'Cache-Control': 'no-cache',
+                Expires: new Date(Date.now() - 36000 * 1000).toUTCString(),
+              });
+
               return res.send(diagramSvgWhiteBackground);
             }
 
