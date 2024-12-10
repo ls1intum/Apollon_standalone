@@ -28,12 +28,9 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
 
   const getLinkForView = (token?: string) => {
     if (LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED) {
-      return (
-        `![${
-          diagram ? diagram.title : 'Diagram'
-        }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)` +
-        `\n[Edit a copy](${DEPLOYMENT_URL}/${LocalStorageRepository.getLastPublishedToken()}?view=${DiagramView.EDIT})`
-      );
+      return `![${
+        diagram ? diagram.title : 'Diagram'
+      }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)`;
     }
 
     return `${DEPLOYMENT_URL}/${token || LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;
