@@ -30,7 +30,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     if (LocalStorageRepository.getLastPublishedType() === DiagramView.EMBED) {
       return `![${
         diagram ? diagram.title : 'Diagram'
-      }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg)`;
+      }](${DEPLOYMENT_URL}/api/diagrams/${LocalStorageRepository.getLastPublishedToken()}?type=svg&mode=${LocalStorageRepository.getUserThemePreference() ?? 'light'})`;
     }
 
     return `${DEPLOYMENT_URL}/${token || LocalStorageRepository.getLastPublishedToken()}?view=${LocalStorageRepository.getLastPublishedType()}`;

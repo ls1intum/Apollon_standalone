@@ -22,11 +22,25 @@ export class DiagramResource {
         .then(async (diagram: DiagramDTO | undefined) => {
           if (diagram) {
             if (req.query.type === 'svg') {
-              const diagramSvg = (await this.conversionService.convertToSvg(diagram.model)).svg;
-              const diagramSvgWhiteBackground = diagramSvg.replace(
-                /<svg([^>]*)>/,
-                '<svg$1 style="background-color: white;">',
-              );
+              let diagramSvg = (await this.conversionService.convertToSvg(diagram.model)).svg;
+
+              // Makes connections and belonging text white, for visibility on a dark background
+              if (req.query.mode === 'dark') {
+                const whiteConnections = `
+                  [class=""] polyline {
+                    stroke: white;
+                  }
+
+                  [class=""] text {
+                    fill: white;
+                  }
+                `;
+
+                diagramSvg = diagramSvg.replace(/<style>([\s\S]*?)<\/style>/, (match, existingStyles) => {
+                  // Inserts the new CSS rules into the <style> tag
+                  return `<style>\n${existingStyles.trim()}\n${whiteConnections.trim()}\n</style>`;
+                });
+              }
 
               res.set({
                 'Content-Type': 'image/svg+xml',
@@ -34,7 +48,7 @@ export class DiagramResource {
                 Expires: new Date(Date.now() - 36000 * 1000).toUTCString(),
               });
 
-              return res.send(diagramSvgWhiteBackground);
+              return res.send(diagramSvg);
             }
 
             return res.json(diagram);
