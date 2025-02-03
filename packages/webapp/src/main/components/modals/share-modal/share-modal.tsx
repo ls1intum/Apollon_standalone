@@ -71,8 +71,8 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     );
   };
 
-  const handleShareButtonPress = (view: DiagramView) => {
-    const token = tokenInUrl ? tokenInUrl : publishDiagram();
+  const handleShareButtonPress = async (view: DiagramView) => {
+    const token = tokenInUrl.length > 0 ? tokenInUrl : await publishDiagram();
     LocalStorageRepository.setLastPublishedType(view);
 
     if (token) {
@@ -91,7 +91,7 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     }
   };
 
-  const publishDiagram = () => {
+  const publishDiagram = async () => {
     if (!diagram || !diagram.model || Object.keys(diagram.model.elements).length === 0) {
       dispatch(
         displayError(
@@ -109,22 +109,20 @@ export const ShareModal: React.FC<ModalContentProps> = ({ close }) => {
     diagramCopy.title = 'New shared version ';
     diagramCopy.description = 'Your auto-generated version for sharing';
 
-    DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token)
-      .then((res) => {
-        dispatch(updateDiagramThunk(res.diagram));
-        dispatch(setCreateNewEditor(true));
-        dispatch(setDisplayUnpublishedVersion(false));
-        token = res.diagramToken;
-      })
-      .catch((error) => {
-        dispatch(
-          displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
-        );
-        // tslint:disable-next-line:no-console
-        console.error(error);
-      });
-
-    return token;
+    try {
+      const res = await DiagramRepository.publishDiagramVersionOnServer(diagramCopy, diagram.token);
+      dispatch(updateDiagramThunk(res.diagram));
+      dispatch(setCreateNewEditor(true));
+      dispatch(setDisplayUnpublishedVersion(false));
+      token = res.diagramToken;
+      return token;
+    } catch (error) {
+      dispatch(
+        displayError('Connection failed', 'Connection to the server failed. Please try again or report a problem.'),
+      );
+      // tslint:disable-next-line:no-console
+      console.error(error);
+    }
   };
 
   const hasRecentlyPublished = () => {
