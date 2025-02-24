@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Apollon Standalone</string>
+    <string name="title_activity_main">Apollon Standalone</string>
+    <string name="package_name">com.tum.apollon</string>
+    <string name="custom_url_scheme">com.tum.apollon</string>
+</resources>
