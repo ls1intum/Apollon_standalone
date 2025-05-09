@@ -99,7 +99,7 @@ export class DiagramResource {
     if (width === undefined || height === undefined) {
       res.status(400).send('Both width and height must be defined');
     } else {
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      pdfMake.vfs = pdfFonts.vfs;
       const svg = req.body.svg;
       const doc = pdfMake.createPdf({
         content: [
