@@ -22,10 +22,10 @@ export const register = (app: express.Application) => {
   router.get('/converter/status', (req, res) => conversionResource.status(req, res));
 
   // routes: diagrams
-  router.get('/diagrams/:token', (req, res) => diagramResource.getDiagram(req, res));
+  router.post('/diagrams/pdf', (req, res) => diagramResource.convertSvgToPdf(req, res));
   router.post('/diagrams/publish', (req, res) => diagramResource.publishDiagramVersion(req, res));
+  router.get('/diagrams/:token', (req, res) => diagramResource.getDiagram(req, res));
   router.delete('/diagrams/:token', (req, res) => diagramResource.deleteDiagramVersion(req, res));
   router.post('/diagrams/:token', (req, res) => diagramResource.editDiagramVersion(req, res));
-  router.post('/diagrams/pdf', (req, res) => diagramResource.convertSvgToPdf(req, res));
   app.use('/api', router);
 };
