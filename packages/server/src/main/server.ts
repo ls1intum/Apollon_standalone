@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import bodyParser from 'body-parser';
 import express, { RequestHandler } from 'express';
-import * as Sentry from '@sentry/node';
 import { indexHtml, webappPath } from './constants';
 import { register } from './routes';
 import { CollaborationService } from './services/collaboration-service/collaboration-service';
@@ -10,16 +9,6 @@ import { CollaborationService } from './services/collaboration-service/collabora
 const port = 8080;
 
 const app = express();
-
-if (process.env.SENTRY_DSN) {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    environment: process.env.DEPLOYMENT_URL?.split('//')[1] || '',
-    tracesSampleRate: 0.5,
-  });
-
-  Sentry.setTag('package', 'server');
-}
 
 // Replace http://localhost:8080 with the actual process.env.DEPLOYMENT_URL
 const jsFiles = fs.readdirSync(webappPath).filter((file) => file.endsWith('.js'));

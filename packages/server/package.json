@@ -5,10 +5,11 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf ../../build/server",
-    "start": "ts-node-dev src/main/server.ts",
-    "build": "webpack --config webpack/webpack.config.js",
+    "start": "ts-node-dev --esm src/main/server.ts",
+    "build": "webpack --config webpack/webpack.config.cjs",
     "lint": "eslint -c .eslintrc.js \"**/*.{ts,tsx}\""
   },
+  "type": "module",
   "engines": {
     "node": ">=24.7.0",
     "npm": ">=11.5.1"
@@ -21,7 +22,6 @@
     "crypto-js": "4.2.0"
   },
   "dependencies": {
-    "@sentry/node": "10.22.0",
     "audit-debounce": "0.1.1",
     "body-parser": "1.20.3",
     "canvas": "3.2.0",
