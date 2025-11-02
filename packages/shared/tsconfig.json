@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "target": "es2024",
+    "module": "preserve",
+    "lib": ["es2024", "dom"],
     "esModuleInterop": true,
     "outDir": "dist",
     "declaration": true,

@@ -14,10 +14,6 @@ import { ApplicationStore } from './components/store/application-store';
 import { ApollonEditorComponentWithConnection } from './components/apollon-editor-component/ApollonEditorComponentWithConnection';
 import { VersionManagementSidebar } from './components/version-management-sidebar/VersionManagementSidebar';
 
-const postHogOptions = {
-  api_host: POSTHOG_HOST,
-};
-
 export function RoutedApplication() {
   const [editor, setEditor] = useState<ApollonEditor>();
   const handleSetEditor = (newEditor: ApollonEditor) => {
@@ -25,24 +21,34 @@ export function RoutedApplication() {
   };
   const isFirefox = useMemo(() => /Firefox/i.test(navigator.userAgent), []);
 
-  return (
-    <PostHogProvider apiKey={POSTHOG_KEY} options={postHogOptions}>
-      <ApplicationStore>
-        <BrowserRouter>
-          <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
-            <ApplicationBar />
-            <ApplicationModal />
-            <VersionManagementSidebar />
-            {isFirefox && <FirefoxIncompatibilityHint />}
-            <Routes>
-              <Route path={'/:token'} element={<ApollonEditorComponentWithConnection />} />
-              <Route path={'/'} element={<ApollonEditorComponent />} />
-            </Routes>
-            <ErrorPanel />
-            <ToastContainer />
-          </ApollonEditorProvider>
-        </BrowserRouter>
-      </ApplicationStore>
-    </PostHogProvider>
+  const postHogOptions = POSTHOG_HOST ? { api_host: POSTHOG_HOST } : undefined;
+
+  const application = (
+    <ApplicationStore>
+      <BrowserRouter>
+        <ApollonEditorProvider value={{ editor, setEditor: handleSetEditor }}>
+          <ApplicationBar />
+          <ApplicationModal />
+          <VersionManagementSidebar />
+          {isFirefox && <FirefoxIncompatibilityHint />}
+          <Routes>
+            <Route path={'/:token'} element={<ApollonEditorComponentWithConnection />} />
+            <Route path={'/'} element={<ApollonEditorComponent />} />
+          </Routes>
+          <ErrorPanel />
+          <ToastContainer />
+        </ApollonEditorProvider>
+      </BrowserRouter>
+    </ApplicationStore>
   );
+
+  if (POSTHOG_KEY) {
+    return (
+      <PostHogProvider apiKey={POSTHOG_KEY} options={postHogOptions}>
+        {application}
+      </PostHogProvider>
+    );
+  }
+
+  return application;
 }

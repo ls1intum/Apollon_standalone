@@ -16,12 +16,19 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
+    fullySpecified: false, // allow extensionless ESM imports from dependencies
   },
   performance: {
     hints: false,
   },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
       {
         test: /\.tsx?/,
         exclude: /\/node_modules\//,

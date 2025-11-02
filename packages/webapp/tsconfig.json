@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2021",
-    "module": "es2020",
-    "moduleResolution": "node",
-    "lib": ["es2021", "dom"],
+    "target": "es2024",
+    "module": "preserve",
+    "lib": ["es2024", "dom"],
     "jsx": "react",
     "declaration": true,
     "strict": true,

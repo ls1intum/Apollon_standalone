@@ -1,12 +1,13 @@
 {
   "name": "shared",
-  "version": "1.0.0",
+  "version": "2.4.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "engines": {
-    "node": ">=22.10.0"
+    "node": ">=24.7.0",
+    "npm": ">=11.5.1"
   }
 }

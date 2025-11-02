@@ -23,6 +23,7 @@ const diagramNamesMap: { [key in UMLDiagramType]: string } = {
   SyntaxTree: 'Syntax Tree',
   Flowchart: 'Flowchart',
   BPMN: 'BPMN Diagram',
+  Sfc: 'Sequential Function Chart',
 };
 
 // Separating diagrams into Behavioral and Structural categories
@@ -33,6 +34,7 @@ const behavioralDiagrams = [
   'PetriNet',
   'ReachabilityGraph',
   'BPMN',
+  'Sfc',
 ] as UMLDiagramType[];
 
 const structuralDiagrams = [

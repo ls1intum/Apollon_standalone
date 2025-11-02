@@ -4,7 +4,7 @@
 ARG build_dir=/build_application
 
 # First stage: Builds the application
-FROM node:20.18.0 as builder
+FROM node:24.11.0-alpine as builder
 
 ARG build_dir
 ENV DEPLOYMENT_URL="http://localhost:8080"
@@ -20,7 +20,7 @@ RUN npm install
 RUN npm run build
 
 # Second stage: Sets up the container to run the application
-FROM node:20.18.0
+FROM node:24.11.0-alpine
 
 # Install cron for scheduling
 RUN apt-get update && apt-get -y install cron

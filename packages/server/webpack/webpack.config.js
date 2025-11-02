@@ -15,9 +15,16 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js'], //resolve all the modules other than index.ts
+    fullySpecified: false, // allow extensionless ESM imports from dependencies
   },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
       {
         use: 'ts-loader',
         test: /\.ts?$/,

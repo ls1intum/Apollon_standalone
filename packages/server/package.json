@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "2.4.2",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -10,31 +10,39 @@
     "lint": "eslint -c .eslintrc.js \"**/*.{ts,tsx}\""
   },
   "engines": {
-    "node": ">=22.10.0"
+    "node": ">=24.7.0",
+    "npm": ">=11.5.1"
+  },
+  "overrides": {
+    "semver": "7.7.3",
+    "word-wrap": "1.2.5",
+    "tough-cookie": "6.0.0",
+    "postcss": "8.5.6",
+    "crypto-js": "4.2.0"
   },
   "dependencies": {
-    "@sentry/node": "8.38.0",
+    "@sentry/node": "10.22.0",
     "audit-debounce": "0.1.1",
     "body-parser": "1.20.3",
-    "canvas": "2.11.2",
+    "canvas": "3.2.0",
     "cors": "2.8.5",
     "express": "4.21.2",
     "fast-json-patch": "3.1.1",
     "ms": "2.1.3",
-    "pdfmake": "0.2.15",
+    "pdfmake": "0.2.20",
     "redis": "4.7.0",
-    "rxjs": "7.8.1",
-    "global-jsdom": "9.2.0",
-    "jsdom": "23.2.0",
+    "rxjs": "7.8.2",
+    "global-jsdom": "27.0.0",
+    "jsdom": "27.1.0",
     "shared": "*"
   },
   "devDependencies": {
-    "@types/cors": "2.8.17",
-    "@types/express": "4.17.21",
-    "@types/ms": "0.7.34",
-    "@types/node": "22.9.0",
-    "@types/pdfmake": "0.2.11",
-    "copy-webpack-plugin": "12.0.2",
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.5",
+    "@types/ms": "2.1.0",
+    "@types/node": "24.9.2",
+    "@types/pdfmake": "0.2.12",
+    "copy-webpack-plugin": "13.0.1",
     "ts-node": "10.9.2",
     "ts-node-dev": "2.0.0"
   }

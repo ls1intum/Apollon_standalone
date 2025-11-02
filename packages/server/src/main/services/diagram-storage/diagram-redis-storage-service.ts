@@ -140,9 +140,23 @@ export class DiagramRedisStorageService implements DiagramStorageService {
   }
 
   protected async checkExpire(key: string) {
-    if (this.options?.ttl) {
-      const client = await this.redisClient;
-      await client.expire(key, ms(this.options.ttl) / 1000);
+    const ttl = this.options?.ttl;
+
+    if (!ttl) {
+      return;
+    }
+
+    const client = await this.redisClient;
+    const ttlInMilliseconds = ms(ttl as ms.StringValue);
+
+    if (typeof ttlInMilliseconds !== 'number' || Number.isNaN(ttlInMilliseconds)) {
+      throw new Error(`Invalid ttl option "${ttl}" provided for Redis storage`);
+    }
+
+    const ttlInSeconds = Math.ceil(ttlInMilliseconds / 1000);
+
+    if (ttlInSeconds > 0) {
+      await client.expire(key, ttlInSeconds);
     }
   }
 
