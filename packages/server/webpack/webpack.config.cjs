@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../../../build/server/'),
-    filename: 'bundle.js',
+    filename: 'bundle.cjs',
   },
   resolve: {
     extensions: ['.ts', '.js'], //resolve all the modules other than index.ts
@@ -43,8 +43,14 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: '../../node_modules/canvas/build/Release/',
+          from: path.resolve(__dirname, '../node_modules/canvas/build/Release'),
           to: 'canvas',
+          noErrorOnMissing: true,
+        },
+        {
+          from: path.resolve(__dirname, '../node_modules/jsdom/lib/jsdom/browser'),
+          to: 'node_modules/jsdom/lib/jsdom/browser',
+          noErrorOnMissing: true,
         },
       ],
     }),

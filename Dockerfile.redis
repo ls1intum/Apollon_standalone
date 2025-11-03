@@ -21,4 +21,4 @@ WORKDIR /app/build/server
 
 EXPOSE 8080
 
-CMD [ "node", "bundle.js" ]
+CMD [ "node", "bundle.cjs" ]

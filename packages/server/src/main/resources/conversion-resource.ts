@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ConversionService } from '../services/conversion-service/conversion-service';
-import { UMLModel } from '@ls1intum/apollon';
+import type { UMLModel } from '@ls1intum/apollon';
 
 export class ConversionResource {
   conversionService: ConversionService = new ConversionService();
