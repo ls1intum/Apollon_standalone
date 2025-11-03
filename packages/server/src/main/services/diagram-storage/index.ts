@@ -1,6 +1,6 @@
-export { DiagramStorageService } from './diagram-storage-service';
+export type { DiagramStorageService } from './diagram-storage-service';
 
-import { DiagramStorageService } from './diagram-storage-service';
+import type { DiagramStorageService } from './diagram-storage-service';
 import { DiagramRedisStorageService } from './diagram-redis-storage-service';
 import { DiagramFileStorageService } from './diagram-file-storage-service';
 import { MigratingStorageService } from './migrating-storage-service';
