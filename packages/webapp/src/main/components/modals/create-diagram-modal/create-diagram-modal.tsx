@@ -8,7 +8,7 @@ import { createDiagram } from '../../../services/diagram/diagramSlice';
 import { useNavigate } from 'react-router-dom';
 import { setPreviewedDiagramIndex } from '../../../services/version-management/versionManagementSlice';
 
-const diagramsInBeta: string[] = ['BPMN'];
+const diagramsInBeta: string[] = [];
 
 const diagramNamesMap: { [key in UMLDiagramType]: string } = {
   ClassDiagram: 'Class Diagram',
