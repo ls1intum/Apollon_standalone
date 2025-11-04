@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/cors": "2.8.19",
-    "@types/express": "5.0.5",
+    "@types/express": "4.17.25",
     "@types/ms": "2.1.0",
     "@types/node": "24.9.2",
     "@types/pdfmake": "0.2.12",
