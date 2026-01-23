@@ -14,8 +14,9 @@ const app = express();
 const jsFiles = fs.readdirSync(webappPath).filter((file) => file.endsWith('.js'));
 jsFiles.forEach((file) => {
   const filePath = path.join(webappPath, file);
-  const content = fs.readFileSync(filePath, 'utf8')
-      .replace(/http:\/\/localhost:8080/g, process.env.DEPLOYMENT_URL || 'http://localhost:8080');
+  const content = fs
+    .readFileSync(filePath, 'utf8')
+    .replace(/http:\/\/localhost:8080/g, process.env.DEPLOYMENT_URL || 'http://localhost:8080');
   fs.writeFileSync(filePath, content);
 });
 

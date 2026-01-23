@@ -2,7 +2,6 @@ import { Operation } from 'fast-json-patch';
 import { DiagramDTO } from 'shared/src/diagram-dto';
 import { DiagramStorageService } from './diagram-storage-service';
 
-
 /**
  * Options for a migrating storage service.
  */
@@ -23,13 +22,12 @@ export interface MigratingStorageOptions {
   sourceStorage: DiagramStorageService;
 }
 
-
 /**
  * Storage service that migrates diagrams between two storage services.
  * This class allows for migrating from one diagram storage backend to another
  * in a slow rollout, and without any downtime, assuming both storage backends
  * are available during the migration.
- * 
+ *
  * - New diagrams are stored solely in the target storage.
  * - Upon loading diagrams from the old storage, they are also stored in target storage.
  * - Updates are only applied to target storage, so diagrams in the source storage
@@ -47,8 +45,9 @@ export class MigratingStorageService implements DiagramStorageService {
   }
 
   async diagramExists(token: string) {
-    return await this.options.targetStorage.diagramExists(token)
-      || await this.options.sourceStorage.diagramExists(token);
+    return (
+      (await this.options.targetStorage.diagramExists(token)) || (await this.options.sourceStorage.diagramExists(token))
+    );
   }
 
   async getDiagramByLink(token: string) {
@@ -56,7 +55,7 @@ export class MigratingStorageService implements DiagramStorageService {
       return await this.options.targetStorage.getDiagramByLink(token);
     } else {
       const dto = await this.options.sourceStorage.getDiagramByLink(token);
-      dto && await this.options.targetStorage.saveDiagram(dto, token);
+      dto && (await this.options.targetStorage.saveDiagram(dto, token));
 
       return dto;
     }

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { ListGroup, Tab, Tabs } from 'react-bootstrap';
-import { Template} from '../template-types';
+import { Template } from '../template-types';
 import { SoftwarePatternCategory, SoftwarePatternTemplate, SoftwarePatternType } from './software-pattern-types';
 import { TemplateFactory } from '../template-factory';
 

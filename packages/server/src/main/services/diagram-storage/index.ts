@@ -14,7 +14,6 @@ export class DiagramStorageFactory {
 
   private static createStorageService(): DiagramStorageService {
     if (process.env.APOLLON_REDIS_URL !== undefined) {
-
       const redisStorage = new DiagramRedisStorageService({
         url: process.env.APOLLON_REDIS_URL,
         ttl: process.env.APOLLON_REDIS_DIAGRAM_TTL,

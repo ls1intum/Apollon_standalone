@@ -9,7 +9,7 @@ export type ApollonEditorContextType = {
 // Provide a default no-op function for `setEditor`
 export const ApollonEditorContext = createContext<ApollonEditorContextType>({
   setEditor: () => {
-    throw new Error("setEditor is not defined. Make sure to wrap your component within ApollonEditorProvider.");
+    throw new Error('setEditor is not defined. Make sure to wrap your component within ApollonEditorProvider.');
   },
 });
 
