@@ -34,7 +34,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "2.11.2",
     "bootstrap": "5.3.8",
-    "posthog-js": "1.334.1",
+    "posthog-js": "1.335.2",
     "react": "18.3.1",
     "react-bootstrap": "2.10.10",
     "react-bootstrap-icons": "1.11.6",
