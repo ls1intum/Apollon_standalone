@@ -88,7 +88,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: SSH to VM and execute docker compose down (if exists)
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.4
         with:
           host: ${{ vars.VM_HOST }}
           username: ${{ vars.VM_USERNAME }}
@@ -131,7 +131,7 @@ jobs:
           target: /home/${{ vars.VM_USERNAME }}
 
       - name: SSH to VM and create .env file
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.4
         with:
           host: ${{ vars.VM_HOST }}
           username: ${{ vars.VM_USERNAME }}
@@ -150,7 +150,7 @@ jobs:
             fi
 
       - name: SSH to VM and execute docker compose up
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.4
         with:
           host: ${{ vars.VM_HOST }}
           username: ${{ vars.VM_USERNAME }}
