@@ -40,6 +40,11 @@
     "lint": "concurrently \"npm run lint:webapp\" \"npm run lint:server\"",
     "lint:webapp": "npm run lint --workspace=webapp",
     "lint:server": "npm run lint --workspace=server",
+    "test": "npm run test:webapp && npm run test:server",
+    "test:webapp": "npm run test --workspace=webapp",
+    "test:server": "npm run test --workspace=server",
+    "test:watch": "npm run test:watch --workspace=webapp",
+    "test:coverage": "npm run test:coverage --workspace=webapp",
     "prettier:check": "prettier --check 'packages/**/{main,tests}/**/*.{json,ts,tsx,js,jsx,css,scss,html}'",
     "prettier:write": "prettier --write 'packages/**/{main,tests}/**/*.{json,ts,tsx,js,jsx,css,scss,html}'",
     "update": "ncu -i --deep --format group"
