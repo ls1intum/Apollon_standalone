@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { errorReducer, displayError, dismissError, ApollonError } from '../../main/services/error-management/errorManagementSlice';
+import {
+  errorReducer,
+  displayError,
+  dismissError,
+  ApollonError,
+} from '../../main/services/error-management/errorManagementSlice';
 
 // Mock uuid to return predictable values
 vi.mock('uuid', () => ({
@@ -46,9 +51,7 @@ describe('errorManagementSlice', () => {
     });
 
     it('should not change state when dismissing non-existent error', () => {
-      const stateWithError: ApollonError[] = [
-        { id: 'error-1', headerText: 'Error 1', bodyText: 'Body 1' },
-      ];
+      const stateWithError: ApollonError[] = [{ id: 'error-1', headerText: 'Error 1', bodyText: 'Body 1' }];
 
       const result = errorReducer(stateWithError, dismissError('non-existent'));
 
@@ -57,9 +60,7 @@ describe('errorManagementSlice', () => {
     });
 
     it('should return empty array when dismissing last error', () => {
-      const stateWithError: ApollonError[] = [
-        { id: 'error-1', headerText: 'Error 1', bodyText: 'Body 1' },
-      ];
+      const stateWithError: ApollonError[] = [{ id: 'error-1', headerText: 'Error 1', bodyText: 'Body 1' }];
 
       const result = errorReducer(stateWithError, dismissError('error-1'));
 
