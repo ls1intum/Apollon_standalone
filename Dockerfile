@@ -4,7 +4,7 @@
 ARG build_dir=/build_application
 
 # First stage: Builds the application
-FROM node:24.11.0-bookworm-slim AS builder
+FROM node:24.13.0-bookworm-slim AS builder
 
 ARG build_dir
 ENV DEPLOYMENT_URL="http://localhost:8080"
@@ -31,7 +31,7 @@ RUN npm install
 RUN npm run build
 
 # Second stage: Sets up the container to run the application
-FROM node:24.11.0-bookworm-slim
+FROM node:24.13.0-bookworm-slim
 
 ARG build_dir=/build_application
 
