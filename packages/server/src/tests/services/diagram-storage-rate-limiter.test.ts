@@ -1,16 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { DiagramDTO } from 'shared';
 import type { UMLModel } from '@ls1intum/apollon';
 import {
   isDiagramSaveRequest,
   isDiagramPatchRequest,
-  DiagramSaveRequest,
-  DiagramPatchRequest,
-  DiagramPresistenceRequest,
+  type DiagramSaveRequest,
+  type DiagramPatchRequest,
+  type DiagramPresistenceRequest,
 } from '../../main/services/diagram-storage/diagram-storage-rate-limiter';
 
-const buildDiagramDTO = (title: string) =>
-  new DiagramDTO('test-id', title, {} as UMLModel, '2024-01-01T00:00:00.000Z', [], 'test-token');
+const buildDiagramDTO = (title: string): DiagramSaveRequest['diagramDTO'] => ({
+  id: 'test-id',
+  title,
+  model: {} as UMLModel,
+  lastUpdate: '2024-01-01T00:00:00.000Z',
+  versions: [],
+  token: 'test-token',
+});
 
 describe('diagram-storage-rate-limiter', () => {
   describe('isDiagramSaveRequest', () => {

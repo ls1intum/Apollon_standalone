@@ -1,5 +1,5 @@
 import type { Operation } from 'fast-json-patch';
-import { DiagramDTO } from 'shared';
+import type { DiagramDTO } from 'shared';
 import { debounceTime, from, groupBy, mergeMap, Observable, Subject, switchMap } from 'rxjs';
 import { auditDebounceTime } from 'audit-debounce';
 
