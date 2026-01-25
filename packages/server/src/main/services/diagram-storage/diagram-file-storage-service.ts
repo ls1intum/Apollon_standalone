@@ -1,5 +1,6 @@
-import { applyPatch, Operation } from 'fast-json-patch';
-
+import jsonpatch from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
+import { promises as fs } from 'fs';
 import { FileStorageService } from '../storage-service/file-storage-service';
 import { DiagramDTO } from 'shared';
 import { diagramStoragePath } from '../../constants';
@@ -12,7 +13,7 @@ type SaveRequest = DiagramStorageRequest & {
 
 /**
  * Service for storing diagrams on the file system.
- * Requires `/diagrams` directory to be present in the working directory.
+ * Ensures the diagram storage directory exists before any I/O.
  */
 export class DiagramFileStorageService implements DiagramStorageService {
   /**
@@ -41,24 +42,27 @@ export class DiagramFileStorageService implements DiagramStorageService {
    */
   private limiter: DiagramStorageRateLimiter<SaveRequest>;
 
+  /**
+   * Resolved once the storage directory is available.
+   */
+  private storageDirReady: Promise<void>;
+
   constructor() {
+    this.storageDirReady = this.ensureStorageDir();
     this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
       async (request) => {
-        //
-        // FIXME: this requires cancellation  mechanism on storage, which is not implemented yet.
-        // read [this](https://stackoverflow.com/questions/74529131/node-js-how-to-cancel-a-writefile-operation)
-        // to learn how to cancel a write operation.
-        //
+        // TODO: add cancellable writes in FileStorageService; limiter can queue overlapping saves.
+        await this.storageDirReady;
         await this.fileStorageService.saveContentToFile(request.path, JSON.stringify(request.diagramDTO));
       },
       async (request) => {
-        //
-        // FIXME: this requires cancellation  mechanism on storage, which is not implemented yet.
-        // read [this](https://stackoverflow.com/questions/74529131/node-js-how-to-cancel-a-writefile-operation)
-        // to learn how to cancel a write operation.
-        //
+        // TODO: add cancellable writes in FileStorageService; limiter can queue overlapping saves.
+        await this.storageDirReady;
         const diagram = await this.getDiagramByLink(request.token);
-        diagram!.model = applyPatch(diagram!.model, request.patch).newDocument;
+        if (!diagram) {
+          throw Error(`File at ${request.path} does not exist`);
+        }
+        diagram.model = jsonpatch.applyPatch(diagram.model, request.patch).newDocument;
         await this.fileStorageService.saveContentToFile(request.path, JSON.stringify(diagram));
       },
       {
@@ -71,7 +75,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
 
   async saveDiagram(diagramDTO: DiagramDTO, token: string, shared: boolean = true): Promise<string> {
     const path = this.getFilePathForToken(token);
-    const exists = await this.diagramExists(path);
+    const exists = await this.diagramExists(token);
 
     if (exists && !shared) {
       throw Error(`File at ${path} already exists`);
@@ -79,6 +83,7 @@ export class DiagramFileStorageService implements DiagramStorageService {
       if (exists) {
         this.limiter.request({ diagramDTO, token, path });
       } else {
+        await this.storageDirReady;
         await this.fileStorageService.saveContentToFile(path, JSON.stringify(diagramDTO));
       }
 
@@ -104,7 +109,15 @@ export class DiagramFileStorageService implements DiagramStorageService {
 
   getDiagramByLink(token: string): Promise<DiagramDTO | undefined> {
     const path = this.getFilePathForToken(token);
-    return this.fileStorageService.getFileContent(path).then((fileContent) => JSON.parse(fileContent) as DiagramDTO);
+    return this.storageDirReady
+      .then(() => this.fileStorageService.getFileContent(path))
+      .then((fileContent) => JSON.parse(fileContent) as DiagramDTO)
+      .catch((error: NodeJS.ErrnoException) => {
+        if (error?.code === 'ENOENT') {
+          return undefined;
+        }
+        throw error;
+      });
   }
 
   /**
@@ -112,5 +125,9 @@ export class DiagramFileStorageService implements DiagramStorageService {
    */
   private getFilePathForToken(token: string): string {
     return `${diagramStoragePath}/${token}.json`;
+  }
+
+  private async ensureStorageDir(): Promise<void> {
+    await fs.mkdir(diagramStoragePath, { recursive: true });
   }
 }

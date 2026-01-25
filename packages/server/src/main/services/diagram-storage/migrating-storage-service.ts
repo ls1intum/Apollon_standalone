@@ -1,4 +1,4 @@
-import { Operation } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
 import { DiagramDTO } from 'shared/src/diagram-dto';
 import { DiagramStorageService } from './diagram-storage-service';
 

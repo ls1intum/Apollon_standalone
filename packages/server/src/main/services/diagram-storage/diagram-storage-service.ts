@@ -1,5 +1,5 @@
 import { DiagramDTO } from 'shared';
-import { Operation } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
 
 /**
  * Service for storing and retrieving diagrams.

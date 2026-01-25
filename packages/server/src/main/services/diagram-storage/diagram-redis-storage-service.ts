@@ -1,5 +1,5 @@
 import ms from 'ms';
-import { Operation } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
 import { RedisClientType, createClient } from 'redis';
 
 import { DiagramDTO } from 'shared';

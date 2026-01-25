@@ -10,7 +10,7 @@ const port = 8080;
 
 const app = express();
 
-// Replace http://localhost:8080 with the actual process.env.DEPLOYMENT_URL
+// Rewrite baked-in localhost URLs in the built webapp to the deployment URL.
 const jsFiles = fs.readdirSync(webappPath).filter((file) => file.endsWith('.js'));
 jsFiles.forEach((file) => {
   const filePath = path.join(webappPath, file);
@@ -28,12 +28,11 @@ app.use(
   }) as RequestHandler,
 );
 
-// registers routes
+// Register API routes before the SPA fallback.
 register(app);
 
-// if nothing matches return webapp
-// must be registered after other routes
-app.get('/*', (req, res) => {
+// SPA fallback; must stay after API/static routes.
+app.get('/*path', (req, res) => {
   res.sendFile(indexHtml);
 });
 const collaborationService = new CollaborationService();

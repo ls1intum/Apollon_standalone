@@ -1,5 +1,5 @@
 import { RedisClientType } from 'redis';
-import { Operation } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
 
 /**
  * Converts a [JSONPointer](https://tools.ietf.org/html/rfc6901) to a Redis JSON path.
