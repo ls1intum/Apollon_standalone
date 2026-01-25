@@ -20,6 +20,11 @@ module.exports = {
   module: {
     rules: [
       {
+        // Force CommonJS parsing for Apollon ES5 output despite package type=module.
+        test: /node_modules[\\/]+@ls1intum[\\/]+apollon[\\/]+lib[\\/]es5[\\/].*\.js$/,
+        type: 'javascript/auto',
+      },
+      {
         test: /\.m?js$/,
         resolve: {
           fullySpecified: false,
