@@ -16,13 +16,11 @@ import {
 import { LocalStorageRepository } from '../../../services/local-storage/local-storage-repository';
 import { displayError } from '../../../services/error-management/errorManagementSlice';
 import { DiagramRepository } from '../../../services/diagram/diagram-repository';
-import { useNavigate } from 'react-router-dom';
 
 export const RestoreVersionModal: React.FC<ModalContentProps> = ({ close }) => {
   const dispatch = useAppDispatch();
   const diagram = useAppSelector(selectDiagram);
   const versionActionIndex = useAppSelector(selectVersionActionIndex);
-  const navigate = useNavigate();
 
   const displayToast = () => {
     toast.success(`You have successfuly restored the chosen diagram version`, {

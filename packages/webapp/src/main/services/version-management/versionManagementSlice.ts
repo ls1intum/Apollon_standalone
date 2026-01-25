@@ -16,7 +16,7 @@ const versionManagementSlice = createSlice({
   name: 'versionManagement',
   initialState,
   reducers: {
-    toggleSidebar(state, action: PayloadAction<void>) {
+    toggleSidebar(state) {
       state.displaySidebar = !state.displaySidebar;
     },
     setPreviewedDiagramIndex(state, action: PayloadAction<number>) {

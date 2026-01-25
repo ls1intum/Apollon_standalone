@@ -1,54 +1,65 @@
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
+import type { RawData } from 'ws';
+import type { IncomingMessage } from 'http';
+import type { Socket } from 'net';
+import type { Duplex } from 'stream';
 import { randomString } from '../../utils';
 import { DiagramStorageFactory, DiagramStorageService } from '../diagram-storage';
 import { Collaborator, SelectionChange } from 'shared';
 import type { Patch } from '@ls1intum/apollon';
 
 type Client = { token: string; collaborator: Collaborator };
+type ApollonSocket = WebSocket & { apollonId: string; isAlive: boolean };
+type CollaborationMessage = {
+  token?: string;
+  collaborator?: Collaborator;
+  patch?: Patch;
+  selection?: SelectionChange;
+};
 
 export class CollaborationService {
-  private wsServer: any;
-  private clients: { [key: string]: Client } = {};
+  private wsServer: WebSocketServer;
+  private clients: Record<string, Client> = {};
   private diagramService: DiagramStorageService;
   private readonly interval: NodeJS.Timeout;
   constructor() {
-    this.wsServer = new WebSocket.Server({ noServer: true });
+    this.wsServer = new WebSocketServer({ noServer: true });
     this.diagramService = DiagramStorageFactory.getStorageService();
     this.interval = setInterval(() => {
-      this.wsServer.clients.forEach((ws: any) => {
-        if (ws.isAlive === false) {
-          this.onConnectionLost(ws);
-          return ws.terminate();
+      this.wsServer.clients.forEach((ws) => {
+        const socket = ws as ApollonSocket;
+        if (socket.isAlive === false) {
+          this.onConnectionLost(socket);
+          return socket.terminate();
         }
-        ws.isAlive = false;
-        ws.ping(() => {});
+        socket.isAlive = false;
+        socket.ping();
       });
     }, 2000);
-    this.wsServer.on('connection', (socket: any) => {
-      socket.apollonId = randomString(15);
-      socket.isAlive = true;
-      socket.on('pong', () => {
-        socket.isAlive = true;
+    this.wsServer.on('connection', (socket: WebSocket) => {
+      const clientSocket = socket as ApollonSocket;
+      clientSocket.apollonId = randomString(15);
+      clientSocket.isAlive = true;
+      clientSocket.on('pong', () => {
+        clientSocket.isAlive = true;
       });
-      socket.on('message', (message: any) => {
-        const { token, collaborator, patch, selection } = JSON.parse(message);
+      clientSocket.on('message', (message: RawData) => {
+        const { token, collaborator, patch, selection } = JSON.parse(message.toString()) as CollaborationMessage;
         if (token) {
-          if (patch) {
-            this.onDiagramPatch(socket, token, patch, collaborator);
-          } else if (selection) {
-            this.onSelection(socket, token, selection, collaborator);
-          } else {
-            this.onConnection(socket, token, collaborator);
+          if (patch && collaborator) {
+            this.onDiagramPatch(clientSocket, token, patch, collaborator);
+          } else if (selection && collaborator) {
+            this.onSelection(clientSocket, token, selection, collaborator);
+          } else if (collaborator) {
+            this.onConnection(clientSocket, token, collaborator);
           }
-        } else {
+        } else if (collaborator && collaborator.name !== '') {
           // Case where only collaborator object is updated
-          if (collaborator?.name !== '') {
-            this.onCollaboratorUpdate(socket, collaborator);
-          }
+          this.onCollaboratorUpdate(clientSocket, collaborator);
         }
       });
-      socket.on('close', () => {
-        this.onConnectionLost(socket);
+      clientSocket.on('close', () => {
+        this.onConnectionLost(clientSocket);
       });
     });
 
@@ -67,17 +78,18 @@ export class CollaborationService {
     });
   };
 
-  onConnectionLost = (socket: any) => {
+  onConnectionLost = (socket: ApollonSocket) => {
     const token = this.clients[socket.apollonId]?.token;
     const tokenClients = this.getTokenClients(socket.apollonId, true);
 
-    this.wsServer.clients.forEach((clientSocket: any) => {
+    this.wsServer.clients.forEach((clientSocket) => {
+      const apollonSocket = clientSocket as ApollonSocket;
       if (
-        clientSocket !== socket &&
-        clientSocket.readyState === WebSocket.OPEN &&
-        this.clients[clientSocket.apollonId]?.token === token
+        apollonSocket !== socket &&
+        apollonSocket.readyState === WebSocket.OPEN &&
+        this.clients[apollonSocket.apollonId]?.token === token
       ) {
-        clientSocket.send(
+        apollonSocket.send(
           JSON.stringify({
             token,
             collaborators: tokenClients.map((client) => client.collaborator),
@@ -87,36 +99,38 @@ export class CollaborationService {
     });
   };
 
-  onCollaboratorUpdate = (socket: any, collaborator: Collaborator) => {
+  onCollaboratorUpdate = (socket: ApollonSocket, collaborator: Collaborator) => {
     this.clients[socket.apollonId] = { ...this.clients[socket.apollonId], collaborator };
     const token = this.clients[socket.apollonId]?.token;
     const tokenClients = this.getTokenClients(socket.apollonId, false);
-    this.wsServer.clients.forEach((clientSocket: any) => {
-      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId].token === token) {
-        clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborator) }));
+    this.wsServer.clients.forEach((clientSocket) => {
+      const apollonSocket = clientSocket as ApollonSocket;
+      if (apollonSocket.readyState === WebSocket.OPEN && this.clients[apollonSocket.apollonId].token === token) {
+        apollonSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborator) }));
       }
     });
   };
 
-  onConnection = (socket: any, token: string, collaborator: Collaborator) => {
+  onConnection = (socket: ApollonSocket, token: string, collaborator: Collaborator) => {
     this.clients[socket.apollonId] = { token, collaborator };
     const tokenClients = this.getTokenClients(socket.apollonId, false);
-    this.wsServer.clients.forEach((clientSocket: any) => {
-      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId]?.token === token) {
-        if (clientSocket === socket) {
+    this.wsServer.clients.forEach((clientSocket) => {
+      const apollonSocket = clientSocket as ApollonSocket;
+      if (apollonSocket.readyState === WebSocket.OPEN && this.clients[apollonSocket.apollonId]?.token === token) {
+        if (apollonSocket === socket) {
           this.diagramService.getDiagramByLink(token).then((diagram) => {
-            clientSocket.send(
+            apollonSocket.send(
               JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborator), diagram }),
             );
           });
         } else {
-          clientSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborator) }));
+          apollonSocket.send(JSON.stringify({ collaborators: tokenClients.map((client) => client.collaborator) }));
         }
       }
     });
   };
 
-  onDiagramPatch = async (socket: any, token: string, patch: Patch, collaborator: Collaborator) => {
+  onDiagramPatch = async (socket: ApollonSocket, token: string, patch: Patch, collaborator: Collaborator) => {
     await this.diagramService.patchDiagram(token, patch);
     // const diagram = await this.diagramService.getDiagramByLink(token);
     // diagram!.model = applyPatch(diagram!.model, patch).newDocument;
@@ -125,9 +139,10 @@ export class CollaborationService {
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.clients[socket.apollonId] = { token, collaborator };
 
-    this.wsServer.clients.forEach((clientSocket: any) => {
-      if (clientSocket.readyState === WebSocket.OPEN && this.clients[clientSocket.apollonId]?.token === token) {
-        clientSocket.send(
+    this.wsServer.clients.forEach((clientSocket) => {
+      const apollonSocket = clientSocket as ApollonSocket;
+      if (apollonSocket.readyState === WebSocket.OPEN && this.clients[apollonSocket.apollonId]?.token === token) {
+        apollonSocket.send(
           JSON.stringify({
             collaborators: tokenClients.map((client) => client.collaborator),
             patch,
@@ -138,17 +153,18 @@ export class CollaborationService {
     });
   };
 
-  onSelection = async (socket: any, token: string, selection: SelectionChange, collaborator: Collaborator) => {
+  onSelection = async (socket: ApollonSocket, token: string, selection: SelectionChange, collaborator: Collaborator) => {
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.clients[socket.apollonId] = { token, collaborator };
 
-    this.wsServer.clients.forEach((clientSocket: any) => {
+    this.wsServer.clients.forEach((clientSocket) => {
+      const apollonSocket = clientSocket as ApollonSocket;
       if (
-        clientSocket !== socket &&
-        clientSocket.readyState === WebSocket.OPEN &&
-        this.clients[clientSocket.apollonId]?.token === token
+        apollonSocket !== socket &&
+        apollonSocket.readyState === WebSocket.OPEN &&
+        this.clients[apollonSocket.apollonId]?.token === token
       ) {
-        clientSocket.send(
+        apollonSocket.send(
           JSON.stringify({
             collaborators: tokenClients.map((client) => client.collaborator),
             selection,
@@ -159,9 +175,9 @@ export class CollaborationService {
     });
   };
 
-  handleUpgrade = (request: any, socket: any, head: any) => {
-    this.wsServer.handleUpgrade(request, socket, head, (socket: any) => {
-      this.wsServer.emit('connection', socket, request);
+  handleUpgrade = (request: IncomingMessage, socket: Duplex, head: Buffer) => {
+    this.wsServer.handleUpgrade(request, socket as Socket, head, (clientSocket) => {
+      this.wsServer.emit('connection', clientSocket, request);
     });
   };
 }

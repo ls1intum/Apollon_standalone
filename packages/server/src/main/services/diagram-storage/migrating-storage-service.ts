@@ -24,8 +24,8 @@ export interface MigratingStorageOptions {
 
 /**
  * Storage service that migrates diagrams between two storage services.
- * This class allows for migrating from one diagram storage backend to another
- * in a slow rollout, and without any downtime, assuming both storage backends
+ * This class allows for migrating from one diagram storage server to another
+ * in a slow rollout, and without any downtime, assuming both storage servers
  * are available during the migration.
  *
  * - New diagrams are stored solely in the target storage.

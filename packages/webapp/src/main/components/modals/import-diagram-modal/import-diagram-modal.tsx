@@ -9,19 +9,21 @@ export const ImportDiagramModal: React.FC<ModalContentProps> = ({ close }) => {
 
   const importDiagramHandler = () => {
     if (selectedFile) {
-      new Promise((resolve: (value: string) => void, reject) => {
-        if (selectedFile) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            const target: any = event.target;
-            const data = target.result;
-            resolve(data);
-          };
-          reader.readAsText(selectedFile);
-        } else {
-          reject();
-        }
-      }).then((content: string) => {
+      new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event: ProgressEvent<FileReader>) => {
+          const result = event.target?.result;
+          if (typeof result === 'string') {
+            resolve(result);
+            return;
+          }
+          reject(new Error('Unable to read file as text.'));
+        };
+        reader.onerror = () => {
+          reject(reader.error ?? new Error('Failed to read file.'));
+        };
+        reader.readAsText(selectedFile);
+      }).then((content) => {
         importDiagram(content);
       });
     }

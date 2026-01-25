@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { localStorageDiagramPrefix, localStorageDiagramsList, localStorageLatest } from '../../constant';
+import { localStorageDiagramPrefix } from '../../constant';
 import { Diagram } from '../diagram/diagramSlice';
 import { useAppDispatch } from '../../components/store/hooks';
 import { displayError } from '../error-management/errorManagementSlice';

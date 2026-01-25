@@ -3,7 +3,7 @@ import {
   SoftwarePatternTemplate,
   SoftwarePatternType,
 } from './software-pattern/software-pattern-types';
-import { UMLDiagramType } from '@ls1intum/apollon';
+import { UMLDiagramType, UMLModel } from '@ls1intum/apollon';
 import adapterModel from '../../../templates/pattern/structural/adapter.json';
 import bridgeModel from '../../../templates/pattern/structural/bridge.json';
 import commandModel from '../../../templates/pattern/behavioral/command.json';
@@ -19,35 +19,35 @@ export class TemplateFactory {
         return new SoftwarePatternTemplate(
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
-          adapterModel as any,
+          adapterModel as unknown as UMLModel,
           SoftwarePatternCategory.STRUCTURAL,
         );
       case SoftwarePatternType.BRIDGE:
         return new SoftwarePatternTemplate(
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
-          bridgeModel as any,
+          bridgeModel as unknown as UMLModel,
           SoftwarePatternCategory.STRUCTURAL,
         );
       case SoftwarePatternType.COMMAND:
         return new SoftwarePatternTemplate(
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
-          commandModel as any,
+          commandModel as unknown as UMLModel,
           SoftwarePatternCategory.BEHAVIORAL,
         );
       case SoftwarePatternType.FACTORY:
         return new SoftwarePatternTemplate(
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
-          factoryModel as any,
+          factoryModel as unknown as UMLModel,
           SoftwarePatternCategory.CREATIONAL,
         );
       case SoftwarePatternType.OBSERVER:
         return new SoftwarePatternTemplate(
           softwarePatternType,
           UMLDiagramType.ClassDiagram,
-          observerModel as any,
+          observerModel as unknown as UMLModel,
           SoftwarePatternCategory.BEHAVIORAL,
         );
       default:

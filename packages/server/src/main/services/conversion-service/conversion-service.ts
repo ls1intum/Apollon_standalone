@@ -5,7 +5,7 @@ export class ConversionService {
   convertToSvg = async (model: UMLModel): Promise<SVG> => {
     document.body.innerHTML = '<!doctype html><html lang="en"><body><div></div></body></html>';
     // JSDOM does not support getBBox so we have to mock it here
-    // @ts-ignore
+    // @ts-ignore - JSDOM does not implement getBBox.
     window.SVGElement.prototype.getBBox = () => ({
       x: 0,
       y: 0,

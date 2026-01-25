@@ -1,12 +1,20 @@
 import { LocalStorageRepository } from '../../main/services/local-storage/local-storage-repository';
-import * as themings from '../themings.json';
+import themingsJson from '../themings.json';
+
+type ThemeMap = Record<string, Record<string, string>>;
+
+const themings = themingsJson as ThemeMap;
 
 export const setTheme = (theming: string) => {
   const root = document.documentElement;
-  // @ts-ignore
-  for (const themingVar of Object.keys(themings[theming])) {
-    // @ts-ignore
-    root.style.setProperty(themingVar, themings[theming][themingVar]);
+  const theme = themings[theming];
+
+  if (!theme) {
+    return;
+  }
+
+  for (const [themingVar, value] of Object.entries(theme)) {
+    root.style.setProperty(themingVar, value);
   }
 };
 

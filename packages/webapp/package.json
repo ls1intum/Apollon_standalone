@@ -8,8 +8,8 @@
     "lint": "eslint -c .eslintrc.cjs \"**/*.{ts,tsx}\"",
     "lint:ts": "eslint -c .eslintrc.cjs \"/src/main\"",
     "lint:css": "stylelint \"src/**/*.ts\"",
-    "build": "npm run clean && webpack --config webpack/webpack.prod.cjs",
-    "build:local": "npm run clean && DEPLOYMENT_URL=http://localhost:8080 webpack --config webpack/webpack.prod.cjs",
+    "build": "npm run clean && NODE_OPTIONS=--no-deprecation webpack --config webpack/webpack.prod.cjs",
+    "build:local": "npm run clean && NODE_OPTIONS=--no-deprecation DEPLOYMENT_URL=http://localhost:8080 webpack --config webpack/webpack.prod.cjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

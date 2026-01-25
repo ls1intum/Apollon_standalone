@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { generateRandomName } from '../../main/utils/random-name-generator/random-name-generator';
 
 describe('generateRandomName', () => {

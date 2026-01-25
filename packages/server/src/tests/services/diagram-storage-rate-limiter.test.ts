@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { DiagramDTO } from 'shared';
+import type { UMLModel } from '@ls1intum/apollon';
 import {
   isDiagramSaveRequest,
   isDiagramPatchRequest,
@@ -7,15 +9,15 @@ import {
   DiagramPresistenceRequest,
 } from '../../main/services/diagram-storage/diagram-storage-rate-limiter';
 
+const buildDiagramDTO = (title: string) =>
+  new DiagramDTO('test-id', title, {} as UMLModel, '2024-01-01T00:00:00.000Z', [], 'test-token');
+
 describe('diagram-storage-rate-limiter', () => {
   describe('isDiagramSaveRequest', () => {
     it('should return true for a save request with diagramDTO', () => {
       const saveRequest: DiagramSaveRequest = {
         token: 'test-token',
-        diagramDTO: {
-          title: 'Test Diagram',
-          model: {},
-        } as any,
+        diagramDTO: buildDiagramDTO('Test Diagram'),
       };
 
       expect(isDiagramSaveRequest(saveRequest)).toBe(true);
@@ -64,10 +66,7 @@ describe('diagram-storage-rate-limiter', () => {
     it('should return false for a save request', () => {
       const saveRequest: DiagramSaveRequest = {
         token: 'test-token',
-        diagramDTO: {
-          title: 'Test Diagram',
-          model: {},
-        } as any,
+        diagramDTO: buildDiagramDTO('Test Diagram'),
       };
 
       expect(isDiagramPatchRequest(saveRequest)).toBe(false);
@@ -86,7 +85,7 @@ describe('diagram-storage-rate-limiter', () => {
     it('should correctly discriminate between save and patch requests', () => {
       const saveRequest: DiagramSaveRequest = {
         token: 'save-token',
-        diagramDTO: { title: 'Save', model: {} } as any,
+        diagramDTO: buildDiagramDTO('Save'),
       };
 
       const patchRequest: DiagramPatchRequest = {

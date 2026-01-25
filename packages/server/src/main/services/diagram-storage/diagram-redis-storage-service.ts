@@ -10,6 +10,7 @@ import { applyPatchToRedisValue } from './redis-patch';
 type SaveRequest = DiagramStorageRequest & {
   key: string;
 };
+type RedisJson = null | boolean | number | string | Date | RedisJson[] | { [key: string]: RedisJson };
 
 /**
  * Options for the Redis storage service.
@@ -32,7 +33,7 @@ export interface RedisStorageOptions {
 }
 
 /**
- * Diagram storage service that uses Redis as a storage backend.
+ * Diagram storage service that uses Redis as storage.
  */
 export class DiagramRedisStorageService implements DiagramStorageService {
   /**
@@ -69,7 +70,8 @@ export class DiagramRedisStorageService implements DiagramStorageService {
     this.limiter = new DiagramStorageRateLimiter<SaveRequest>(
       async (request) => {
         const client = await this.redisClient;
-        await client.json.set(request.key, '$', request.diagramDTO as any);
+        const diagramJson = request.diagramDTO as unknown as RedisJson;
+        await client.json.set(request.key, '$', diagramJson);
         await this.checkExpire(request.key);
       },
       async (request) => {
@@ -96,7 +98,8 @@ export class DiagramRedisStorageService implements DiagramStorageService {
         this.limiter.request({ diagramDTO, token, key });
       } else {
         const client = await this.redisClient;
-        await client.json.set(key, '$', diagramDTO as any);
+        const diagramJson = diagramDTO as unknown as RedisJson;
+        await client.json.set(key, '$', diagramJson);
         await this.checkExpire(key);
       }
 
@@ -132,7 +135,7 @@ export class DiagramRedisStorageService implements DiagramStorageService {
         return undefined;
       }
 
-      return diagram as any as DiagramDTO;
+      return diagram as unknown as DiagramDTO;
     } catch (err) {
       console.log(`Can't load diagram ${key}:: `, err);
       return undefined;

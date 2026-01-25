@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ErrorMessage } from '../../main/components/error-handling/error-message';
 import { ApollonError } from '../../main/services/error-management/errorManagementSlice';
@@ -53,6 +53,6 @@ describe('ErrorMessage', () => {
     const closeButton = screen.getByRole('button', { name: /close/i });
     await user.click(closeButton);
 
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByRole('alert'));
   });
 });

@@ -39,6 +39,11 @@ module.exports = {
     canvas: 'commonjs ./canvas/canvas',
     'utf-8-validate': 'utf-8-validate',
   },
+  ignoreWarnings: [
+    {
+      message: /Critical dependency: the request of a dependency is an expression/,
+    },
+  ],
   plugins: [
     new CopyPlugin({
       patterns: [
