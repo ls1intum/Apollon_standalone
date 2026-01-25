@@ -153,7 +153,12 @@ export class CollaborationService {
     });
   };
 
-  onSelection = async (socket: ApollonSocket, token: string, selection: SelectionChange, collaborator: Collaborator) => {
+  onSelection = async (
+    socket: ApollonSocket,
+    token: string,
+    selection: SelectionChange,
+    collaborator: Collaborator,
+  ) => {
     const tokenClients = this.getTokenClients(socket.apollonId, false);
     this.clients[socket.apollonId] = { token, collaborator };
 
