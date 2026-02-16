@@ -64,7 +64,7 @@
     "@typescript-eslint/eslint-plugin": "8.53.1",
     "@typescript-eslint/parser": "8.53.1",
     "concurrently": "9.2.1",
-    "css-loader": "7.1.2",
+    "css-loader": "7.1.4",
     "eslint": "9.39.2",
     "husky": "9.1.7",
     "prettier": "3.8.1",
